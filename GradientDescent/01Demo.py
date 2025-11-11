@@ -26,8 +26,8 @@ def gradient_descent(alpha, max_iters, diff):
 
 
 if __name__ == '__main__':
-    alpha = 0.1
-    max_iters = 100
-    diff = 1e-10
+    alpha = 0.1         # 学习率
+    max_iters = 100     # 最大迭代次数
+    diff = 1e-10        # 误差范围
     x_opt, cost_opt = gradient_descent(alpha, max_iters, diff)
-    print('x取值：%.2f，代价函数最小值：%.2f' % (x_opt, cost_opt))
+    print('x取值：%.5f，代价函数最小值：%.5f' % (x_opt, cost_opt))
