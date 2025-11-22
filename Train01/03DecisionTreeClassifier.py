@@ -1,3 +1,6 @@
+'''
+决策树分类（鸢尾花分类）
+'''
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
@@ -22,7 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 clf = DecisionTreeClassifier(max_depth=3)
 
 # 模型训练
-clf = clf.fit(X_train, y_train)
+clf.fit(X_train, y_train)
 
 # 模型预测
 y_pred = clf.predict(X_test)
