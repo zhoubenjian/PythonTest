@@ -6,6 +6,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
 import matplotlib.pyplot as plt
 
+# 设置中文字体
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
 
 
 X_train = np.array([[1], [2], [3], [4], [5]])
@@ -30,4 +33,14 @@ y_pre = lr.predict(x_test)          # 预测值
 print(f'均方误差：{mean_squared_error(y_true, y_pre):.2f}')     # 越小拟合越好
 # R² = 1 - (MSE/方差）
 print(f'R²分数：{r2_score(y_true, y_pre):.2f}')                # 越接近于1，拟合效果越好
+
+
+
+# 可视化
+plt.figure(figsize=(12, 8))
+plt.plot(X_train, y_train, color='red')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.title(f'y = {lr.coef_[0]:.2f}x + {lr.intercept_:.2f}')
+plt.show()
 
