@@ -43,14 +43,14 @@ plt.show()
 
 
 # 多因子拟合
-X_mulity = data.drop(['Price'], axis=1)
+X_multi = data.drop(['Price'], axis=1)
 y = np.array(data.loc[:, 'Price'])
-print(X_mulity.shape, y.shape)
+print(X_multi.shape, y.shape)
 
 lr = LinearRegression()
-lr.fit(X_mulity, y)
-y_pred = lr.predict(X_mulity)
-print(mean_squared_error(y, lr.predict(X_mulity)))
+lr.fit(X_multi, y)
+y_pred = lr.predict(X_multi)
+print(mean_squared_error(y, lr.predict(X_multi)))
 
 r7_mulity = plt.figure(figsize=(8, 5))
 plt.scatter(y, y_pred)
