@@ -11,13 +11,13 @@ age = [25, 30, 22, 27, 35]          # 年龄
 height_weight_matrix = np.cov(height, weight)
 
 # Pandas美化输出
-hw_variables = ['Height', 'Age']
+hw_variables = ['Height', 'Weight']
 hw_cov = pd.DataFrame(height_weight_matrix, index=hw_variables, columns=hw_variables)
 print('身高和体重的协方差矩阵（带标签）：')
 '''
-        Height   Age
-Height    62.5  75.0
-Age       75.0  92.5
+        Height  Weight
+Height    62.5    75.0
+Weight    75.0    92.5
 '''
 print(hw_cov)
 

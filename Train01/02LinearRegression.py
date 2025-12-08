@@ -30,9 +30,9 @@ y_true = np.array([21, 42])         # 测试标签（真实值）
 y_pre = lr.predict(x_test)          # 预测值
 
 # 模型评估
-print(f'均方误差：{mean_squared_error(y_true, y_pre):.2f}')     # 越小拟合越好
+print(f'均方误差：{mean_squared_error(y_true, y_pre):.2f}')     # 均方误差越小拟合越好
 # R² = 1 - (MSE/方差）
-print(f'R²分数：{r2_score(y_true, y_pre):.2f}')                # 越接近于1，拟合效果越好
+print(f'R²分数：{r2_score(y_true, y_pre):.2f}')                # R²越接近于1，拟合效果越好
 
 
 

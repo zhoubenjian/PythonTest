@@ -25,7 +25,7 @@ data = np.array([
 
 '''
 如果你的数据是 (n_features, n_samples)，使用默认的 rowvar=True
-如果你的数据是 (n_samples, n_features)，务必设置 rowvar=False
+如果你的数据是 (n_samples, n_features)，务必设置 rowvar=False 
 '''
 # 因为我们的数据是 (samples, features)，所以需要设置 rowvar=False
 cov_matrix = np.cov(data, rowvar=False)
