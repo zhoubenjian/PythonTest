@@ -25,9 +25,6 @@ kernel = np.array([
 
 # 卷积操作
 output = convolve2d(input_image, kernel, mode="valid")
-'''
-
-'''
 print('\n卷积结果：')
 '''
 [[15 22 21]
