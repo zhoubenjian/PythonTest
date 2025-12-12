@@ -33,6 +33,10 @@ print('\nreshape(3, 4):', reshaped.shape)   # torch.Size([3, 4])
 viewd = tensor.view(3, 4)
 print('view(3, 4):', viewd.shape)           # torch.Size([3, 4])
 
+# 自动推算维度
+auto = tensor.reshape(-1, 3)                # -1表示自动计算
+print("reshape(-1, 3):", auto.shape)        # torch.Size([4, 3])
+
 
 print('\n' + '=' * 40)
 

@@ -2,6 +2,7 @@
 基础运算
 '''
 import torch
+import numpy as np
 
 
 # 一维张量(向量)
@@ -67,3 +68,22 @@ tensor([[ 73,  83],
         [174, 198]])
 '''
 print(f'c @ d = {torch.matmul(c, d)}')
+
+# 转置乘法(点积)
+e = torch.randn(3, 4)
+f = torch.randn(3, 4)
+'''
+tensor([[ 1.6641, -1.2235,  1.3737],
+        [ 1.7265, -0.2957,  1.2510],
+        [-0.1234,  1.2949, -2.0281]])
+'''
+print(f'e @ f = {torch.matmul(e, f.T)}')
+'''
+tensor([[ 1.6641, -1.2235,  1.3737],
+        [ 1.7265, -0.2957,  1.2510],
+        [-0.1234,  1.2949, -2.0281]])
+'''
+print(f'e @ f = {e @ f.T}')
+# torch.matmul(e, f.T) <=> e @ f
+print(np.allclose(torch.matmul(e, f.T), e @ f.T))   # True
+
