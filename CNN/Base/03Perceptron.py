@@ -27,7 +27,8 @@ class Perceptron:
 
     # 预测
     def predict(self, X):
-        return np.sign(np.dot(X, self.w) + self.b)
+        # NumPy 库中用于计算数组元素符号值的函数
+        return np.sign(np.dot(X, self.w) + self.b)  # 正数返回1 负数返回-1 0返回0（包括 0.0、-0.0）
 
 
 # 示例数据（线性可分）
