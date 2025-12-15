@@ -1,5 +1,5 @@
 '''
-步骤 1: 导入必要的库
+SVM（支持向量机）
 '''
 # 数据集模块
 from sklearn import datasets
@@ -11,7 +11,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 # 导入评估指标
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-
 
 
 '''

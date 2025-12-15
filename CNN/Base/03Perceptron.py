@@ -18,12 +18,14 @@ class Perceptron:
             errors = 0
             for xi, yi in zip(X, y):
                 if yi * (np.dot(xi, self.w) + self.b) <= 0:
-                    self.w += self.lr * yi * xi
-                    self.b += self.lr * yi
+                    # 参数更新（核心！）
+                    self.w += self.lr * yi * xi     # 更新权重
+                    self.b += self.lr * yi          # 更新偏置
                     errors += 1
             if errors == 0:
                 break
 
+    # 预测
     def predict(self, X):
         return np.sign(np.dot(X, self.w) + self.b)
 
