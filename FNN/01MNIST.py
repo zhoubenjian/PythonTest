@@ -84,7 +84,7 @@ for epoch in range(num_epochs):
         images = images.to(device)
         labels = labels.to(device)
 
-        # 向前传播
+        # 向前传播(自动调用 forward 方法：在 PyTorch 的 nn.Module 基类中，定义了 __call__ 方法)
         output = model(images)              # 获取预测
         loss = criterion(output, labels)    # 计算损失
 
