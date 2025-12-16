@@ -21,6 +21,7 @@ print(f'a * b = {a * b}')       # a * b = tensor([14, 33, 65])
 # 乘法(点积)
 print(f'a @ b = {a @ b}')               # a @ b = 112
 print(f'a @ b = {torch.matmul(a, b)}')  # a @ b = 112
+print(f'a @ b = {torch.dot(a, b)}')     # a @ b = 112
 
 
 print('\n' + "#" * 50)

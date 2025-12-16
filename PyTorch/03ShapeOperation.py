@@ -41,6 +41,22 @@ print("reshape(-1, 3):", auto.shape)        # torch.Size([4, 3])
 print('\n' + '=' * 40)
 
 
+tensor = torch.arange(1, 10).reshape(3, 3)
+'''
+tensor([[1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]])
+'''
+print(tensor)
+print(tensor.dim())                 # 2
+# 展平为1维
+print(tensor.reshape(-1))           # tensor([1, 2, 3, 4, 5, 6, 7, 8, 9])
+print(tensor.reshape(-1).dim())     # 1
+
+
+print('\n' + '=' * 40)
+
+
 # 转置
 tensor = torch.randn(2, 3, 4, 5)
 print(f'\n形状: {tensor.shape}')       # torch.Size([2, 3, 4, 5])

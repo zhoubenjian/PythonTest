@@ -20,6 +20,7 @@ import torch
 x = torch.tensor([1, 2, 3])
 print(x)                # tensor([1, 2, 3])
 print(x.shape)          # torch.Size([3])
+print(x.dim())          # 1
 
 
 print("\n" + "#" * 50)
@@ -34,6 +35,7 @@ tensor([[0.5338, 0.9165, 0.0646, 0.5727],
 '''
 print("\n" + str(x))
 print(x.shape)          # torch.Size([3, 4])
+print(x.dim())          # 2
 
 print('***********************************')
 
@@ -46,6 +48,7 @@ tensor([[-0.4617,  0.9369,  1.4320,  1.5183],
 '''
 print(x)
 print(x.shape)          # torch.Size([3, 4])
+print(x.dim())          # 2
 
 print('***********************************')
 
@@ -57,6 +60,7 @@ tensor([[0., 0., 0.],
 '''
 print(x)
 print(x.shape)          # torch.Size([2, 3])
+print(x.dim())          # 2
 
 print('***********************************')
 
@@ -69,3 +73,4 @@ tensor([[1., 1.],
 '''
 print(x)
 print(x.shape)          # torch.Size([3, 2])
+print(x.dim())          # 2
