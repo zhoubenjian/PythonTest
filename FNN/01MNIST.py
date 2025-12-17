@@ -1,6 +1,9 @@
 '''
 手写数字识别
 
+实现逻辑：
+初始化参数 → 加载数据 → 构建模型 → 设置优化器 → 循环训练(前向传播→计算损失→反向传播→更新权重) → 测试评估 → 输出准确率
+
 MNIST数据集特点：
 60,000个训练样本，10,000个测试样本；
 28×28像素的灰度手写数字图像；
@@ -100,15 +103,15 @@ for epoch in range(num_epochs):
 # ----------------------------
 # 6. 测试模型准确率
 # ----------------------------
-model.eval()
-with torch.no_grad():
+model.eval()            # 切换到评估模式
+with torch.no_grad():   # 不计算梯度，节省内存
     correct = 0
     total = 0
     for images, labels in test_loader:
         images = images.to(device)
         labels = labels.to(device)
         outputs = model(images)
-        _, predicted = torch.max(outputs.data, 1)
+        _, predicted = torch.max(outputs.data, 1)   # 获取预测类别
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
 
