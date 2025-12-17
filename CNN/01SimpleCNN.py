@@ -10,7 +10,7 @@ from torchvision import datasets, transforms
 
 class SimpleCNN(nn.Module):
     def __init__(self):
-        super(SimpleCNN, self).__init__()
+        super().__init__()
 
         # 第一个卷积层，输入通道数为1（灰度图像），输出通道数为32，卷积核大小为3 × 3，步长为1，填充为1。
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1)
@@ -40,6 +40,7 @@ class SimpleCNN(nn.Module):
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
 train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)   # 加载MNIST训练数据集，设置存储路径为 ./data，如果数据不存在则自动下载
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)          # 创建数据加载器，设置批量大小为64，打乱数据顺序
+print(len(train_loader))    # 938
 
 # 初始化模型、损失函数和优化器
 model = SimpleCNN()
