@@ -27,13 +27,11 @@ print("特征名：", iris.feature_names)
 print("标签名：", iris.target_names)
 
 
-
 '''
 步骤 3: 划分训练集和测试集
 '''
 # 随机将 30% 的数据划分为测试集，设置 random_state 保证每次划分结果一致
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
 
 
 '''
@@ -49,7 +47,6 @@ X_test_std = scaler.transform(X_test)
 # 注意：一定要用训练集的参数来转换测试集，避免数据泄露
 
 
-
 '''
 步骤 5: 创建、训练（拟合）模型
 '''
@@ -59,13 +56,11 @@ svm_model = SVC(kernel='rbf', C=1.0, gamma='scale', random_state=42)
 svm_model.fit(X_train_std, y_train)
 
 
-
 '''
 步骤 6: 进行预测
 '''
 # 对测试集进行预测
 y_pred = svm_model.predict(X_test_std)
-
 
 
 '''
