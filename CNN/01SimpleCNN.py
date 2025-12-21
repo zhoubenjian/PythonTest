@@ -37,7 +37,10 @@ class SimpleCNN(nn.Module):
 
 
 # 加载数据
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+transform = transforms.Compose(
+    [transforms.ToTensor(),                             # 转为张量(C, H, W)（通道数、高度、宽度，PyTorch 标准格式）
+     transforms.Normalize((0.5,), (0.5,))]    # 归一化
+)
 train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)   # 加载MNIST训练数据集，设置存储路径为 ./data，如果数据不存在则自动下载
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)          # 创建数据加载器，设置批量大小为64，打乱数据顺序
 print(len(train_loader))    # 938
