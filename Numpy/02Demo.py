@@ -1,8 +1,7 @@
 import numpy as np
 
 
-
-# 五行五列的单位矩阵
+# 五行五列的单位方阵（主对角线为1，其余为1）
 a = np.eye(5)
 '''
 [[1. 0. 0. 0. 0.]
@@ -29,7 +28,9 @@ print(b)
 print('---------------------')
 
 c = a + b
+# <class 'numpy.ndarray'>
 print(type(c))
+# (5, 5)
 print(c.shape)
 '''
 [[2. 1. 1. 1. 1.]

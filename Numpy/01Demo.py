@@ -1,7 +1,6 @@
 import numpy as np
 
 
-
 print(np.arange(5))         # [0 1 2 3 4]
 print(np.arange(0, 5, 2))   # [0, 2, 4]
 
@@ -26,16 +25,29 @@ b = np.array([
     [5, 6]
 ])
 
+
+# dot
 '''
 [[22 28]
  [49 64]]
 '''
-# dot
 print(f'矩阵点积：\n{np.dot(a, b)}')
 # 使用 @ 运算符
+'''
+[[22 28]
+ [49 64]]
+'''
 print('矩阵点积：\n%s' % (a @ b))
 # matmul
+'''
+[[22 28]
+ [49 64]]
+'''
 print('矩阵点积：\n', np.matmul(a, b))
+
+# np.allclose(np.dot(a, b) <=> a @ b <=> np.matmul(a, b)
+print(f'np.allclose(np.dot(a, b) == a @ b: {np.allclose(np.dot(a, b), a @ b)}')     # True
+print(f'a @ b == np.matmul(a, b): {np.allclose(np.matmul(a, b), a @ b)}')           # True
 
 print('\n**********************\n')
 

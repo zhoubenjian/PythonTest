@@ -6,7 +6,7 @@ arr0 = np.array(2)
 print('标量(0D): ' + str(arr0))       # 标量(0D): 2
 
 
-print("\n"+"=" * 30)
+print("\n" + "=" * 30)
 
 
 # 向量（1D）
