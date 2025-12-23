@@ -20,7 +20,7 @@ import torch.nn.functional as F
 
 class SimpleMLP(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
-        super(SimpleMLP, self).__init__()
+        super().__init__()
         # 定义神经网络
         self.fc1 = nn.Linear(input_size, hidden_size)   # 第一层全连接
         self.fc2 = nn.Linear(hidden_size, hidden_size)  # 第二层全连接
