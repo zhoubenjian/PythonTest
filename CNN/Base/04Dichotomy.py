@@ -15,6 +15,7 @@ class Perceptron:
     def activation(self, z):
         return np.where(z > 0, 1, -1)
 
+    # 训练方法
     def fit(self, X, y):
         n_samples, n_features = X.shape
         self.w = np.zeros(n_features)
@@ -27,6 +28,8 @@ class Perceptron:
                 if y[i] * y_pred <= 0:
                     self.w += self.lr * y[i] * x_i
                     self.b += self.lr * y[i]
+
+    # 预测函数
     def predict(self, X):
         z = np.dot(X, self.w) + self.b
         return self.activation(z)
