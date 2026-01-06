@@ -37,9 +37,16 @@ print(VT)
 
 # 验证分解的正确性：重构原矩阵
 # 注意：需要将奇异值向量转换为对角矩阵
+'''
+# old
 Sigma = np.zeros(A.shape)
 for i in range(len(S)):
     Sigma[i, i] = S[i]
+'''
+
+# new
+Sigma = np.zeros_like(A, dtype=float)
+np.fill_diagonal(Sigma, S)
 
 A_reconstructed = U @ Sigma @ VT
 print("\n重构的矩阵 A_reconstructed:")

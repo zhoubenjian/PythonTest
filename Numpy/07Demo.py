@@ -16,6 +16,9 @@ print('s =', s)
 Sigma = np.zeros_like(A, dtype=float)
 # 将 s 填入主对角线
 np.fill_diagonal(Sigma, s)
+print('Sigma = \n', Sigma)
+
+print('*' * 30)
 
 print('U = \n', U)
 print('Singular values = ', s)
