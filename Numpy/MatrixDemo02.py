@@ -9,6 +9,7 @@ import numpy as np
     :param matrix: 输入方阵（numpy数组）
     :return: 伴随矩阵（numpy数组）
 """
+# 求伴随矩阵（矩阵的代数余子式转置）
 def adjugate_matrix(matrix):
 
     # 1.增强鲁棒性
@@ -67,7 +68,7 @@ print('*' * 30)
 
 # 方法2：Numpy内置函数直接求逆矩阵（工程首选）
 inv_A_direct = np.linalg.inv(A)
-print("Numpy内置函数计算的逆矩阵：")
+print("numpy内置函数计算的逆矩阵：")
 print(np.round(inv_A_direct, 2))
 
 
@@ -79,7 +80,7 @@ print(np.round(verify, 2))
 print('*' * 40)
 
 verify = np.dot(A, inv_A_direct)
-print('验证逆矩阵（Numpy内置函数求逆矩阵）（A × A⁻¹）：')
+print('验证逆矩阵（numpy内置函数求逆矩阵）（A × A⁻¹）：')
 print(np.round(verify, 2))
 
 
