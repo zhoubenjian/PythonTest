@@ -24,7 +24,8 @@ image = torch.tensor([[
      [31, 32, 33, 34, 35, 36]]
 ]], dtype=torch.float32)
 
-print("原始图像尺寸:", image.shape)
+print(f'原始图像维度:{image.ndim}')        # 原始图像维度:4
+print("原始图像尺寸:", image.shape)        # 原始图像尺寸: torch.Size([1, 1, 6, 6])
 print(f"原始图像数据:\n{image.squeeze()}")
 
 
