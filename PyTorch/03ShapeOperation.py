@@ -24,10 +24,13 @@ print('\n' + '=' * 40)
 '''
 # 0-11, shape: (12,)
 tensor = torch.arange(12)
+print(tensor.shape)     # torch.Size([12])
+print(tensor.dim())     # 1
 
 # 重塑为3×4
 reshaped = tensor.reshape(3, 4)
 print('\nreshape(3, 4):', reshaped.shape)   # torch.Size([3, 4])
+print('\nreshape(3, 4):', reshaped.dim())   # 2
 
 # 也可以使用view
 viewd = tensor.view(3, 4)

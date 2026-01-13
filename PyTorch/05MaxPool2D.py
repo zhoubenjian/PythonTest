@@ -26,23 +26,34 @@ image = torch.tensor([[
 
 print(f'原始图像维度:{image.ndim}')        # 原始图像维度:4
 print("原始图像尺寸:", image.shape)        # 原始图像尺寸: torch.Size([1, 1, 6, 6])
-print(f"原始图像数据:\n{image.squeeze()}")
+# 移除张量（Tensor）中所有尺寸（size）为 1 的维度（轴 /axis）** 的方法
+'''
+tensor([[ 1.,  2.,  3.,  4.,  5.,  6.],
+        [ 7.,  8.,  9., 10., 11., 12.],
+        [13., 14., 15., 16., 17., 18.],
+        [19., 20., 21., 22., 23., 24.],
+        [25., 26., 27., 28., 29., 30.],
+        [31., 32., 33., 34., 35., 36.]])
+'''
+print(f"squeeze后的图像数据:\n{image.squeeze()}")
+print(f'squeeze后的图像维度:{image.squeeze().ndim}')   # 2
+print(f'squeeze后的图像尺寸:{image.squeeze().shape}')  # torch.Size([6, 6])
 
 
 print('\n' + '=' * 40)
 
 
 # 使用nn.MaxPool2d
-maxpool2d = nn.MaxPool2d(2, 2)      # 池化核2x2，步长2
+maxpool2d = nn.MaxPool2d(2, 2)    # 池化核2x2，步长2
 output1 = maxpool2d(image)
 print("\n使用nn.MaxPool2d (2x2, stride=2):")
-print("输出尺寸:", output1.shape)
 '''
 tensor([[ 8., 10., 12.],
         [20., 22., 24.],
         [32., 34., 36.]])
 '''
 print(f"输出数据:\n{output1.squeeze()}")
+print("输出尺寸:", output1.shape)                   # torch.Size([1, 1, 3, 3])
 
 
 print('\n' + '=' * 40)
