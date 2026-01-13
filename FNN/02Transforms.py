@@ -11,4 +11,5 @@ print(f'原图大小：{img.size}')                   # 原图大小：(1920, 12
 to_tensor = transforms.ToTensor()
 img_tensor = to_tensor(img)
 print(f'img_tensor形状：{img_tensor.shape}')    # img_tensor形状：torch.Size([3, 1200, 1920])
+print(f'img_tensor维度：{img_tensor.dim()}')    # img_tensor维度：3
 print(img_tensor)
