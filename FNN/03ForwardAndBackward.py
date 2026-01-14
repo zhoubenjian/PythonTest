@@ -33,7 +33,7 @@ out_size = 1        # 输出维度（回归任务，预测一个标量）
 net = SimpleNet(input_size, hidden_size, out_size)
 # 损失函数：均方误差（适用于回归任务）
 criterion = nn.MSELoss()
-# 优化器：随机梯度下降，学习率0.01
+# SGD优化器：随机梯度下降，学习率0.01
 optimizer = optim.SGD(net.parameters(), lr=0.01)
 
 
