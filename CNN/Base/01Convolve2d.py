@@ -1,37 +1,62 @@
 '''
 模拟CNN卷积操作
 '''
-import numpy as np
-from scipy.signal import convolve2d
+import torch
+import torch.nn.functional as F
 
 
-# 输入图片
-input_image = np.random.randint(1, 10, 25).reshape(5, 5)
-'''
-[[9 4 3 3 5]
- [2 3 8 4 2]
- [5 5 4 6 8]
- [3 4 8 9 5]
- [5 1 5 9 6]]
-'''
-print(input_image)
+# 输入特征图（5 x 5）
+input_map = [
+    [1, 2, 3, 4, 5],
+    [6, 7, 8, 9, 10],
+    [11, 12, 13, 14, 15],
+    [16, 17, 18, 19, 20],
+    [21, 22, 23, 24, 25]
+]
 
-# 卷积核
-kernel = np.array([
-    [1, 0, 1],
-    [0, 1, 0],
-    [1, 0, 0]
-])
+# 卷积核（3 x 3）
+kernel = [
+    [1, 0, -1],
+    [2, 0, -2],
+    [1, 0, -1]
+]
 
-# 卷积操作
-output = convolve2d(input_image, kernel, mode="valid")
-print('\n卷积结果：')
+
+# 1. 转换为PyTorch张量（需适配框架输入格式：[batch, channel, height, width]）
+input_tensor = torch.tensor(input_map, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
+kernel_tensor = torch.tensor(kernel, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
+
+# 2. 调用PyTorch的卷积函数（F.conv2d，默认Padding=0，Stride=1）
+# 注意：F.conv2d实现的是互相关，与我们的模拟逻辑一致
+pytorch_result = F.conv2d(input_tensor, kernel_tensor, stride=1, padding=0)
+
+# 3. 转换格式并打印结果
+print("=== PyTorch框架CNN卷积结果（3×3）===")
+print(pytorch_result.squeeze().int())
+
+
+
+
+
 '''
-[[15 22 21]
- [24 21 21]
- [18 24 28]]
+测试
 '''
-print(output)
+A = [
+    [1,2,3],
+    [4,5,6],
+    [7,8,9]
+]
+
+K = [
+    [1,0,1],
+    [0,1,0],
+    [1,0,0]
+]
+
+
+
+
+
 
 
 
