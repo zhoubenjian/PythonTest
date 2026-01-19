@@ -22,7 +22,7 @@ kernel = [
 ]
 
 
-# 1. 转换为PyTorch张量（需适配框架输入格式：[batch, channel, height, width]）
+# 1. 转换为PyTorch张量（需适配框架输入格式：[batch(批次), channel(通道), height(高度), width(宽度)]）
 input_tensor = torch.tensor(input_map, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
 kernel_tensor = torch.tensor(kernel, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
 
@@ -32,6 +32,11 @@ pytorch_result = F.conv2d(input_tensor, kernel_tensor, stride=1, padding=0)
 
 # 3. 转换格式并打印结果
 print("=== PyTorch框架CNN卷积结果（3×3）===")
+'''
+tensor([[-8, -8, -8],
+        [-8, -8, -8],
+        [-8, -8, -8]], dtype=torch.int32)
+'''
 print(pytorch_result.squeeze().int())
 
 
