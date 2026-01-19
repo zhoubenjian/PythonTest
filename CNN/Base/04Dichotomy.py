@@ -4,6 +4,7 @@
 import numpy as np
 
 
+# 感知机
 class Perceptron:
     def __init__(self, lr = 0.01, epochs = 1000):
         self.lr = lr
