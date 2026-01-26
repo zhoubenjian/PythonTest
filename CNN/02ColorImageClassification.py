@@ -43,5 +43,36 @@ testset = torchvision.datasets.CIFAR10(
     download=True,
     transform=transform_test
 )
-testloader = DataLoader(testset, batch_size=False, num_workers=2)
+testloader = DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+
+# 分类
+classes = ('plane', 'car', 'bird', 'cat', 'deer',
+           'dog', 'frog', 'horse', 'ship', 'truck')
+
+
+# 3.定义CNN模型
+class SimpleCNN(nn.Module):
+    def __init__(self, num_classes=10):
+        super().__init__()
+        self.feature = nn.Sequential(
+            # 第一块
+            nn.Conv2d(3, 32, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(32, 64, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # 32x32 => 16x16
+
+            # 第二块
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(128, 128, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # 16 x 16 => 8 x 8
+
+            # 第三块
+            nn.Conv2d(128, 256, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2)   # 8 x 8 => 4 x 4
+        )
+
 
