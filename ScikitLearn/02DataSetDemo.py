@@ -1,11 +1,8 @@
-from sklearn.datasets import load_iris, fetch_20newsgroups
-import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
-
-
 
 # 1.数据集获取
 # 1.1小数据集获取
