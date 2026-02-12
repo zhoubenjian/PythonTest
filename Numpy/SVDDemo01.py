@@ -44,17 +44,12 @@ for i in range(len(eigen_value)):
 print('=' * 60)
 
 
-print("原始矩阵 A：")
-print(A)
-print('-' * 20)
-
-
 # 执行 SVD 分解
 # U: 左奇异向量矩阵（正交）
 # S: 奇异值数组（降序排列）
 # Vt: 右奇异向量矩阵的转置（正交）
 U, S, Vt = np.linalg.svd(A)
-print(f'左奇异向量矩阵 U：')
+print(f'\n左奇异向量矩阵 U：')
 print(U)
 print(f'\n奇异值数组：{S}')
 print(f'\n右奇异向量转置 Vt：')
