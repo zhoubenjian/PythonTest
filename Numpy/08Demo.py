@@ -27,7 +27,7 @@ print(eigen_vector)
 # A * v = λ * v
 for i in range(len(eigen_value)):
 
-    # 对应的特征矩阵（标量）
+    # 对应的特征值（标量）
     lambda_value = eigen_value[i]
     # 第i个特征向量
     v = eigen_vector[:, i]
