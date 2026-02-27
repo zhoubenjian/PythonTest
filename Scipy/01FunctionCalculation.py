@@ -93,5 +93,7 @@ norm_dist = stats.norm(loc=0, scale=1)
 random_data = norm_dist.rvs(size=1000)
 
 # 3.计算统计量
-print("均值：", np.mean(random_data))           # 输出≈0（随机，接近0）
-print("标准差：", np.std(random_data))          # 输出≈1（随机，接近1）
+# 输出≈0（随机，接近0）
+print("均值：", np.mean(random_data))      # -0.053469588354015586
+# 输出≈1（随机，接近1）
+print("标准差：", np.std(random_data))     # 1.0180882830808482
