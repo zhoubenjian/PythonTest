@@ -48,6 +48,6 @@ for i in range(len(eigen_value)):
     print(f"λ * v = {right_side}")
     print(f"是否相等: {np.allclose(left_side, right_side)}")
 
-    print()
+    print('-' * 40)
 
 
