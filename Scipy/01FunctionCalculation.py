@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import optimize, integrate, linalg, stats    # optimize（优化）、integrate（积分）、stats（统计）
 
+
 '''
 1.求最值
 '''
@@ -12,8 +13,8 @@ def f1(x):
 min_value = optimize.minimize(f1, x0=0)
 
 # 输出结果
-print(f'最小值对应x值：{min_value.x[0]}')  # -1.3064401160169776
-print('函数最小值：' + str(min_value.fun))  # -7.945823375615215
+print(f'最小值对应x值：{min_value.x[0]}')      # -1.3064401160169776
+print('函数最小值：' + str(min_value.fun))     # -7.945823375615215
 print('是否成功收敛：%s' % min_value.success)  # True
 
 
@@ -84,7 +85,7 @@ print('-' * 40)
 
 
 '''
-4.统计模块：概率分布与统计分析
+5.统计模块：概率分布与统计分析
 '''
 # 1.创建标准正态分布（均值0，标准差1）
 norm_dist = stats.norm(loc=0, scale=1)

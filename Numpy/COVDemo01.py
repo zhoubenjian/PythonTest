@@ -11,6 +11,7 @@
 5.正负值 正值表示正相关，负值表示负相关，零表示无线性关系
 '''
 import numpy as np
+import pandas as pd
 
 
 # 假设我们有一个数据集，有3个特征（身高、体重、年龄）和5个样本
@@ -35,9 +36,15 @@ print('协方差形状：%s' % str(cov_matrix.shape))
 print('\n协方差矩阵：')
 print(cov_matrix)
 
+# Pandas美化输出
+hwa_variables = ['Height', 'Weight', 'Age']
+hwa_cov = pd.DataFrame(cov_matrix, index=hwa_variables, columns=hwa_variables)
+print('\n身高，体重，年龄协方差矩阵（带标签）：')
+print(hwa_cov)
+
 # 身高的方差（第一个特征）
 height_variance = cov_matrix[0, 0]
-print(f'\n身高方差：{height_variance:.2f}')
+print(f'\n身高方差：{height_variance:.2f}')             # 62.50
 
 # 身高和体重的协方差
 height_weight_cov = cov_matrix[0, 1]
