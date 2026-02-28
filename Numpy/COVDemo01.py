@@ -40,6 +40,12 @@ print(cov_matrix)
 hwa_variables = ['Height', 'Weight', 'Age']
 hwa_cov = pd.DataFrame(cov_matrix, index=hwa_variables, columns=hwa_variables)
 print('\n身高，体重，年龄协方差矩阵（带标签）：')
+'''
+        Height  Weight    Age
+Height   62.50    75.0  38.75
+Weight   75.00    92.5  46.00
+Age      38.75    46.0  24.70
+'''
 print(hwa_cov)
 
 # 身高的方差（第一个特征）
