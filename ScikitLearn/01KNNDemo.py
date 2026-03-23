@@ -6,8 +6,8 @@ from sklearn.neighbors import KNeighborsClassifier
 
 
 # 1.构造数据集
-x = [[0], [1], [2], [3]]
-y = [0, 10, 20, 30]
+x = [[0], [3], [9], [12]]
+y = [0, 30, 90, 120]
 
 
 # 2.训练模型
@@ -19,8 +19,11 @@ estimator.fit(x, y)
 
 
 # 3.数据预测
-res1 = estimator.predict([[2]])
-print(res1)  # [20]
+res1 = estimator.predict([[4]])
+print(res1)  # [30]
 
-res2 = estimator.predict([[5]])
-print(res2)  # [30]
+res2 = estimator.predict([[8]])
+print(res2)  # [90]
+
+res3 = estimator.predict([[14]])
+print(res3)  # [120]

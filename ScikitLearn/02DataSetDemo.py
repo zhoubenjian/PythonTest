@@ -15,7 +15,7 @@ iris = load_iris()
 
 # 2.数据集属性描述
 print("数据集特征值:\n", iris.data)
-print("数据集目标值:\n", iris["target"])      # iris["target"] <=> iris.target
+print("数据集目标值:\n", iris["target"])  # iris["target"] <=> iris.target
 print("数据集特征值:\n", iris.feature_names)
 print("数据集目标值:\n", iris.target_names)
 # print("数据集描述:\n", iris.DESCR)
@@ -24,8 +24,10 @@ print("数据集目标值:\n", iris.target_names)
 # 加载鸢尾花数据
 # 3.数据可视化
 # 数据转为dataframe格式
-iris_d = pd.DataFrame(iris.data, columns = ['Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width'])
+iris_d = pd.DataFrame(iris.data, columns=['Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width'])
 iris_d["target"] = iris.target
+
+
 # print(iris_d)
 # iris_d['Species'] = iris.target
 
@@ -36,6 +38,7 @@ def iris_plot(iris, col1, col2):
     plt.title("鸢尾花种类分布图")
     plt.grid(False)  # 关闭网格线
     plt.show()
+
 
 # iris_plot(iris_d, 'Petal Width', 'Sepal Length')
 
