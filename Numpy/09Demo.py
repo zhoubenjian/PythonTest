@@ -37,7 +37,7 @@ print('----------------------------')
 
 
 '''
-单位矩阵
+5阶单位矩阵
 '''
 eye_array = np.eye(5)
 '''
@@ -48,3 +48,32 @@ eye_array = np.eye(5)
  [0. 0. 0. 0. 1.]]
 '''
 print(eye_array)
+
+
+print('----------------------------')
+
+
+'''
+3行3列1矩阵
+'''
+array04 = np.ones([3, 3])
+'''
+[[1. 1. 1.]
+ [1. 1. 1.]
+ [1. 1. 1.]]
+'''
+print(array04)
+
+
+print('----------------------------')
+
+
+'''
+一维数组电积
+a @ b <=> np.dot(a, b) <=> np.matmul(a, b)
+'''
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+print(f'a · b = {a @ b}')           # a · b = 32
+print('a · b = %d' % np.dot(a, b))  # a · b = 32
+print('a · b =', np.matmul(a, b))   # a · b = 32
