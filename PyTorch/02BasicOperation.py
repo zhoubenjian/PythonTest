@@ -58,7 +58,7 @@ tensor([[ 22,  39],
 '''
 print(f'c * d = {c * d}')
 
-# 乘法(点积)
+# 矩阵乘法
 '''
 tensor([[ 73,  83],
         [174, 198]])
@@ -69,8 +69,13 @@ tensor([[ 73,  83],
         [174, 198]])
 '''
 print(f'c @ d = {torch.matmul(c, d)}')
+'''
+c @ d = tensor([[ 73,  83],
+        [174, 198]])
+'''
+print(f'c @ d = {torch.mm(c, d)}')
 
-# 转置乘法(点积)
+# 矩阵转置乘法
 e = torch.randn(3, 4)
 f = torch.randn(3, 4)
 '''
