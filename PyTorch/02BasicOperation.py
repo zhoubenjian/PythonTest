@@ -4,28 +4,25 @@
 import torch
 import numpy as np
 
-
 # 一维张量(向量)
 a = torch.tensor([2, 3, 5])
 b = torch.tensor([7, 11, 13])
 
 # 加法
-print(f'a + b = {a + b}')       # a + b = tensor([ 9, 14, 18])
+print(f'a + b = {a + b}')  # a + b = tensor([ 9, 14, 18])
 
 # 减法
-print(f'a - b = {a - b}')       # a - b = tensor([-5, -8, -8])
+print(f'a - b = {a - b}')  # a - b = tensor([-5, -8, -8])
 
 # 乘法(逐元素相乘)
-print(f'a * b = {a * b}')       # a * b = tensor([14, 33, 65])
+print(f'a * b = {a * b}')  # a * b = tensor([14, 33, 65])
 
 # 乘法(点积)
-print(f'a @ b = {a @ b}')               # a @ b = 112
+print(f'a @ b = {a @ b}')  # a @ b = 112
 print(f'a @ b = {torch.matmul(a, b)}')  # a @ b = 112
-print(f'a @ b = {torch.dot(a, b)}')     # a @ b = 112
-
+print(f'a @ b = {torch.dot(a, b)}')  # a @ b = 112
 
 print('\n' + "#" * 50)
-
 
 # 二维张量(矩阵)
 c = torch.tensor([
@@ -58,7 +55,7 @@ tensor([[ 22,  39],
 '''
 print(f'c * d = {c * d}')
 
-# 乘法(点积)
+# 矩阵乘法
 '''
 tensor([[ 73,  83],
         [174, 198]])
@@ -69,8 +66,13 @@ tensor([[ 73,  83],
         [174, 198]])
 '''
 print(f'c @ d = {torch.matmul(c, d)}')
+'''
+c @ d = tensor([[ 73,  83],
+        [174, 198]])
+'''
+print(f'c @ d = {torch.mm(c, d)}')
 
-# 转置乘法(点积)
+# 矩阵转置乘法
 e = torch.randn(3, 4)
 f = torch.randn(3, 4)
 '''
@@ -85,6 +87,14 @@ tensor([[ 1.6641, -1.2235,  1.3737],
         [-0.1234,  1.2949, -2.0281]])
 '''
 print(f'e @ f = {e @ f.T}')
-# torch.matmul(e, f.T) <=> e @ f
-print(np.allclose(torch.matmul(e, f.T), e @ f.T))   # True
+'''
+e @ f = tensor([[ 1.9655, -0.1957, -0.0708],
+        [-5.0071,  3.5788,  4.9961],
+        [-2.0534,  0.9367,  1.4033]])
+'''
+print(f'e @ f = {torch.mm(e, f.T)}')
 
+# torch.matmul(e, f.T) <=> e @ f <=> torch.mm(e, f.T)
+print(np.allclose(torch.matmul(e, f.T), e @ f.T))  # True
+print(np.allclose(e @ f.T, torch.mm(e, f.T)))  # True
+print(np.allclose(torch.matmul(e, f.T), torch.mm(e, f.T)))  # True
