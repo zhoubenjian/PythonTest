@@ -19,12 +19,12 @@ import torch.nn.functional as F
 
 
 class SimpleMLP(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes):
+    def __init__(self, input_size, hidden_size, output_size):
         super().__init__()
         # 定义神经网络
         self.fc1 = nn.Linear(input_size, hidden_size)   # 第一层全连接
         self.fc2 = nn.Linear(hidden_size, hidden_size)  # 第二层全连接
-        self.fc3 = nn.Linear(hidden_size, num_classes)  # 输出层
+        self.fc3 = nn.Linear(hidden_size, output_size)  # 输出层
 
     def forward(self, x):
         # 前向传播过程
@@ -33,9 +33,8 @@ class SimpleMLP(nn.Module):
         x = self.fc3(x)             # 输出层通常不加激活（损失函数会处理）
 
 
-
 # 实例化模型
-model = SimpleMLP(input_size=784, hidden_size=128, num_classes=10)
+model = SimpleMLP(input_size=784, hidden_size=128, output_size=10)
 print(model)
 
 
