@@ -187,7 +187,8 @@ new_employee = torch.tensor([
 with torch.no_grad()：上下文管理器，禁用梯度计算
 为什么？预测时不需要反向传播，禁用梯度可以节省内存和计算
 '''
-with torch.no_grad():
+with torch.no_grad():       # 测试时不需要计算梯度
+
     # 将新员工数据传入模型，得到离职概率
     prob = model(new_employee)
 

@@ -22,11 +22,12 @@ class CreditFNN(nn.Module):
 
         self.relu = nn.ReLU()           # Relu常用于隐藏层
 
-        self.sigmoid = nn.Sigmoid()     # 通常用于二分类的输出层
+        self.sigmoid = nn.Sigmoid()     # Sigmoid通常用于二分类的输出层
 
 
     # 前向传播
     def forward(self, x):
+
         # 第一层：线性变换 => ReLU激活
         x = self.relu(self.fc1(x))
 
@@ -67,7 +68,7 @@ y = torch.tensor([
 
 # 3.初始化模型、损失函数、优化器
 model = CreditFNN()
-criterion = nn.BCELoss()
+criterion = nn.BCELoss()    # BCELoss 必须配合 Sigmoid
 optimizer = optim.Adam(model.parameters(), lr=0.01)
 
 
@@ -94,7 +95,7 @@ new_customer = torch.tensor([
     [15.0, 0.50, 2, 620, 26]
 ], dtype=torch.float32)
 
-with torch.no_grad():
+with torch.no_grad():       # 测试时不需要计算梯度
     prob = model(new_customer)
     print(f'新客户信用卡预期概率：{prob.item():.3f}')
     print(f"预测结果：{'逾期风险高' if prob.item() > 0.5 else '信用良好'}")
