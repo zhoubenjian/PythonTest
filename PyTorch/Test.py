@@ -20,7 +20,8 @@ class BostonHousingFNN(nn.Module):
         # 全连接层3：隐藏层2(4) => 输出层(1)
         self.fc3 = nn.Linear(4, 1)
 
-        # 注意：回归问题输出层不用Sigmoid，因为房价可以是任意正数
+        # 注意：回归问题输出层不用Sigmoid，因为房价可以是任意正数!!!
+        # ReLU输出范围: max(0, x)
         self.relu = nn.ReLU()
 
     # 前向传播

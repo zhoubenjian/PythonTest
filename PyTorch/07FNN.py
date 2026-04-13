@@ -65,7 +65,7 @@ class Fnn(nn.Module):
         x = self.relu(self.fc2(x))
 
         '''
-        第三层（输出层）：线性变换 → Sigmoid激活
+        第三层（输出层）：线性变换 => Sigmoid激活
         输入形状 [batch_size, 4]，输出形状 [batch_size, 1]
         Sigmoid将输出压缩到(0,1)区间，表示离职概率
         '''
