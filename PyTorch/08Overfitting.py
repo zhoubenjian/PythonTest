@@ -1,6 +1,10 @@
 '''
 过拟合演示
 L2正则化对比
+
+过拟合：方差大，偏差小
+欠拟合：方差小，偏差大
+正则化：增加一点偏差，大幅降低方差
 '''
 import torch
 import torch.nn as nn
@@ -34,11 +38,14 @@ class OverfitNet(nn.Module):
 # 1.无正则化(过拟合版本)
 net_no_reg = OverfitNet()
 net_no_reg_optimizer = optim.Adam(net_no_reg.parameters(), lr=0.005)
-criterion = nn.MSELoss()
 
 # 2.带L2正则化(weight_decay)
 net_12 = OverfitNet()
-opt12 = optim.Adam(net_12.parameters(), lr=0.005, weight_decay=0.01)
+opt12 = optim.Adam(net_12.parameters(), lr=0.005, weight_decay=0.01)    # weight_decay把权重往0拉，让模型更平滑
+
+# 均方误差损失函数
+criterion = nn.MSELoss()
+
 
 # 训练
 epochs = 2000
@@ -59,15 +66,15 @@ for _ in range(epochs):
 
 
 # 绘图
-plt.figure(figsize=(12,5))
+plt.figure(figsize=(12, 5))
 
-plt.subplot(1,2,1)
+plt.subplot(1, 2, 1)
 plt.scatter(x, y, s=10, alpha=0.5, label='data')
 plt.plot(x, pred_no.detach(), 'r-', linewidth=2, label='no reg (overfit)')
 plt.title('Overfitting (No Regularization)')
 plt.legend()
 
-plt.subplot(1,2,2)
+plt.subplot(1, 2, 2)
 plt.scatter(x, y, s=10, alpha=0.5, label='data')
 plt.plot(x, pred_l2.detach(), 'g-', linewidth=2, label='L2 reg')
 plt.title('L2 Regularization (Smoother)')
