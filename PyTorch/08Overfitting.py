@@ -9,6 +9,9 @@ L2正则化对比
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import matplotlib
+# 强制切换后端，解决PyCharm绘图报错
+matplotlib.use('TkAgg')  # 关键修复
 import matplotlib.pyplot as plt
 
 
@@ -40,8 +43,8 @@ net_no_reg = OverfitNet()
 net_no_reg_optimizer = optim.Adam(net_no_reg.parameters(), lr=0.005)
 
 # 2.带L2正则化(weight_decay)
-net_12 = OverfitNet()
-opt12 = optim.Adam(net_12.parameters(), lr=0.005, weight_decay=0.01)    # weight_decay把权重往0拉，让模型更平滑
+net_l2 = OverfitNet()
+optl2 = optim.Adam(net_l2.parameters(), lr=0.005, weight_decay=0.01)    # weight_decay把权重往0拉，让模型更平滑
 
 # 均方误差损失函数
 criterion = nn.MSELoss()
@@ -58,11 +61,11 @@ for _ in range(epochs):
     net_no_reg_optimizer.step()         # 更新参数
 
     # L2正则
-    pred_l2 = net_12(x)
+    pred_l2 = net_l2(x)
     loss_l2 = criterion(pred_l2, y)
-    opt12.zero_grad()                   # 清空旧梯度
+    optl2.zero_grad()                   # 清空旧梯度
     loss_l2.backward()                  # 计算新梯度
-    opt12.step()                        # 更新参数
+    optl2.step()                        # 更新参数
 
 
 # 绘图
