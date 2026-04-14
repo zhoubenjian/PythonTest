@@ -34,7 +34,7 @@ class Fnn(nn.Module):
         作用：将负数变为0，正数保持不变
         优点：计算简单、缓解梯度消失、产生稀疏激活
         '''
-        self.relu = nn.ReLU()       # 通常用于隐藏层
+        self.relu = nn.ReLU()           # 通常用于隐藏层
 
         '''
         Sigmoid 激活函数
