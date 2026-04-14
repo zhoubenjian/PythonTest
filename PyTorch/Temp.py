@@ -6,6 +6,11 @@ x = torch.tensor([
     [4, 5, 6]
 ])
 print(f'x原始形状: {x.shape}')      # x原始形状:torch.Size([2, 3])
+'''
+tensor([[1, 2, 3],
+        [4, 5, 6]])
+'''
+print(x)
 
 print('-' * 50)
 
