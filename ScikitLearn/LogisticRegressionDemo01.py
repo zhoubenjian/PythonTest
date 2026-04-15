@@ -32,6 +32,7 @@ model = LogisticRegression()
 model.fit(X, y)
 
 
-# 预测类别 & 概率
+# 预测类别[[分类类型]]
 print("预测类别:", model.predict([[3.5]]))          # 预测类别: [0]
+# 预测概率 [[0的概率, 1的概率]]
 print("预测概率:", model.predict_proba([[3.5]]))    # 预测概率: [[0.5208689 0.4791311]]
