@@ -1,5 +1,14 @@
 '''
 信用卡逾期预测
+
+特征	            含义                  示例值
+income	        年收入（万元）	         25.5
+debt_ratio	    负债率（月供/月收入）	 0.35
+late_count	    过去1年逾期次数	     2
+credit_score	信用评分（300-850）	 680
+age	            年龄（岁）	         32
+
+标签：default = 1（逾期），0（按时还款）
 '''
 import torch
 import torch.nn as nn

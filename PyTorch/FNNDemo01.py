@@ -1,5 +1,14 @@
 '''
 波士顿房价预测
+
+特征          含义              示例值
+rm           平均房间数	      6.2
+age          房龄（年）	      65.0
+tax          房产税率	          320.0
+lstat        低收入群体比例	  12.5
+ptratio      教师比	          15.3
+
+标签：medv = 房价中位数（千美元），例如 24.5 表示 $24,500
 '''
 import torch
 import torch.nn as nn
