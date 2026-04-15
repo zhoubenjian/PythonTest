@@ -59,7 +59,7 @@ model = BostonHousingFNN()
 # 关键区别1: 使用 MSELoss（均方误差）而不是 BCELoss
 # 公式: Loss = (y_pred - y_true)² 的平均值
 criterion = nn.MSELoss()
-
+# Adam优化器
 optimizer = optim.Adam(model.parameters(), lr=0.01)
 
 
