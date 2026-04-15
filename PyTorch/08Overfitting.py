@@ -44,7 +44,7 @@ net_no_reg_optimizer = optim.Adam(net_no_reg.parameters(), lr=0.005)
 
 # 2.带L2正则化(weight_decay)
 net_l2 = OverfitNet()
-optl2 = optim.Adam(net_l2.parameters(), lr=0.005, weight_decay=0.01)    # weight_decay把权重往0拉，让模型更平滑
+opt_l2 = optim.Adam(net_l2.parameters(), lr=0.005, weight_decay=0.01)    # weight_decay把权重往0拉，让模型更平滑
 
 # 均方误差损失函数
 criterion = nn.MSELoss()
@@ -53,6 +53,7 @@ criterion = nn.MSELoss()
 # 训练
 epochs = 2000
 for _ in range(epochs):
+
     # 无正则化
     pred_no = net_no_reg(x)
     loss_no = criterion(pred_no, y)
@@ -63,9 +64,9 @@ for _ in range(epochs):
     # L2正则
     pred_l2 = net_l2(x)
     loss_l2 = criterion(pred_l2, y)
-    optl2.zero_grad()                   # 清空旧梯度
+    opt_l2.zero_grad()                  # 清空旧梯度
     loss_l2.backward()                  # 计算新梯度
-    optl2.step()                        # 更新参数
+    opt_l2.step()                       # 更新参数
 
 
 # 绘图
