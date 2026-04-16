@@ -1,10 +1,11 @@
 '''
- 分类问题（随机森林分类） - 鸢尾花分类
+分类问题（随机森林分类） - 鸢尾花分类
 '''
 from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
 from sklearn.model_selection import train_test_split
+
 
 # 加载数据
 iris = load_iris()
