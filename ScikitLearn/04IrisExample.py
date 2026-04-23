@@ -26,10 +26,10 @@ estimator = KNeighborsClassifier(n_neighbors=5)
 estimator.fit(x_train, y_train)
 
 # 5.模型评估
-# 5.1 预测值输出结果
+# 5.1预测值输出结果
 y_pred = estimator.predict(x_test)
 print('预测值:\n', y_pred)
 print('预测值和真实值的的对比:\n', y_pred == y_test)
-# 5.2 准确率计算
+# 5.2准确率计算
 score = estimator.score(x_test, y_test)
 print('准确率为:\n', score)
