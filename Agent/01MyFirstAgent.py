@@ -1,3 +1,8 @@
+'''
+模拟一个简单的Agent
+'''
+
+
 # 1.定义工具
 def get_weather(city):
     return f"{city}的天气是{city}的天气是晴朗的"
