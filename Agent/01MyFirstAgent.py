@@ -1,39 +1,88 @@
 '''
-模拟一个简单的Agent
+模拟简易天气穿衣助手Agent（伪代码）
 '''
+import requests
 
 
-# 1.定义工具
-def get_weather(city):
-    return f"{city}的天气是{city}的天气是晴朗的"
+class weather_agent:
+    '''
+    初始化
+    '''
+    def __init__(self):
+        # 简单记忆存储
+        self.memory = []
+        # 工具集
+        self.tools = {
+            'get_weather': self.get_weather_api,
+            'get_advice': self.get_advice_api
+        }
 
 
-# 2.定义Agent核心循环
-def run_agent(user_prompt):
-    # 第一步：构建提示词，包含工具描述
-    system_prompt = f"""
-    你是一个助手。你可以使用以下工具：
-    1. get_weather(city): 查询天气
-    如果用户问天气，请返回 "ACTION: get_weather({{city}})"。
-    否则直接回答。
-    """
+    '''
+    工具1：获取天气API
+    '''
+    def get_weather_api(self, city):
+        """
+        调用外部天气API获取数据
+        """
+        # 模拟调用天气API
+        print(f"[Agent 行动] 正在查询{city}的天气...")
 
-    # 第二步：调用LLM（这里假设你有一个llm.call 函数）
-    # 实际开发中这里会调用 OpenAI/Anthropic API
-    response = llm.call(system_prompt + user_prompt)
-
-    # 第三步：判断是否需要行动
-    if "ACTION" in response:
-        # 解析工具调用（简单的字符串处理或正则）
-        tool_name, args = parse_action(response)
-        if tool_name == "get_weather":
-            observation = get_weather(args)  # 执行工具
-            # 第四步：把结果喂回给 LLM
-            final_answer = llm.call(f"工具返回结果是：{observation}。请回答用户。")
-            return final_answer
-    else:
-        return response
+        # 假设返回的数据
+        weather_data = {'city': city, 'temp': 29, 'condition': '晴朗', 'wind': '3级'}
+        return weather_data
 
 
-# 3.运行
-print(run_agent("帮我查查北京的天气"))
+    '''
+    工具2：根据天气生成建议
+    '''
+    def get_advice_api(self, weather_data):
+        """
+        根据天气数据生成穿衣建议
+        """
+        temp = weather_data['temp']
+        condition = weather_data['condition']
+        advice = f"当前{weather_data['city']}气温{temp}℃，天气{condition}。"
+        if temp > 25:
+            advice += '建议穿短袖、短裤。'
+        elif temp > 15:
+            advice += "建议穿长袖T恤、薄外套。"
+        else:
+            advice += "建议穿毛衣、厚外套。"
+        return advice
+
+
+    '''
+    规划与执行核心
+    '''
+    def run(self, user_input):
+        """
+        解析用户目标并执行任务
+        """
+        print(f"[用户指令] {user_input}")
+
+        # 步骤1: 规划 - 从指令中提取关键信息（城市）
+        # 这里简化处理，实际会用更复杂的NLP模型
+        if '天气' in user_input and '重庆' in user_input:
+            city = '重庆'
+        else:
+            return "请告诉我您需要查询天气的城市。"
+
+        # 步骤2: 行动 - 调用工具获取天气
+        weather_data = self.tools['get_weather'](city)
+        # 存入记忆
+        self.memory.append({'step': 'fetched_weather', 'data': weather_data})
+
+        # 步骤3: 行动 - 调用工具生成建议
+        final_advice = self.tools['get_advice'](weather_data)
+        # 存入记忆
+        self.memory.append({'step': 'generated_advice', 'data': final_advice})
+
+        return final_advice
+
+
+# 使用Agent智能体
+agent = weather_agent()
+result = agent.run("重庆天气怎么样，如何穿搭？")
+print(f"[Agent 回复] {result}")
+
