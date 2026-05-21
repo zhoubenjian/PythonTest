@@ -3,17 +3,17 @@ import torch
 
 # 一维张量：形状 (4,)
 a = torch.tensor([2, 3, 5, 7])
-print(a)            # tensor([2, 3, 5, 7])
-print(a.shape)      # torch.Size([4])
-print(a.dim())      # 1
+print(a)                # tensor([2, 3, 5, 7])
+print(a.shape)          # torch.Size([4])
+print(a.dim())          # 1
 
 print('\n' + '*' * 50 + '\n')
 
 # 索引0处插入新的维度
 b = a.unsqueeze(0)
-print(b)            # tensor([[2, 3, 5, 7]])
-print(b.shape)      # torch.Size([1, 4])
-print(b.dim())      # 2
+print(b)                # tensor([[2, 3, 5, 7]])
+print(b.shape)          # torch.Size([1, 4])
+print(b.dim())          # 2
 
 print('\n' + '*' * 50 + '\n')
 
@@ -25,8 +25,8 @@ tensor([[2],
         [7]])
 '''
 print(c)
-print(c.shape)      # torch.Size([4, 1])
-print(c.dim())      # 2
+print(c.shape)          # torch.Size([4, 1])
+print(c.dim())          # 2
 
 
 print('\n' * 5)
