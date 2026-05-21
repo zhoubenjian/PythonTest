@@ -16,8 +16,32 @@
 import torch
 
 
+z = torch.arange(10)
+print(z)                # tensor([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+print(z.shape)          # torch.Size([10])
+print(z.dim())          # 1
+'''
+将一个一维张量转换为二维列向量：
+tensor([[0],
+        [1],
+        [2],
+        [3],
+        [4],
+        [5],
+        [6],
+        [7],
+        [8],
+        [9]])
+'''
+print(z.unsqueeze(1))
+
+
+print("\n" + "#" * 50)
+
+
 # 从数据创建
 x = torch.tensor([1, 2, 3])
+print()
 print(x)                # tensor([1, 2, 3])
 print(x.shape)          # torch.Size([3])
 print(x.dim())          # 1
