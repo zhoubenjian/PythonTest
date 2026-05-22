@@ -29,7 +29,7 @@ class weather_agent:
         print(f"[Agent 行动] 正在查询{city}的天气...")
 
         # 假设返回的数据
-        weather_data = {'city': city, 'temp': 29, 'condition': '晴朗', 'wind': '3级'}
+        weather_data = {'date': '2026-05-21', 'city': city, 'temp': 31, 'condition': '晴朗', 'wind': '5级'}
         return weather_data
 
 
@@ -42,7 +42,8 @@ class weather_agent:
         """
         temp = weather_data['temp']
         condition = weather_data['condition']
-        advice = f"当前{weather_data['city']}气温{temp}℃，天气{condition}。"
+        wind = weather_data['wind']
+        advice = f"当前{weather_data['city']}气温{temp}℃，天气{condition}，风速{wind}。"
         if temp > 25:
             advice += '建议穿短袖、短裤。'
         elif temp > 15:
