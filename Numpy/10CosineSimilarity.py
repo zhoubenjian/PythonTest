@@ -21,7 +21,7 @@ print("query vs 简单课程:", cos_sim(query, b))
 print("query vs 专业课:", cos_sim(query, c))
 
 
-print('\n' * 5)
+print('\n' * 2)
 
 
 # 求夹角
