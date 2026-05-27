@@ -50,7 +50,7 @@ class weather_agent:
         temp = weather_data['temp']
         condition = weather_data['condition']
         wind = weather_data['wind']
-        advice = f"{query_date}{city}气温{temp}℃，天气{condition}，风速{wind}。"
+        advice = f"{query_date}{city}气温{temp}℃；天气{condition}；风速{wind}。"
         if temp > 25:
             advice += '建议穿短袖、短裤。'
         elif temp > 15:
@@ -78,7 +78,7 @@ class weather_agent:
         else:
             return "请告诉我您需要查询天气的城市。"
 
-        # 步骤1: 规划 - 从指令中提取关键信息（日期），如果没有，则获取当天日期
+        # 步骤2: 规划 - 从指令中提取关键信息（日期），如果没有，则获取当天日期
         pattern = r'\b(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b'      # 正则表达式，校验指定时间格式：yyyy-MM-dd
         match = re.search(pattern, user_input)
 
@@ -94,12 +94,12 @@ class weather_agent:
             query_date = date.today()
 
 
-        # 步骤2: 行动 - 调用工具获取天气
+        # 步骤3: 行动 - 调用工具获取天气
         weather_data = self.tools['get_weather'](query_date, city)
         # 存入记忆
         self.memory.append({'step': 'fetched_weather', 'data': weather_data})
 
-        # 步骤3: 行动 - 调用工具生成建议
+        # 步骤4: 行动 - 调用工具生成建议
         final_advice = self.tools['get_advice'](weather_data)
         # 存入记忆
         self.memory.append({'step': 'generated_advice', 'data': final_advice})

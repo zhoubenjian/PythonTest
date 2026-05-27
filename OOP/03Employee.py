@@ -20,4 +20,4 @@ class Manager(Employee):
 
 
 manager = Manager('Alex', 18000, 'Software Engineer')
-print(manager.get_info())
+print(manager.get_info())               # Name: Alex, Salary: 18000, Department: Software Engineer
