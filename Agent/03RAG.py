@@ -72,3 +72,18 @@ def rag(question):
 rag("一线城市住宿报销多少？")
 rag("洗衣机能中途添衣吗？")
 rag("交通费报销多少？")
+
+
+
+print('\n' * 3)
+
+
+
+# 切分
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size = 512,       # 每块最大token数
+    chunk_overlap = 50,     # 相邻块的重叠token数，防止信息在边界处丢失
+    separators = ['\n\n', '\n', '。', '.', ' ', ''])     # 优先按段落、句子切分
+
+chunks = splitter.split_text(document)
+print(f'切分为{len(chunks)}个文档块')
