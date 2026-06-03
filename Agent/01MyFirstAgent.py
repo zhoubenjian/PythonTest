@@ -16,7 +16,7 @@ class weather_agent:
     def __init__(self):
         # 简单记忆存储
         self.memory = []
-        # 工具集
+        # 工具集字典
         self.tools = {
             'get_weather': self.get_weather_api,
             'get_advice': self.get_advice_api
