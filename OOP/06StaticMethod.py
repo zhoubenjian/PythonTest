@@ -1,5 +1,6 @@
 class Student:
     def __init__(self, no, name, gener, profession):
+        # __属性：私有属性
         self.__no = no
         self.__name = name
         self.__gender = gener
