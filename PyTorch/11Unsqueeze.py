@@ -9,7 +9,7 @@ print(a.dim())          # 1
 
 print('\n' + '*' * 50 + '\n')
 
-# 索引0处插入新的维度
+# 索引0处插入新的维度（行）
 b = a.unsqueeze(0)
 print(b)                # tensor([[2, 3, 5, 7]])
 print(b.shape)          # torch.Size([1, 4])
@@ -17,6 +17,7 @@ print(b.dim())          # 2
 
 print('\n' + '*' * 50 + '\n')
 
+# 索引1处插入新的维度（列）
 c = a.unsqueeze(1)
 '''
 tensor([[2],
