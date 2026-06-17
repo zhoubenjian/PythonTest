@@ -1,6 +1,7 @@
 '''
 自动求导
 '''
+# import math
 import torch
 
 
@@ -20,3 +21,20 @@ print(x.grad)   # tensor(18.)
 print(y.grad)   # tensor(16.)
 
 
+print('\n' + '*' * 30 + '\n')
+
+
+# 梯度清零！！！
+x.grad.zero_()
+y.grad.zero_()
+
+# 定义函数：lnx + e^y
+z = torch.log(x) + torch.exp(y)
+
+# 反向传播
+z.backward()
+
+# 对x求偏导（y看做常数）
+print(x.grad)   # tensor(0.5000)
+# 对y求偏导（x看做常数）
+print(y.grad)   # tensor(20.0855)

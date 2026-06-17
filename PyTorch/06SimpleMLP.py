@@ -26,8 +26,10 @@ class SimpleMLP(nn.Module):
         self.fc2 = nn.Linear(hidden_size, hidden_size)  # 第二层全连接
         self.fc3 = nn.Linear(hidden_size, output_size)  # 输出层
 
+    '''
+    前向传播过程
+    '''
     def forward(self, x):
-        # 前向传播过程
         x = F.relu(self.fc1(x))     # 激活函数用ReLU
         x = F.relu(self.fc2(x))
         x = self.fc3(x)             # 输出层通常不加激活（损失函数会处理）

@@ -1,5 +1,6 @@
 '''
-前向传播（Forward Propagation），反向传播（Backward Propagation）
+前向传播（Forward Propagation）
+反向传播（Backward Propagation）
 '''
 import torch
 import torch.nn as nn
