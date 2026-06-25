@@ -132,3 +132,17 @@ tensor([[[ 0,  1,  2,  3],
          [44, 45, 46, 47]]])
 '''
 print(t)
+
+print('-' * 30)
+
+# 遍历每一层（最常用）
+for layer in t:
+    print('一层：')
+    print(layer)
+
+print('*' * 30)
+
+# 遍历层 + 行（两层循环）
+for layer in t:
+    for row in layer:
+        print(row)
