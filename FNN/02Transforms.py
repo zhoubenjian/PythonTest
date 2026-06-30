@@ -7,8 +7,10 @@ from PIL import Image
 img = Image.open('./images/2025-10-27.jpg')
 print(f'原图大小：{img.size}')                   # 原图大小：(1920, 1200)
 
+# 定义转换工具 ToTensor()
 # (C, H, W)（通道数、高度、宽度，PyTorch 标准格式），[0,1]范围
 to_tensor = transforms.ToTensor()
+# 图片转化为张量
 img_tensor = to_tensor(img)
 print(f'img_tensor形状：{img_tensor.shape}')    # img_tensor形状：torch.Size([3, 1200, 1920])
 print(f'img_tensor维度：{img_tensor.dim()}')    # img_tensor维度：3
