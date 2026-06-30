@@ -47,14 +47,14 @@ class Perceptron:
 
 # 测试：线性可分数据（AND逻辑）
 X = np.array([
-    [0,0],
-    [0,1],
-    [1,0],
-    [1,1]
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
 ])
 # AND标签
 y = np.array([-1, -1, -1, 1])
 model = Perceptron(lr=0.1, epochs=100)
 model.fit(X, y)
-print("权重:", model.w, "偏置:", model.b)
+print("权重w:", model.w, "\n偏置b:", model.b)
 print("预测:", model.predict(X))
