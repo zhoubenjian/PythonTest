@@ -19,9 +19,10 @@ class Perceptron:
             for xi, yi in zip(X, y):
                 if yi * (np.dot(xi, self.w) + self.b) <= 0:
                     # 参数更新（核心！）
-                    self.w += self.lr * yi * xi     # 更新权重
-                    self.b += self.lr * yi          # 更新偏置
+                    self.w += self.lr * yi * xi     # 更新权重w
+                    self.b += self.lr * yi          # 更新偏置b
                     errors += 1
+            # 如果没有分类错误，提前结束训练
             if errors == 0:
                 break
 
