@@ -16,5 +16,7 @@ import torch.nn as nn
 
 
 relu = nn.ReLU()
+
 sigmoid = nn.Sigmoid()
+
 softmax = nn.Softmax(dim=1)
