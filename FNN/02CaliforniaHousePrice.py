@@ -1,14 +1,14 @@
 '''
-波士顿房价回归预测（连续值输出）
-    13 项房屋 / 周边特征，预测房价（回归任务）
-    波士顿房价回归预测（连续值输出）
+加利福尼亚房价回归预测（连续值输出）
+    8项房屋 / 周边特征，预测房价（回归任务）
+    加利福尼亚房价回归预测（连续值输出）
 '''
+
 
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from sklearn.datasets import load_boston
-from sklearn.datasets import fetch_openml
+from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -16,9 +16,11 @@ from sklearn.preprocessing import StandardScaler
 '''
 1.加载数据集
 '''
-boston = load_boston()
-X = boston.data
-y = boston.target
+housing = fetch_california_housing()
+print(housing.feature_names)        # 收入中位数:'MedInc', 房屋年龄中位数:'HouseAge', 平均房间数:'AveRooms', 平均卧室数:'AveBedrms', 人口数量:'Population', 户均人口数:'AveOccup', 纬度:'Latitude', 经度:'Longitude'
+print(housing.target_names)         # MedHouseVal(房价中位数)
+X = housing.data
+y = housing.target.reshape(-1, 1)
 
 # 标准化
 scaler_x = StandardScaler()
@@ -42,7 +44,7 @@ class BostonHouseMLP(nn.Module):
     # 初始化模型
     def __init__(self):
         super().__init__()
-        self.fc1 = nn.Linear(13, 64)
+        self.fc1 = nn.Linear(8, 64)
         self.fc2 = nn.Linear(64, 32)
         self.fc3 = nn.Linear(32, 1)
         self.relu = nn.ReLU()
