@@ -39,7 +39,10 @@ criterion = nn.CrossEntropyLoss()
 
 # 2.模拟多分类输出 (Logits，未经过Softmax的原始输出)
 # shape: (batch_size, num_classes)
-logits = torch.tensor([[2.0, 1.0, 0.1], [0.5, 2.5, 0.3]])
+logits = torch.tensor([
+    [2.0, 1.0, 0.1],
+    [0.5, 2.5, 0.3]
+])
 
 # 3.真实标签 (类别索引，如 0, 1, 2)
 labels = torch.tensor([0, 1])

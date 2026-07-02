@@ -69,7 +69,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 '''
 epochs = 200
 for epoch in range(epochs):
-    # 切换到训练模式
+    # 切换到训练模式(对于回归任务，训练模式与评估模式没有区别)
     model.train()
     # 预测训练集结果
     pred = model(X_train)
@@ -85,8 +85,9 @@ for epoch in range(epochs):
 
     # 测试集打印损失(每20个epoch打印一次)
     if (epoch + 1) % 20 == 0:
-        # 切换到评估模式
+        # 切换到评估模式(对于回归任务，评估模式与训练模式没有区别)
         model.eval()
+        # 关闭梯度计算，大幅节省显存、提速
         with torch.no_grad():
             # 预测测试集结果
             test_pred = model(X_test)

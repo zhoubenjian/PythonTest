@@ -63,9 +63,12 @@ for epoch in range(100):
     loss.backward()
     # 更新参数权重
     optim.step()
+
     if (epoch + 1) % 20 == 0:
-        pred = torch.argmax(model(X_test), dim=1)
-        acc = (pred == y_test).sum() / len(y_test)
+        # 关闭梯度计算，大幅节省显存、提速
+        with torch.no_grad():
+            pred = torch.argmax(model(X_test), dim=1)
+            acc = (pred == y_test).sum() / len(y_test)
         print(f"Epoch {epoch+1}, Loss:{loss:.3f}, Acc:{acc:.3f}")
 
 
