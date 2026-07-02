@@ -17,8 +17,8 @@ from sklearn.preprocessing import StandardScaler
 1.加载数据集
 '''
 housing = fetch_california_housing()
-print(housing.feature_names)        # 收入中位数:'MedInc', 房屋年龄中位数:'HouseAge', 平均房间数:'AveRooms', 平均卧室数:'AveBedrms', 人口数量:'Population', 户均人口数:'AveOccup', 纬度:'Latitude', 经度:'Longitude'
-print(housing.target_names)         # MedHouseVal(房价中位数)
+# print(housing.feature_names)        # 收入中位数:'MedInc', 房屋年龄中位数:'HouseAge', 平均房间数:'AveRooms', 平均卧室数:'AveBedrms', 人口数量:'Population', 户均人口数:'AveOccup', 纬度:'Latitude', 经度:'Longitude'
+# print(housing.target_names)         # MedHouseVal(房价中位数)
 X = housing.data
 y = housing.target.reshape(-1, 1)
 
@@ -40,7 +40,7 @@ y_test = torch.tensor(y_test, dtype=torch.float32)
 '''
 2.回归MLP
 '''
-class BostonHouseMLP(nn.Module):
+class CaliforniaHouseMLP(nn.Module):
     # 初始化模型
     def __init__(self):
         super().__init__()
@@ -57,8 +57,8 @@ class BostonHouseMLP(nn.Module):
         return out
 
 # 实例化模型
-model = BostonHouseMLP()
-# 定义均方误差函数
+model = CaliforniaHouseMLP()
+# 定义均方误差函数(回归任务)
 criterion = nn.MSELoss()
 # 定义Adam优化器
 optimizer = optim.Adam(model.parameters(), lr=0.001)

@@ -46,7 +46,7 @@ class IrisMLP(nn.Module):
 
 # 实例化模型
 model = IrisMLP()
-# 定义交叉熵损失函数
+# 定义交叉熵损失函数(多分类任务)
 criterion = nn.CrossEntropyLoss()
 # 定义Adam优化器
 optim = optim.Adam(model.parameters(), lr=0.01)
