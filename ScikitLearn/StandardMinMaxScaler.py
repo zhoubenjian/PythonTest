@@ -20,8 +20,16 @@ X = [[10, 19, 51, 99], [11, 91, 31, 17]]
 # 标准化
 scaler = StandardScaler()
 X_std = scaler.fit_transform(X)
-print(f'标准化后：{X_std}')
+print(f'标准化后：\n{X_std}')
 
+
+print('-' * 20)
+
+
+# 归一化
+scaler = MinMaxScaler()
+X_minmax = scaler.fit_transform(X)
+print(f'归一化后：\n{X_minmax}')
 
 
 
