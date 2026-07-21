@@ -3,10 +3,13 @@ from openai import OpenAI
 
 from Brain import AgentBrain
 from Tools import AgentTools
+from dotenv import load_dotenv
 
 
+# 加载.env 文件中的环境变量
+load_dotenv()
 # 这里设置你申请的 key
-DEEPSEEK_API_KEY = ""
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 DEEPSEEK_API_URL = "https://api.deepseek.com/v1"
 
 client = OpenAI(
