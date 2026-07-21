@@ -11,8 +11,8 @@ load_dotenv()
 # 1.初始化OpenAI模型
 llm = ChatOpenAI(
     model = "deepseek-chat",
-    api_key = "",    # 填写你的 API Key
-    base_url = "https://api.deepseek.com/v1"            # 接口地址固定
+    api_key = os.getenv("DEEPSEEK_API_KEY"),    # 填写你的 API Key
+    base_url = "https://api.deepseek.com/v1"    # 接口地址固定
 )
 
 # 2.提示词模版
