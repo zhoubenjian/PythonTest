@@ -17,7 +17,7 @@ def simple_calculator(a, b, operator):
     if operator == '+':
         return f'{a} + {b} = {a + b}'
     elif operator == '-':
-        return 'a - b = %d' % (a - b)
+        return '%d - %d = %d' % (a, b, a - b)
     return '暂不支持此运算！'
 
 
