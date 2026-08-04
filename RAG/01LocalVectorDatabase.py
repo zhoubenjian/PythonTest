@@ -57,7 +57,7 @@ def search(query_key):
 
 # 7.执行一次查询
 if __name__ == '__main__':
-    search("RAG的作用？")
+    search("本地RAG消耗Token吗？")
 
 
 
