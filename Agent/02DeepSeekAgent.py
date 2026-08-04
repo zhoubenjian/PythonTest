@@ -1,16 +1,23 @@
 import os
 from openai import OpenAI
+from dotenv import load_dotenv
+
+
+# 加载.env 文件中的环境变量
+load_dotenv()
+# 这里设置你申请的 key
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
 
 # 初始化客户端
-clinet = OpenAI(
-    api_key = '',
+client = OpenAI(
+    api_key = DEEPSEEK_API_KEY,
     base_url = 'https://api.deepseek.com/v1'
 )
 
 # 调用对话API
 try:
-    response = clinet.chat.completions.create(
+    response = client.chat.completions.create(
         model="deepseek-v4-pro",  # 指定模型，可选 deepseek-v4-flash / deepseek-v4-pro
         messages=[
             {"role": "system", "content": "You are a helpful assistant"},  # 系统角色定义
