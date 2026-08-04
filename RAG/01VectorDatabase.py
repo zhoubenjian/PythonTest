@@ -1,12 +1,11 @@
 '''
 实现本地向量库
 '''
-import os
 import chromadb
 from sentence_transformers import SentenceTransformer
 
 
-# 1.准备你的本地知识库
+# 1.模拟你的本地知识库
 knowledge = [
     "什么是AI：人工智能（AI）是一门使机器模拟人类智能的技术。",
     "什么是RAG：RAG代表检索增强生成，通过检索外部知识提升大模型回答准确性。",
@@ -28,7 +27,7 @@ vectors = embed_model.encode(knowledge)
 client = chromadb.PersistentClient(path="./local_chroma_db")
 
 
-# 4.获取或创建一个”knowledge_base“的集合
+# 4.获取或创建一个”knowledge_base“的知识库集合
 collection = client.get_or_create_collection(name="knowledge_base")
 
 
