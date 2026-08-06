@@ -1,10 +1,15 @@
 '''
 原生 Chroma API，不依赖 LangChain 高层封装
 '''
+import os
 import chromadb
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pypdf import PdfReader
+
+
+# 配置
+PERSIST_PATH = "./local_pdf_chroma_db_02"   # 本地向量库
 
 
 '''
@@ -15,7 +20,7 @@ embedding = SentenceTransformerEmbeddingFunction(
     device = "cpu"
 )
 
-client = chromadb.PersistentClient(path="./local_pdf_chroma_db_02")
+client = chromadb.PersistentClient(path = PERSIST_PATH)
 collections = client.get_or_create_collection(
     name = "pdf_local_rag",
     embedding_function= embedding
