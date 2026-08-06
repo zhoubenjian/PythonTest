@@ -35,7 +35,7 @@ model = ChatOpenAI(
 output_parser = StrOutputParser()
 
 
-# 4.管道符
+# 4.管道符（提示词 | 模型 | 输出）
 chain = prompt | model | output_parser
 
 
