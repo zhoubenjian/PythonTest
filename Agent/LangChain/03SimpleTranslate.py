@@ -1,5 +1,6 @@
 '''
-langchain实现简单翻译功能
+实现简单翻译功能
+    langchain + LLM(DeepSeek)
 '''
 import os
 from dotenv import load_dotenv
