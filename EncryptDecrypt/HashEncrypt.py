@@ -7,7 +7,7 @@ param data: 待哈希的字符串
 param algorithm: 哈希算法名称 (sha1(不安全，不建议使用), sha224, sha256, sha384, sha512)
 return: 十六进制哈希字符串
 """
-def sha_hash(data: str, algorithm: str = 'SHA-256') -> str:
+def sha_hash(data, algorithm = 'SHA-256'):
 
     # 将字符串编码为字节
     data_bytes = data.encode("utf-8")
@@ -48,13 +48,15 @@ if __name__ == '__main__':
 
     text = 'Just have a little faith.'
 
-    print('SHA-1:\t %s' % sha_hash(text, 'sha-1'))
-    print(f'SHA-256: {sha_hash(text, "sha-256")}')
-    print('SHA-512:', sha_hash(text, 'sha-512'))
+    print('MD5:\t ' + hashlib.md5(text.encode("utf-8")).hexdigest())
 
 
     print('\n' + '-' * 50 + '\n')
 
 
-    print('MD5:\t ' + hashlib.md5(text.encode("utf-8")).hexdigest())
+    print('SHA-1:\t %s' % sha_hash(text, 'sha-1'))
+    print(f'SHA-256: {sha_hash(text, "sha-256")}')
+    print('SHA-512:', sha_hash(text, 'sha-512'))
+
+    print(sha_hash(text, 'sha-111'))
 
