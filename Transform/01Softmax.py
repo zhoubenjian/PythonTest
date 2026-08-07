@@ -21,8 +21,9 @@ print(weight)
 
 sum = 0.0
 for i in weight:
+    print('%.2f' % i.item())
     sum += i.item()
-print('%.2f' % sum)
+print('\n%.2f' % sum)
 
 
 
