@@ -1,13 +1,13 @@
 import hashlib
 
 
-"""
-计算字符串的 SHA 哈希值
-param data: 待哈希的字符串
-param algorithm: 哈希算法名称 (sha1(不安全，不建议使用), sha224, sha256, sha384, sha512)
-return: 十六进制哈希字符串
-"""
 def sha_hash(data, algorithm = 'SHA-256'):
+    """
+    计算字符串的 SHA 哈希值
+    :param data: 待哈希的字符串
+    :param algorithm: 哈希算法名称 (sha1(不安全，不建议使用), sha224, sha256, sha384, sha512)
+    :return: 十六进制哈希字符串
+    """
 
     # 将字符串编码为字节
     data_bytes = data.encode("utf-8")
