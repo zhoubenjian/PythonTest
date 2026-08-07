@@ -45,7 +45,16 @@ def sha_hash(data: str, algorithm: str = 'SHA-256') -> str:
 
 
 if __name__ == '__main__':
+
     text = 'Just have a little faith.'
-    print(sha_hash(text, 'sha-1'))
-    print(sha_hash(text, 'sha-256'))
-    print(sha_hash(text, 'sha-512'))
+
+    print('SHA-1:\t %s' % sha_hash(text, 'sha-1'))
+    print(f'SHA-256: {sha_hash(text, "sha-256")}')
+    print('SHA-512:', sha_hash(text, 'sha-512'))
+
+
+    print('\n' + '-' * 50 + '\n')
+
+
+    print('MD5:\t ' + hashlib.md5(text.encode("utf-8")).hexdigest())
+
