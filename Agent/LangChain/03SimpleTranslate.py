@@ -14,7 +14,7 @@ load_dotenv()
 
 # 配置
 source_language = "中文"
-target_language = "英文"
+target_language = "English"
 
 
 # 1.系统提示模版
@@ -58,7 +58,7 @@ if __name__ == "__main__":
         source_language_input = input(f"{source_language}: ")
         conversation_history.append(source_language_input)
 
-        if source_language_input == '退出' or source_language_input == '结束':
+        if '退出' in source_language_input or '结束' in source_language_input:
             break
 
         target_language_result = chain.invoke({
@@ -66,8 +66,9 @@ if __name__ == "__main__":
             "target_language": f"{target_language}",
             "text": f"{source_language_input}"
         })
+
+        print(f'{target_language}: {target_language_result}')
         conversation_history.append(target_language_result)
-        print(f'target language: {target_language_result}')
 
 
     # 历史记录

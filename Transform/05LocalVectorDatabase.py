@@ -4,6 +4,7 @@ os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
 import chromadb
 from sentence_transformers import SentenceTransformer
 
+
 # 本地向量化模型
 model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")    # 支持中文
 
