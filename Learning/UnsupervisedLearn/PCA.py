@@ -17,23 +17,19 @@ y = iris.target     # 标签：3种鸢尾花（0,1,2）
 pca = PCA(n_components = 2)     # 关键参数：指定降维后的维度为2
 X_pca = pca.fit_transform(X)    # 执行降维：150 × 4 => 150 × 2
 
-# 查看各主成分解释的方差比例
-print(pca.explained_variance_ratio_)    # [0.92461872 0.05306648]       第1主成分保留92.46%信息，第2主成分保留5.31%
-
-# 查看主成分方向（特征向量）
-'''
-[[ 0.36138659 -0.08452251  0.85667061  0.3582892 ]
- [ 0.65658877  0.73016143 -0.17337266 -0.07548102]]
-'''
-print(pca.components_)          # 2 × 4矩阵，每一行是一个主成分
+# 3. 查看信息保留情况
+print(f"各主成分方差比例: {pca.explained_variance_ratio_}")            # 各主成分方差比例: [0.92461872 0.05306648]
+print(f"累计方差比例: {sum(pca.explained_variance_ratio_):.2%}")      # 累计方差比例: 97.77%
 
 
-# 3.可视化结果
-'''
-X_pca[:, 0]：第1主成分（X轴）
-X_pca[:, 1]：第2主成分（Y轴）
-c=y：用不同颜色标记3种鸢尾花
-'''
-plt.scatter(X_pca[:, 0], X_pca[:, 1], c = y, cmap='viridis')
-plt.title('PCA of Iris Dataset')
+# 4. 可视化（带图例）
+colors = ['red', 'green', 'blue']
+for i, color in enumerate(colors):
+    plt.scatter(X_pca[y==i, 0], X_pca[y==i, 1],
+                c=color, label=iris.target_names[i])
+plt.xlabel(f'PC1 ({pca.explained_variance_ratio_[0]:.1%})')
+plt.ylabel(f'PC2 ({pca.explained_variance_ratio_[1]:.1%})')
+plt.title('PCA降维可视化（4维 => 2维）')
+plt.legend()
+plt.grid(True, alpha=0.3)
 plt.show()
