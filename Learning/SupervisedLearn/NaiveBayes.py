@@ -24,7 +24,12 @@ texts = [data[0] for data in train_data]    # 文本列表
 labels = [data[1] for data in train_data]   # 标签列表
 
 
-# 2.创建模型 训练模型
+'''
+2.创建模型 训练模型
+CountVectorizer()：这是一个文本特征提取器。它把每封邮件（一段文本）转换成一个数字向量。向量的每个位置代表一个词（如"免费"、"会议"），值代表这个词在该邮件中出现的次数。
+MultinomialNB()：这就是我们的 多项式朴素贝叶斯分类器。它接收上一步产生的数字向量，并学习这些向量与标签（spam/ham）之间的概率关系。
+make_pipeline()：将这两个步骤自动串联，训练时先转换再分类，预测时亦然。
+'''
 model = make_pipeline(CountVectorizer(), MultinomialNB())
 model.fit(texts, labels)
 
