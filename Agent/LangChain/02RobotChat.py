@@ -23,22 +23,22 @@ model = ChatOpenAI(
 )
 
 
-# 3.创建输出解析器，提取纯文本
-output_parser = StrOutputParser()
+# # 3.创建输出解析器，提取纯文本
+# output_parser = StrOutputParser()
 
 
 # 4.创建 Chain
-chain = prompt | model | output_parser
+chain = prompt | model
 
 
 # 5.调用，执行
 result = chain.invoke({
-    'question': '预估中国2026年经济增长率范围'
+    'question': '用一句话介绍菜鸟教程（RUNOOB）'
 })
 
 
 # 6.打印回答内容
-print(result)
+print(result.content)
 
 
 
