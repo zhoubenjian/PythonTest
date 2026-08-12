@@ -1,9 +1,7 @@
 '''
 梯度下降算法
 '''
-
-
-# 代价函数
+# 模拟代价函数
 def cost(x):
     return 2 * x ** 2 - 4 * x + 10
 
@@ -24,7 +22,7 @@ def gradient_descent(alpha, max_iters, diff):
         # 核心更新公式：通过学习率向梯度反方向移动
         new_x = x - (gradient * alpha)
 
-        # 如果梯度每次变化的绝对值几乎为0（小于diff），说明已经到达最低点，可以提前停止（此判断几乎不用，一般判断梯度是否为0）
+        # 如果参数变化量很小，说明已经收敛
         if abs(x - new_x) <= diff:
             print(f'共迭代了：{i}次')
             break
