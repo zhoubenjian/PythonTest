@@ -28,7 +28,7 @@ mse_manual = np.sum(squared_errors) / n     # 平均误差
 print('手动计算MSE：%.2f' % mse_manual)
 
 
-# 使用sklearn实现
+# 使用 sklearn 实现
 from sklearn.metrics import mean_squared_error
 
 mse_sklearn = mean_squared_error(y_true, y_pred)
@@ -54,6 +54,14 @@ y_true_binary = np.array([1, 0, 0, 1])      # 真实类别：是，否，否，�
 
 # 模型预测为"是"这个类别的概率
 y_pred_prob = np.array([.9, .1, .2, .8])    # 预测概率：0.9, 0.1, 0.2, 0.8
+
+# 手动实现 交叉熵损失（Cross-Entropy Loss）
+sum = 0.0
+for t, p in zip(y_true_binary, y_pred_prob):
+    sum += ((t * np.log(p)) + ((1 - t) * np.log(1 - p)))
+ce_loss_manual = -sum / len(y_true_binary)
+print(f'手动计算交叉熵损失（Cross-Entropy Loss）：{ce_loss_manual}')
+
 
 # 使用 sklearn 计算交叉熵损失（对数损失）
 from sklearn.metrics import log_loss
