@@ -7,7 +7,7 @@ for i in range(5):
     print('-' * 50)
 
 
-print('=' * 77)
+print('\n' + '=' * 77 + '\n')
 
 
 for i in range(5):
