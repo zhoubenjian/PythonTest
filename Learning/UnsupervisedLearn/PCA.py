@@ -1,6 +1,8 @@
 '''
 无监督学习：
-    PCA（主要成分分析）
+    PCA（主要成分分析）：
+    PCA 是一种降维技术，它通过线性变换将数据转换到新的坐标系中，使得大部分的方差集中在前几个主成分上。
+    应用场景：图像降维、特征选择、数据可视化。
 '''
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
