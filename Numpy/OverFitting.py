@@ -38,7 +38,7 @@ y = y_true + y_noise                        # 我们实际观测到的数据
 
 
 # 尝试用1阶多项式（直线）拟合
-poly = PolynomialFeatures(degree = 1)
+poly = PolynomialFeatures(degree=1)
 X_poly1 = poly.fit_transform(X.reshape(-1, 1))
 model_under = LinearRegression()
 model_under.fit(X_poly1, y)

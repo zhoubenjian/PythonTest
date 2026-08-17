@@ -1,3 +1,8 @@
+'''
+图像展示向量加法：
+    三角形法则
+    平行四边形法则
+'''
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -51,4 +56,6 @@ ax.arrow(b[0], b[1], a[0], a[1],
 ax.arrow(0, 0, sum[0], sum[1], head_width=0.2, head_length=0.2,
          fc='#2ecc71', ec='#2ecc71', lw=2, ls='dashed', label='a+b')
 ax.legend()
-plt.tight_layout(); plt.show()
+plt.tight_layout();
+
+plt.show()
