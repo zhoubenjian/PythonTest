@@ -20,7 +20,7 @@ plt.rcParams['axes.unicode_minus'] = False
 
 
 np.random.seed(42)
-# 生成等差数列 起始：0；结束：10；个数：20
+# 生成等差数列 起始：0；结束：10(包含10）；个数：20
 X = np.linspace(0, 10, 20)
 # 真实数据规律（我们不知道）
 y_true = np.sin(X)
