@@ -20,10 +20,14 @@ plt.rcParams['axes.unicode_minus'] = False
 
 
 np.random.seed(42)
+# 生成等差数列 起始：0；结束：10；个数：20
 X = np.linspace(0, 10, 20)
-y_true = np.sin(X)                  # 真实数据规律（我们不知道）
-y_noise = np.random.randn(20) * 0.3 # 随机噪声
-y = y_true + y_noise                # 实际观测到的数据
+# 真实数据规律（我们不知道）
+y_true = np.sin(X)
+# 随机噪声
+y_noise = np.random.randn(20) * 0.3
+# 实际观测到的数据
+y = y_true + y_noise
 
 
 plt.scatter(X, y, label='观测数据 (含噪声)', color='blue', alpha=0.6)
