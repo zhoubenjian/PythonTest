@@ -11,7 +11,7 @@ b = np.array([5, 7])
 # 向量加法
 print(f'a + b = {a + b}')       # [7 10]
 
-# 向量减法
+# 向量减法（等价于加法的负向量）
 print(f'a - b = {a - b}')       # [-3 -4]
 
 # 向量数乘
@@ -19,6 +19,16 @@ print(f'2.5 * a = {2.5 * a}')   # [5.  7.5]
 
 # 相反（负）向量
 print(f'-a = {-a}')             # [-2, -3]
+
+# 交换率 a⋅b=b⋅a
+print(f'{np.allclose(a + b, b + a)}')       # True
+
+# 分配率 a⋅(b+c)=a⋅b+a⋅c
+c = np.array([9, 11])
+print(f'{np.allclose((a + b) @ c, a @ c + b @ c)}')       # True
+
+# 自身点积 a⋅a = |a|^2
+print(f'{np.allclose(a @ a, np.linalg.norm(a) ** 2)}')      # True
 
 
 print('\n' + '-' * 20 + '\n')
