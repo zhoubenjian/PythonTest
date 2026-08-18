@@ -55,6 +55,7 @@ u = a / ||a|| = a / np.linalg.norm(a)
 
 # 逆矩阵(只有方阵才有逆矩阵！！！)
     AB = BA = I
+    (AB)^-1 = B^-1A^-1 
     可逆矩阵也叫非奇异矩阵（Non-singular matrix），不可逆的叫奇异矩阵（Singular matrix）
     如果矩阵可逆，其逆矩阵是唯一的
 
