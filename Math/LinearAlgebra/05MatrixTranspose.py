@@ -48,7 +48,7 @@ print(f'\nc @ c_inv是否相等单位阵(主对角线为1，其他为0)：{np.al
 
 
 '''
-奇异矩阵（Singular matrix）没有逆矩阵
+没有逆矩阵的矩阵称为：奇异矩阵（Singular matrix）
 '''
 # det(d)=0, d没有逆矩阵
 d = np.array([
