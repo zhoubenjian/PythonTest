@@ -53,7 +53,7 @@ u = a / ||a|| = a / np.linalg.norm(a)
     (AB)^T = B^TA^T
 
 
-# 伴随矩阵(adj(A))
+# 伴随矩阵(Adjointate matrix)
     伴随矩阵adj(A)是矩阵A代数余子式矩阵的转置
 
 
