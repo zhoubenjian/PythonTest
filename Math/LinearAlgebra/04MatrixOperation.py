@@ -54,3 +54,11 @@ print(f'revenue:\n{revenue}')
 # 手动验证(0,0)位置结果
 manual = sales[0, 0] * price[0, 0] + sales[0, 1] * price[1, 0] + sales[0, 2] * price[2, 0]
 print(f'manual check：{manual} == {revenue[0, 0]}')
+
+
+# 维度不匹配的陷阱
+print(f'\nsales形状：{sales.shape}')                   # sales形状：(3, 3)
+print(f'price.T形状：{price.T.shape}')                 # price.T形状：(3, 2)
+# A @ price.T => (3,3) @ (2,3) 无法计算，不匹配！!!
+# 正确计算
+print(f'price.T @ A形状：{(price.T @ sales).shape}')   # price.T @ A形状：(2, 3)
