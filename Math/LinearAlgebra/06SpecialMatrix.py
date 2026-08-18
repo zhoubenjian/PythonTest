@@ -65,9 +65,3 @@ cov_matrix = np.cov(data, rowvar=False)
 print('协方差矩阵对称：', np.allclose(cov_matrix, cov_matrix.T), sep='')    # True
 
 
-# # 求d的特征向量，特征值
-# eigenvecs, eigenvals = np.linalg.eig(d)
-# print('\nd的特征向量：\n', eigenvecs)
-# print('d的特征值：\n', eigenvals)
-
-
