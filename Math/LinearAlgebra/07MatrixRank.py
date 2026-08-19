@@ -14,12 +14,28 @@
 import numpy as np
 
 
-# 鸡兔同笼
+# 鸡兔同笼（满秩）
 a = np.array([
     [1, 1],
     [2, 4]
 ])
 
-b = np.array([
-    [10, 28]
+# np.linalg.solve会将b作为列向量处理
+b = np.array([10, 28])
+
+x = np.linalg.solve(a, b)
+print('解：', x, sep='')                              # [6. 4.]
+print('秩：', np.linalg.matrix_rank(a), sep='')       # 2
+
+
+# 冗余方程
+c = np.array([
+    [1, 2],
+    [2, 4]
 ])
+print('\n冗余方程组的秩：', np.linalg.matrix_rank(c), sep='')       # 1
+
+
+# 随机大矩阵的秩
+big = np.random.rand(100, 50)
+print('\n随机大矩阵的秩：', np.linalg.matrix_rank(big), sep='')     # 50
