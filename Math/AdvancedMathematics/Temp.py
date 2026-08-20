@@ -34,5 +34,5 @@ f = sp.log(x, 2)
 g = sp.cos(f)
 
 dg_dx = sp.diff(g, x)
-# sympy会对数表达式进行常用对数换底！！！    sympy乘法优于除法
-print(f'g′(x) = {dg_dx}')       # -sin(log(x)/log(2))/(x*log(2)) <=> -log(2)*sin(log(x)/log(2))/x
+# sympy会对数表达式进行常用对数换底！！！
+print(f'g′(x) = {dg_dx}')       # -sin(log(x)/log(2))/(x*log(2))
