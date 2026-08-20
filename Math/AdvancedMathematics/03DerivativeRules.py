@@ -22,7 +22,7 @@ print('f(x) = x**2*sp.exp(x) => ', "f'(x) = ", sp.diff(f, x), sep='')
 
 
 # 链式法则 g(x) = (2x+1)^3
-g = (2*x+1)**3
+g = (2 * x + 1) ** 3
 print('\n链式法则：')
 print('g(x) = (2x+1)^3 => ', "g'(x) = ", sp.diff(g, x), sep='')
 
