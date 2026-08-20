@@ -39,12 +39,11 @@ print(f"一致: {sp.simplify(d_direct - d_chain) == 0}")
 两层网络反向传播
 '''
 w, xi, yi = sp.symbols('w xi yi')
-# 中间变量单独定义为符号
-a = sp.symbols('a')
-
 # a 关于 w 的具体表达式
 a_expr = w * xi
 
+# 中间变量单独定义为符号
+a = sp.symbols('a')
 # loss 定义为关于符号 a 的函数
 loss = (a - yi) ** 2
 
@@ -53,15 +52,16 @@ dL_da = sp.diff(loss, a)
 # ∂a/∂w
 da_dw = sp.diff(a_expr, w)
 
-# 链式求导法则
+# 链式求导法则 代入 a=w*x_i 后相乘
 dL_dw_chain = dL_da.subs(a, a_expr) * da_dw
 
 # 把 loss 完全展开成 w 的函数
 loss_direct = loss.subs(a, a_expr)
 dL_dw_direct = sp.diff(loss_direct, w)
-print(f"\n链式 ∂L/∂w: {sp.simplify(dL_dw_chain)}")
-print(f"直接 ∂L/∂w: {sp.simplify(dL_dw_direct)}")
-print(f"一致: {sp.simplify(dL_dw_chain - dL_dw_direct) == 0}")
+
+print(f"\n链式 ∂L/∂w: {sp.simplify(dL_dw_chain)}")                # 2*xi*(w*xi - yi)
+print(f"直接 ∂L/∂w: {sp.simplify(dL_dw_direct)}")                 # 2*xi*(w*xi - yi)
+print(f"一致: {sp.simplify(dL_dw_chain - dL_dw_direct) == 0}")    # True
 
 
 
