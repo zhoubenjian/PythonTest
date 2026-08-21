@@ -8,6 +8,7 @@ import numpy as np
 def f(x, y):
     return x ** 2 + y ** 2
 
+
 # 梯度
 def grad(x, y):
     return np.array([2 * x, 2 * y])
