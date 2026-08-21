@@ -37,5 +37,4 @@ def monty_hall(switch=True, n_simulations=10000):
 
     return win / n_simulations
 
-
 print(f'\n蒙提霍尔三门问题：换门胜率{monty_hall(switch=True):.4f}，不换门胜率{monty_hall(switch=False):.4f}')
