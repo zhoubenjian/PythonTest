@@ -121,6 +121,10 @@ u = a / ||a|| = a / np.linalg.norm(a)
     V：n x n正交矩阵，列为右奇异向量，两两单位正交，V^T的行是右奇异向量的转置
 
     适用于所有矩阵
+
+
+# 正交矩阵（Orthogonal matrix）
+    正交矩阵的转置等于它的逆矩阵  A^T = A^-1, A^T x A = A x A^T = I
     
     
 

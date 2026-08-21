@@ -23,6 +23,7 @@ print('\n' + '-' * 30 + '\n')
 
 
 # 手动校验 Av = λv
+# 特征矩阵的第i列对应特征值的第i个索引
 for i in range(len(eigvals)):
     # 特征值
     eigval = eigvals[i]
