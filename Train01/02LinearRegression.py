@@ -6,9 +6,18 @@ from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
 import matplotlib.pyplot as plt
 
-# 设置中文字体
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+# -------------------------- 设置中文字体 start --------------------------
+plt.rcParams['font.sans-serif'] = [
+    # Windows 优先
+    'SimHei', 'Microsoft YaHei',
+    # macOS 优先
+    'PingFang SC', 'Heiti TC',
+    # Linux 优先
+    'WenQuanYi Micro Hei', 'DejaVu Sans'
+]
+# 修复负号显示为方块的问题
 plt.rcParams['axes.unicode_minus'] = False
+# -------------------------- 设置中文字体 end --------------------------
 
 
 X_train = np.array([[1], [2], [3], [4], [5]])
