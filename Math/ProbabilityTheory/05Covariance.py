@@ -13,7 +13,7 @@ data = np.random.normal(5, 2, 10000)
 print(f'均值={np.mean(data):.3f}，方差={np.var(data):.3f}，标准差={np.std(data):.3f}')
 
 
-# 协方差
+# 协方差   标准正态分布(μ=0, σ²=1)
 x = np.random.randn(1000)
 # 正相关
 y1 = 0.8 * x + np.random.randn(1000) * 0.3
