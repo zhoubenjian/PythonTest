@@ -27,7 +27,9 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "outputs")
 os.makedirs(OUT, exist_ok=True)
 
 
-# 1. 生成一张合成灰度图：对角渐变 + 中间亮方块
+'''
+1.生成一张合成灰度图：对角渐变 + 中间亮方块
+'''
 size = 64
 img = np.zeros((size, size))
 for i in range(size):
@@ -45,5 +47,24 @@ print("图像矩阵形状 (shape):", img.shape, sep='')
 print("图像矩阵前 3x3 部分：\n", np.round(img[:3, :3], 3), sep='')
 
 
+'''
+2.矩阵运算 = 图像变换
+'''
+# 转置(行列互换)
+img_transposed = img.T
+
+# 水平镜像：列索引反转，行索引保持不变
+img_flip_lr = img[:, ::-1]
+
+# 垂直镜像：行索引反转，列索引保持不变
+img_flip_ud = img[::-1, :]
+
+# 裁剪：切片取子矩阵
+img_crop = img[10:54, 10:54]
+
+
+'''
+3.手写卷积模糊（5x5 卷积核，不调 OpenCV）
+'''
 
 
