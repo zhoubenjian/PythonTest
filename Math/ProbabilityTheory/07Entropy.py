@@ -1,5 +1,5 @@
 '''
-信息量 I(x)=−logP(x)
+信息量 I(x) = −logP(x)
     底数 2 => 单位比特，底数 e => 单位纳特；AI 中通常用自然对数（求导方便）；
 
     反比关系：P(x) 越小（越意外），I(x) 应该越大。负号保证了这一点;
@@ -24,7 +24,7 @@ def entropy(probs):
     probs = np.array(probs)
     # 过滤掉概率为大于0的事件
     probs = probs[probs > 0]
-    return -np.sum(probs * np.log(probs))
+    return -np.sum(probs * np.log2(probs))
 
 
 # 确定分布
@@ -34,11 +34,11 @@ print(entropy([1, 0, 0]))   # -0.0
 
 # 均匀分布
 print('\n' + '--- 均匀分布 ---')
-print(f'{entropy([.5] * 2):.2f}')               # 0.69
-print('%.2f' % entropy([.25] * 4))              # 1.39
-print('{:.2f}'.format(entropy([.2] * 5)))       # 1.61
-print('', f'{entropy([.1] * 10):.2f}', sep='')  # 2.30
+print(f'{entropy([.5] * 2):.2f}')               # 1.00
+print('%.2f' % entropy([.25] * 4))              # 2.00
+print('{:.2f}'.format(entropy([.2] * 5)))       # 2.32
+print('', f'{entropy([.1] * 10):.2f}', sep='')  # 3.32
 
 # 非均匀分布
 print('\n' + '--- 非均匀分布 ---')
-print(f'{entropy([.05, .15, .35, .25, .2]):.2f}')   # 1.47
+print(f'{entropy([.05, .15, .35, .25, .2]):.2f}')   # 2.12
