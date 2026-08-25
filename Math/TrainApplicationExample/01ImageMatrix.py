@@ -66,5 +66,44 @@ img_crop = img[10:54, 10:54]
 '''
 3.手写卷积模糊（5x5 卷积核，不调 OpenCV）
 '''
+def img_blur(img, k = 5):
+    """
+    模拟边缘填充
+    :param img: 输入图像
+    :param k: 模糊半径
+    :return: 模糊后的图像
+    """
+    pad = 5 // 2
+    # 边界用边缘值填充（edge padding）
+    padded = np.pad(img, pad, mode='edge')
+    out = np.zeros_like(img)
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            # 取 k x k 邻域，求均值
+            out[i, j] = padded[i:i+k, j:j+k].mean()     # np.mean(padded[i:pad+i, j:pad+j])
+    return out
 
+# 模糊后的图像矩阵
+img_blur = img_blur(img, k=5)
+print("模糊后矩阵前 3x3 部分：\n", np.round(img_blur[:3, :3], 3))
+
+
+# 4. 保存可视化对比图
+fig, axes = plt.subplots(2, 3, figsize=(12, 8))
+titles = ["原图 (矩阵)", "转置 img.T",
+          "水平镜像 img[:, ::-1]",
+          "垂直镜像 img[::-1, :]",
+          "裁剪 img[10:54, 10:54]",
+          "均值模糊 (5x5 卷积)"]
+images = [img, img_transposed, img_flip_lr,
+          img_flip_ud, img_crop, img_blur]
+
+for ax, title, im in zip(axes.flat, titles, images):
+    ax.imshow(im, cmap="gray", vmin=0, vmax=1)
+    ax.set_title(title, fontsize=11)
+    ax.axis("off")
+
+plt.tight_layout()
+plt.savefig(os.path.join(OUT, "01_image_as_matrix.png"), dpi=130)
+print(f"\n可视化结果已保存到 {OUT}/01_image_as_matrix.png")
 
