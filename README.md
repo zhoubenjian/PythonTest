@@ -3,10 +3,44 @@ Learning artificial intelligence...
 
 
 
+# pip/pip3安装依赖
 pip install 包名 -i https://pypi.tuna.tsinghua.edu.cn/simple
 清华源：https://pypi.tuna.tsinghua.edu.cn/simple
 腾讯：https://mirrors.cloud.tencent.com/pypi/simple
 阿里：https://mirrors.aliyun.com/pypi/simple/
+
+# 指定版本安装
+pip3 install 包名==版本号
+
+# 最低版本及以上
+pip3 install 包名>=版本号
+
+
+# 检查依赖冲突
+pip3 check  
+
+
+# 升级某个包
+pip3 install --upgrade 包名
+
+
+# 卸载包
+pip3 uninstall 包名
+
+
+# 查看某个包详细信息（版本、依赖、路径）
+pip3 show numpy
+
+
+# 列出全部已安装
+pip3 list
+
+# 过滤关键词（linux/mac）
+pip3 list | grep numpy
+
+# windows cmd
+pip3 list | findstr numpy
+
 
 
 
