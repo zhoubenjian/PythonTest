@@ -1,5 +1,6 @@
 '''
 反向传播
+    链式求导
 '''
 import torch
 
@@ -20,6 +21,7 @@ loss = (y_pred - y) ** 2
 
 # 反向传播
 loss.backward()
+
 
 print('------- Pytorch验证 -------')
 '''
@@ -52,7 +54,18 @@ print(f"∂L/∂b1 = {b1.grad.item():.1f}  (手算: -6)")
        = 2*(1 - 4) * (1) * (1) * (2)
        = -12
 '''
-print(f"∂L/∂w1 = {w1.grad.item():.1f}  (手算: -12)")
+print(f"∂L/∂w1 = {w1.grad.item():.1f} (手算: -12)")
+
+
+# 梯度下降
+lr = 0.01
+with torch.no_grad():
+    w1 -= lr * w1.grad
+    w2 -= lr * w2.grad
+    new_loss = ((w2 * torch.relu(w1 * x + b1) + b2 - y) ** 2).item()
+
+print(f"\n原损失:{loss.item():.1f} => 新损失:{new_loss:.2f}")
+print(f"损失减小了！")
 
 
 
