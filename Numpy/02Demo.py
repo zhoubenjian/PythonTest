@@ -28,10 +28,8 @@ print(b)
 print('---------------------')
 
 c = a + b
-# <class 'numpy.ndarray'>
-print(type(c))
-# (5, 5)
-print(c.shape)
+print(type(c))      # <class 'numpy.ndarray'>
+print(c.shape)      # (5, 5)
 '''
 [[2. 1. 1. 1. 1.]
  [1. 2. 1. 1. 1.]

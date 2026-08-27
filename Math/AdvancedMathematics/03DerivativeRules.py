@@ -18,20 +18,20 @@ for name, func in funcs.items():
 # 复合函数
 f = x**2*sp.exp(x)
 print('\n复合函数的导数：')
-print('f(x) = x**2*sp.exp(x) => ', "f'(x) = ", sp.diff(f, x), sep='')
+print('f(x) = x**2*sp.exp(x) => ', "f'(x) = ", sp.diff(f, x), sep='')       # f'(x) = x**2*exp(x) + 2*x*exp(x)
 
 
 # 链式法则 g(x) = (2x+1)^3
 g = (2 * x + 1) ** 3
 print('\n链式法则：')
-print('g(x) = (2x+1)^3 => ', "g'(x) = ", sp.diff(g, x), sep='')
+print('g(x) = (2x+1)^3 => ', "g'(x) = ", sp.diff(g, x), sep='')       # g'(x) = 6*(2*x + 1)**2
 
 # f(g(x)) = sin(x^2)
 # 直接求导
 d_direct = sp.diff(sp.sin(x**2), x)
 d_chain = sp.cos(x**2) * 2*x
-print(f"\n直接求导: {d_direct}")
-print(f"链式法则: cos(x^2)·2x = {d_chain}")
+print(f"\n直接求导: {d_direct}")                # 2*x*cos(x**2)
+print(f"链式法则: cos(x^2)·2x = {d_chain}")     # cos(x^2)·2x = 2*x*cos(x**2)
 print(f"一致: {sp.simplify(d_direct - d_chain) == 0}")
 
 
