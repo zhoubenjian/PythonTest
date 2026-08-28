@@ -44,7 +44,7 @@ model = models.Sequential([
     layers.Dense(128, activation='relu'),
 
     # 全连接输出层：10 个神经元，使用 Softmax 激活函数输出概率分布
-    layers.Dense(10, activation='softmax'),
+    layers.Dense(10, activation='softmax')
 ])
 
 '''
@@ -70,7 +70,7 @@ model.compile(
     loss='sparse_categorical_crossentropy',
 
     # 3.评估指标：我们选择准确率（Accuracy）在训练和测试过程中，监控模型的分类准确率
-    metrics=['accuracy'],
+    metrics=['accuracy']
 )
 
 
