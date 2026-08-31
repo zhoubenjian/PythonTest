@@ -19,7 +19,7 @@ class ModelTrainer:
     """模型训练器"""
 
     def __init__(self):
-        self.models = {}          # 存储训练好的模型
+        self.models = {}            # 存储训练好的模型
         self.training_history = {}  # 存储训练历史
 
     def train(self, model_type: str, data_dict: dict) -> dict:
@@ -157,12 +157,13 @@ class ModelTrainer:
 
 if __name__ == "__main__":
     # 测试训练流程
-    from data_loader import load_raw_data
+    from data_loader import load_raw_data, save_raw_data
     from preprocessor import DataPreprocessor
 
     # 1. 加载数据
     print("📊 加载数据...")
     df = load_raw_data()
+    save_raw_data(df)
 
     # 2. 数据预处理
     print("\n🔧 数据预处理...")

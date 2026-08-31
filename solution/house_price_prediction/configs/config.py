@@ -24,6 +24,7 @@ PROCESSED_DATA_DIR = os.path.join(DATA_DIR, 'processed')
 # 确保项目存在
 os.makedirs(PROJECT_ROOT, exist_ok=True)
 os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
+os.makedirs(RAW_DATA_DIR, exist_ok=True)
 
 
 '''
@@ -53,7 +54,7 @@ TARGET_COLUMN = "MedHouseVal"  # 目标：房价中位数
 RANDOM_STATE = 42
 # 训练集比例
 TRAIN_SIZE = 0.8
-# 验证集比例(剩余为测试集)
+# 验证集比例10%：调整超参数、选择模型、防止过拟合，训练过程中多次使用。(剩余为测试集10%：最终评估模型泛化能力，训练完成后一次性使用。)
 VAL_SIZE = 0.1
 
 

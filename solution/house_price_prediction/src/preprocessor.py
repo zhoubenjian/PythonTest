@@ -16,7 +16,7 @@ sys.path.insert(0, PROJECT_ROOT)
 from configs.config import (
     FEATURE_COLUMNS, TARGET_COLUMN,
     TRAIN_SIZE, VAL_SIZE, RANDOM_STATE,
-    PROCESSED_DATA_DIR,
+    PROCESSED_DATA_DIR
 )
 
 
@@ -49,9 +49,9 @@ class DataPreprocessor:
         # 先划分出测试集
         X_temp, X_test, y_temp, y_test = train_test_split(
             X, y,
-            train_size=TRAIN_SIZE + VAL_SIZE,
-            test_size=1 - (TRAIN_SIZE + VAL_SIZE),
-            random_state=RANDOM_STATE
+            train_size = TRAIN_SIZE + VAL_SIZE,
+            test_size = 1 - (TRAIN_SIZE + VAL_SIZE),
+            random_state = RANDOM_STATE
         )
 
         # 再从剩余中划分出验证集
