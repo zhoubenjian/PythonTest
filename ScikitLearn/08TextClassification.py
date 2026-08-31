@@ -20,7 +20,11 @@
             优点：简单直观
             缺点：忽略词序和语义
 
-        TF-IDF
+        TF-IDF:
+            如果"apple"在一篇文档中出现很多次（TF高），说明这篇文档在讨论苹果
+            如果""apple"在很多文档中都出现（IDF低），说明这个词很常见，区分度低
+            综合起来，TF-IDF能选出对当前文档重要且在整个数据集中有区分度的词
+
             描述：考虑词的重要性
             优点：比BoW更精确
             缺点：仍然忽略上下文
@@ -140,6 +144,14 @@ print("=" * 50)
 
 '''
 3. 特征提取和模型训练
+TF-IDF = 词频(TF) × 逆文档频率(IDF)
+    TF-IDF(t, d) = TF(t, d) × IDF(t)
+
+TF（词频 Term Frequency）:衡量一个词在当前文档中的重要性
+    TF(t, d) = 词t在文档d中出现的次数 / 文档d的总词数
+
+IDF（逆文档频率 Inverse Document Frequency）:衡量一个词的稀有程度，稀有词更有区分度
+    IDF(t) = log(总文档数 / 包含词t的文档数 + 1)
 '''
 # 创建 Pipeline
 pipeline = Pipeline([
