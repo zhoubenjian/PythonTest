@@ -48,3 +48,20 @@ Thumbs.db
 /mvnw.cmd
 /mvnw
 /.env
+
+
+
+# ========== Python 缓存 ==========
+__pycache__/
+*.pyc
+*.pyo
+
+# ========== solution 下各项目：数据/模型 ==========
+solution/*/data/raw/*.csv
+solution/*/data/processed/*.npz
+solution/*/models/*.pkl
+
+# ========== 保留 .gitkeep 占位文件 ==========
+!solution/*/data/raw/.gitkeep
+!solution/*/data/processed/.gitkeep
+!solution/*/models/.gitkeep
