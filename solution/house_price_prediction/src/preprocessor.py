@@ -6,6 +6,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -16,7 +17,7 @@ sys.path.insert(0, PROJECT_ROOT)
 from configs.config import (
     FEATURE_COLUMNS, TARGET_COLUMN,
     TRAIN_SIZE, VAL_SIZE, RANDOM_STATE,
-    PROCESSED_DATA_DIR
+    PROCESSED_DATA_DIR, MODEL_DIR
 )
 
 
@@ -101,6 +102,33 @@ class DataPreprocessor:
         return self.scaler_y.inverse_transform(y_scaled).ravel()
 
 
+    def save(self, save_dir: str = None) -> None:
+        """
+        保存标准化器（scaler_X 和 scaler_y）
+        :param save_dir: 保存目录，默认 MODEL_DIR
+        """
+        save_dir = save_dir or MODEL_DIR
+        os.makedirs(save_dir, exist_ok=True)
+        joblib.dump(self.scaler_X, os.path.join(save_dir, "scaler_X.pkl"))
+        joblib.dump(self.scaler_y, os.path.join(save_dir, "scaler_y.pkl"))
+        print(f"💾 预处理器(scaler)已保存: {save_dir}")
+
+
+    @classmethod
+    def load(cls, load_dir: str = None) -> "DataPreprocessor":
+        """
+        加载已保存的预处理器
+        :param load_dir: 加载目录，默认 MODEL_DIR
+        :return: DataPreprocessor 实例
+        """
+        load_dir = load_dir or MODEL_DIR
+        preprocessor = cls()
+        preprocessor.scaler_X = joblib.load(os.path.join(load_dir, "scaler_X.pkl"))
+        preprocessor.scaler_y = joblib.load(os.path.join(load_dir, "scaler_y.pkl"))
+        print(f"📂 预处理器(scaler)已加载: {load_dir}")
+        return preprocessor
+
+
     def save_processed_data(self, data_dict: dict) -> None:
         """
         保存预处理后的数据
@@ -159,5 +187,3 @@ if __name__ == "__main__":
         print(f"{key}: {data_dict[key].shape}")
 
     print("\n✅ 数据预处理测试通过！")
-
-

@@ -21,10 +21,14 @@ DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
 RAW_DATA_DIR = os.path.join(DATA_DIR, 'raw')
 PROCESSED_DATA_DIR = os.path.join(DATA_DIR, 'processed')
 
-# 确保项目存在
+# 模型路径
+MODEL_DIR = os.path.join(PROJECT_ROOT, 'models')
+
+# 确保目录存在
 os.makedirs(PROJECT_ROOT, exist_ok=True)
 os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
 os.makedirs(RAW_DATA_DIR, exist_ok=True)
+os.makedirs(MODEL_DIR, exist_ok=True)
 
 
 '''

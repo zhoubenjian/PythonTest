@@ -12,7 +12,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PROJECT_ROOT)
 
-from configs.config import MODEL_CONFIGS
+from configs.config import MODEL_CONFIGS, MODEL_DIR
 
 
 class ModelTrainer:
@@ -170,15 +170,15 @@ if __name__ == "__main__":
     preprocessor = DataPreprocessor()
     data_dict = preprocessor.prepare_data(df)
 
-    # 3. 训练模型
-    print("\n🚀 开始训练...")
+    # 3. 训练所有模型
+    print("\n🚀 开始训练所有模型...")
     trainer = ModelTrainer()
-    results = trainer.train("ridge", data_dict)
+    trainer.train_all(data_dict)
 
-    # 4. 保存模型
-    print("\n💾 保存模型...")
-    save_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "models")
-    save_path = os.path.join(save_dir, "ridge_model.pkl")
-    trainer.save_model("ridge", save_path)
+    # 4. 保存所有交付物
+    print("\n💾 保存所有模型...")
+    preprocessor.save()
+    preprocessor.save_processed_data(data_dict)
+    trainer.save_all_models(MODEL_DIR)
 
-    print("\n✅ 训练器测试通过！")
+    print("\n✅ 训练器测试通过！所有模型已保存！")
