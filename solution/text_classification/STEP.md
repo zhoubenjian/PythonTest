@@ -1,3 +1,13 @@
+顺序 1: configs/config.py          ← 无 __main__，自动导入验证
+顺序 2: src/model.py               ← 独立，创建 4 个模型
+顺序 3: src/data_loader.py         ← 加载本地数据
+顺序 4: src/preprocessor.py        ← 依赖 data_loader
+顺序 5: src/trainer.py             ← 依赖 preprocessor + model
+顺序 6: src/evaluator.py           ← 依赖 trainer
+顺序 7: src/predictor.py           ← 依赖 trainer.py 跑完的模型文件
+
+
+
 # 文本分类项目 — 工作原理详解
 
 ## 一、整体架构
