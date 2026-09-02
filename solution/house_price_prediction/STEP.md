@@ -15,7 +15,7 @@
 项目遵循典型的 MLOps 流水线设计，分为 5 个阶段：
 
 ```
-数据加载 → 数据预处理 → 模型训练 → 模型评估 → 模型预测
+数据加载 => 数据预处理 => 模型训练 => 模型评估 => 模型预测
 ```
 
 ---
@@ -56,11 +56,11 @@
 `get_model(model_type)` 根据配置字符串动态创建 sklearn 模型：
 
 ```python
-# config 中的 name 字段 → sklearn 类
-"LinearRegression" → LinearRegression()
-"Ridge"            → Ridge(alpha=0.1)
-"RandomForestRegressor" → RandomForestRegressor(n_estimators=100, max_depth=10)
-"MLPRegressor"      → MLPRegressor(hidden_layer_sizes=(128,64,32), ...)
+# config 中的 name 字段 => sklearn 类
+"LinearRegression" => LinearRegression()
+"Ridge"            => Ridge(alpha=0.1)
+"RandomForestRegressor" => RandomForestRegressor(n_estimators=100, max_depth=10)
+"MLPRegressor"      => MLPRegressor(hidden_layer_sizes=(128,64,32), ...)
 ```
 
 通过 `globals().get(model_name)` 反射查找类，实现配置驱动的模型创建，新增模型只需改 config 即可。
@@ -71,7 +71,7 @@
 
 | 方法 | 作用 |
 |------|------|
-| `train(model_type, data_dict)` | 训练单个模型：创建模型 → `fit()` → 计算训练/验证集指标 → 存入 `self.models` |
+| `train(model_type, data_dict)` | 训练单个模型：创建模型 => `fit()` => 计算训练/验证集指标 => 存入 `self.models` |
 | `train_all(data_dict)` | 遍历 `MODEL_CONFIGS` 训练所有模型，并打印性能对比表 |
 | `save_model()` / `save_all_models()` | 用 `joblib.dump()` 保存模型到 `.pkl` 文件 |
 | `_calculate_metrics()` | 计算 MSE、RMSE、MAE、R² 四个指标 |
@@ -92,7 +92,7 @@
 
 | 方法 | 作用 |
 |------|------|
-| `predict(features)` | 支持 dict/DataFrame/ndarray 三种输入 → 标准化 → 预测 → **反标准化回原始尺度** |
+| `predict(features)` | 支持 dict/DataFrame/ndarray 三种输入 => 标准化 => 预测 => **反标准化回原始尺度** |
 | `predict_single(**kwargs)` | 单样本预测，关键字参数如 `MedInc=5.0` |
 | `predict_batch(feature_list)` | 批量预测，传入字典列表 |
 
@@ -148,13 +148,13 @@ Step 3: interactive_mode() 或 batch_demo()  交互式/批量预测
           │ data_dict (6 个数组)
           ▼
 ┌─────────────────────┐
-│   ModelTrainer      │  .fit() → 保存 .pkl
+│   ModelTrainer      │  .fit() => 保存 .pkl
 └─────────┬───────────┘
           │
     ┌─────┴──────┐
     ▼            ▼
 ┌──────────┐ ┌──────────┐
-│ Evaluator│ │Predictor │  反标准化 → 原始尺度
+│ Evaluator│ │Predictor │  反标准化 => 原始尺度
 └──────────┘ └──────────┘
 ```
 

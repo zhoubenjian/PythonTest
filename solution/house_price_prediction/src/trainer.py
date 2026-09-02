@@ -155,6 +155,7 @@ class ModelTrainer:
             "r2": r2,
         }
 
+
 if __name__ == "__main__":
     # 测试训练流程
     from data_loader import load_raw_data, save_raw_data
