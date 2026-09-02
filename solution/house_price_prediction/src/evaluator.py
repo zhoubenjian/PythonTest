@@ -28,8 +28,11 @@ class ModelEvaluator:
         """
         y_pred = model.predict(X)
 
+        # MSE(均方误差，越小越好)
         mse = mean_squared_error(y, y_pred)
+        # MAE(均绝对误差，越小越好)
         mae = mean_absolute_error(y, y_pred)
+        # R²(模型解释方差的比例，越接近1越好)
         r2 = r2_score(y, y_pred)
 
         return {

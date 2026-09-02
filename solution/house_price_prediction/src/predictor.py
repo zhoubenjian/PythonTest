@@ -38,7 +38,7 @@ class HousePricePredictor:
         """
         # 1. 转换输入格式
         if isinstance(features, dict):
-            # 单个样本字典 → DataFrame
+            # 单个样本字典 => DataFrame
             df = pd.DataFrame([features])
             X = self.preprocessor.scaler_X.transform(df)
         elif isinstance(features, pd.DataFrame):
