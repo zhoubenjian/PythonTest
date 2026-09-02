@@ -26,3 +26,18 @@ print(list3)            # [31, 29, 23, 19, 17, 13, 11, 7, 5, 3, 2]
 # 排序（顺序）（改变原列表）
 list3.sort()
 print(list3)            # [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31]
+
+
+print('\n' + '=' * 50 + '\n')
+
+
+# list切片(左闭右开)
+a = ['Alex', 'Bob', 'Charlie', 'David', 'Eve', 'Frank', 'Grace']
+print(a[0:3])          # ['Alex', 'Bob', 'Charlie']
+
+print(a[-4:-1])        # ['David', 'Eve', 'Frank']
+
+print(a[:-2])          # ['Alex', 'Bob', 'Charlie', 'David', 'Eve']
+
+# 单个元素
+print(a[-1])           # Grace

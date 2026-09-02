@@ -1,5 +1,5 @@
 '''
-模拟余弦相似度文本推荐
+模拟基于余弦相似度的文本推荐
 '''
 import numpy as np
 import jieba
@@ -19,7 +19,7 @@ sentences = [
 # 2.切分中文分词
 def tokenize(text):
     """
-    中文分词（正则匹配去除非中文字符，再分词）
+    中文分词（正则匹配去除非中文字符，再切分分词）
     :param text: 输入文本
     :return: 分词后的列表(返回值是list)
     """
