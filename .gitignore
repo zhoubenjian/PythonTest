@@ -62,6 +62,6 @@ solution/*/data/processed/*.npz
 solution/*/models/*.pkl
 
 # ========== 保留 .gitkeep 占位文件 ==========
-!solution/*/data/raw/.gitkeep
-!solution/*/data/processed/.gitkeep
-!solution/*/models/.gitkeep
+!statge/solution/*/data/raw/.gitkeep
+!statge/solution/*/data/processed/.gitkeep
+!statge/solution/*/models/.gitkeep
