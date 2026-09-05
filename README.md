@@ -5,9 +5,13 @@ Learning artificial intelligence...
 
 # pip/pip3安装依赖
 pip install 包名 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
 清华源：https://pypi.tuna.tsinghua.edu.cn/simple
+
 腾讯：https://mirrors.cloud.tencent.com/pypi/simple
+
 阿里：https://mirrors.aliyun.com/pypi/simple/
+
 
 # 指定版本安装
 pip3 install 包名==版本号
