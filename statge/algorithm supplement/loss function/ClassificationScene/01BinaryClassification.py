@@ -10,6 +10,8 @@
 '''
 import torch
 import torch.nn as nn
+import tensorflow as tf
+from sklearn.metrics import log_loss
 import numpy as np
 
 
@@ -46,6 +48,11 @@ if __name__ == '__main__':
     # 真实标签
     y_true = np.array([1, 0, 1, 0, 1])
 
+    # 模型原始输出（Logits，未经过 Sigmoid）
+    y_input = np.array([2.3, -1.5, 0.8, -2.1, 3.2])
+    # 模型预测概率（经过 Sigmoid）
+    y_pred = np.array([0.9, 0.2, 0.7, 0.1, 0.99])
+
 
     '''
     PyTorch损失函数 
@@ -54,16 +61,48 @@ if __name__ == '__main__':
     criterion = nn.BCEWithLogitsLoss()
     # 模型原始输出（Logits，未经过 Sigmoid）
     # 注意：这里是任意实数，不是概率！
-    logits = torch.tensor([2.3, -1.5, 0.8, -2.1, 3.2])
-    loss = criterion(logits, torch.tensor([1.0, 0.0, 1.0, 0.0, 1.0]))
+    logits = torch.tensor(y_input)
+    # int => float
+    loss = criterion(logits, torch.tensor(y_true.astype(float)))
     print(f'PyTorch损失函数的损失值(Sigmoid + 二元交叉熵): {loss.item():.4f}')    # 0.1647
 
     print("-" * 30)
 
     # 二元交叉熵(已有概率值)
     criterion = nn.BCELoss()
-    loss = criterion(torch.tensor([0.9, 0.2, 0.7, 0.1, 0.99]), torch.tensor([1.0, 0.0, 1.0, 0.0, 1.0]))
+    loss = criterion(torch.tensor(y_pred.astype(np.float32)), torch.tensor(y_true.astype(np.float32)))
     print(f'PyTorch损失函数的损失值(二元交叉熵): {loss.item():.4f}')    # 0.1601
+
+
+    print("\n" + "=" * 50 + "\n")
+
+
+    '''
+    TensorFlow损失函数
+    '''
+    # from_logits=True：输入是 Logits（未经过 Sigmoid）
+    loss_fn = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    logits = tf.constant(y_input)
+    loss = loss_fn(tf.constant(y_true), logits)
+    print(f'TensorFlow损失函数的损失值(二元交叉熵): {loss.numpy():.4f}')  # 0.1647
+
+    print("-" * 30)
+    
+    # from_logits=False：输入是概率值（已经过 Sigmoid）
+    loss_fn = tf.keras.losses.BinaryCrossentropy(from_logits=False)
+    loss = loss_fn(tf.constant(y_true), tf.constant(y_input))
+    print(f'TensorFlow损失函数的损失值(二元交叉熵): {loss.numpy():.4f}')  # 0.1601
+
+
+    print("\n" + "=" * 50 + "\n")
+
+
+    '''
+    Scikit-learn Log Loss
+    '''
+    # 输入：真实标签（0或1），预测概率（sigmoid后的概率值，0到1之间的浮点数）
+    loss = log_loss(y_true, y_pred)
+    print(f'Scikit-learn Log Loss: {loss:.4f}')     # 0.1601
 
 
     print("\n" + "=" * 50 + "\n")
@@ -73,7 +112,6 @@ if __name__ == '__main__':
     一般情况
     '''
     # 模型预测概率
-    y_pred = np.array([0.9, 0.2, 0.7, 0.1, 0.99])
     loss = binary_cross_entropy(y_true, y_pred)
     print(f'(手动实现)一般情况的损失值: {loss:.4f}')          # 0.1601
 
