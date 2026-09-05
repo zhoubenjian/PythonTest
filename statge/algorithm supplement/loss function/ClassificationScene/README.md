@@ -19,14 +19,14 @@
 
     PyTorch 封装方法（最常用）
         二分类：
-            方式一：BCEWithLogitsLoss（强烈推荐）直接使用    
+            方式一：BCEWithLogitsLoss(logits, y_true)（强烈推荐）直接使用    
                 criterion = nn.BCEWithLogitsLoss()
                     输入：logits（未经过 Sigmoid 的原始输出），不是 y_pred（概率）
                     优点：内部做了数值稳定，不会出现 log(0) 或梯度爆炸
                     输出：标量损失值
 
             方式二：BCELoss（不推荐，极少场景）
-                criterion = nn.BCELoss()
+                criterion = nn.BCELoss(y_pred, y_true)
                     输入：y_pred（概率），不是 logits（未经过 Sigmoid 的原始输出）
                     优点：内部不做数值稳定，会报错（y_pred 为 0 或 1）
                     输出：标量损失值
@@ -37,6 +37,7 @@
         二分类：
             方式一：直接使用（推荐）
                 loss_fn = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+                loss_fn(y_true, logits)
                     from_logits=True：输入是 Logits（未经过 Sigmoid）
                     from_logits=False：输入是概率（已经过 Sigmoid）
 
