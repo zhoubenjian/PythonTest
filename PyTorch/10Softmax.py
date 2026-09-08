@@ -33,8 +33,42 @@ if __name__ == '__main__':
     weights = F.softmax(score, dim=-1)
     print(f"torch softmax: {weights}")      # torch softmax: tensor([0.0900, 0.2447, 0.6652])
 
+
     print('-' * 55)
+
 
     # 手动实现Softmax函数
     weights = manual_softmax(np.array([0.0, 1.0, 2.0]))
-    print(f'manual softmax: {[round(weight, 4) for weight in weights]}')      # manual softmax: [0.0900 0.2447 0.6652]
+    print(f'manual softmax: {np.round(weights, 4)}')  # manual softmax: [0.0900 0.2447 0.6652]
+
+
+    print("\n" + "-" * 55 + "\n")
+
+
+    # 矩阵按列（axis=0）进行Softmax计算
+    weights = manual_softmax(np.array([
+        [1.0, 2.0, 3.0],
+        [2.0, 3.0, 1.0],
+        [3.0, 1.0, 2.0]
+    ]), 0)
+    '''
+    [[0.09   0.2447 0.6652]
+     [0.2447 0.6652 0.09  ]
+     [0.6652 0.09   0.2447]]
+    '''
+    print(f'matrix manual softmax（axis=0）: \n{np.round(weights, 4)}')
+
+    print('=' * 20)
+
+    # 矩阵按行（axis=1）进行Softmax计算
+    weights = manual_softmax(np.array([
+        [1.0, 2.0, 3.0],
+        [2.0, 3.0, 1.0],
+        [3.0, 1.0, 2.0]
+    ]), 1)
+    '''
+    [[0.09   0.2447 0.6652]
+     [0.2447 0.6652 0.09  ]
+     [0.6652 0.09   0.2447]]
+    '''
+    print(f"matrix manual softmax（axis=1）: \n{np.round(weights, 4)}")
