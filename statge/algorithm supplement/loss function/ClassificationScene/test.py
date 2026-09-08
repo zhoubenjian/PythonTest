@@ -40,6 +40,10 @@ row_max_value = np.max(arr, axis=0, keepdims=True)
 print(row_max_value)        # [[23 29 31 37]]
 print(np.max(arr, axis=0, keepdims=False))      # [23 29 31 37]
 
+
+print("-" * 30)
+
+
 # 每行(axis=1)的最大值
 column_max_value = np.max(arr, axis=1, keepdims=True)
 '''
@@ -49,3 +53,9 @@ column_max_value = np.max(arr, axis=1, keepdims=True)
 '''
 print(column_max_value)
 print(np.max(arr, axis=1, keepdims=False))      # [ 7 19 37]
+
+
+score = np.array([0.0, 1.0, 2.0])
+max_value = np.max(score, axis=-1, keepdims=True)
+shifted = score - max_value
+print(shifted)

@@ -48,4 +48,9 @@ if __name__ == '__main__':
     print(f'每个样本损失: {sample_losses}')
 
 
+    print("-" * 30)
+
+
+
+
 
