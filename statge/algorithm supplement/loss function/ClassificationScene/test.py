@@ -23,3 +23,29 @@ Sigmoid = 1 / (1 + exp(-x))
 '''
 c = torch.sigmoid(a)
 print(c)    # tensor([0.8176, 0.3100, 0.7503, 0.2891, 0.7109])
+
+
+print('-' * 55)
+
+
+# 3 x 4 矩阵
+arr = np.array([
+    [2, 3, 5, 7],
+    [11, 13, 17, 19],
+    [23, 29, 31, 37]
+])
+
+# 每列(axis=0)的最大值
+row_max_value = np.max(arr, axis=0, keepdims=True)
+print(row_max_value)        # [[23 29 31 37]]
+print(np.max(arr, axis=0, keepdims=False))      # [23 29 31 37]
+
+# 每行(axis=1)的最大值
+column_max_value = np.max(arr, axis=1, keepdims=True)
+'''
+[[ 7]
+ [19]
+ [37]]
+'''
+print(column_max_value)
+print(np.max(arr, axis=1, keepdims=False))      # [ 7 19 37]
