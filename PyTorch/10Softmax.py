@@ -1,7 +1,7 @@
 '''
 Softmax 函数
     1.用于将一个向量转换为一个概率分布
-    2.保序性
+    2.保序性（它不改变向量原本的大小顺序）
     3.温度系数 T
         当 T=1：就是标准的 Softmax（你现在掌握的）。
         当 T>1（比如 5、10）：概率分布会变得更平滑（小概率的类别概率会提升，模型输出更“柔和”）。
@@ -12,18 +12,18 @@ import torch
 import torch.nn.functional as F
 
 
-def manual_softmax(score, axis=-1):
+def manual_softmax(score, axis=-1, keepdims=True):
     '''
     手动实现Softmax函数
     :param score: 输入向量
     :param axis: 指定轴进行计算，默认最后一个轴
-    :param keepdims: 是否保留输入的维度，默认False
+    :param keepdims: 是否保留输入的维度，默认True
     :return: 输出概率分布
     '''
     # 减去最大值防止溢出，keepdims保证广播正确
-    shifted = score - np.max(score, axis, keepdims=True)
+    shifted = score - np.max(score, axis, keepdims=keepdims)
     exp_shifted = np.exp(shifted)
-    return exp_shifted / np.sum(exp_shifted, axis, keepdims=True)
+    return exp_shifted / np.sum(exp_shifted, axis, keepdims=keepdims)
 
 
 if __name__ == '__main__':
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     print(f"torch softmax: {weights}")      # torch softmax: tensor([0.0900, 0.2447, 0.6652])
 
 
-    print('-' * 55)
+    print("\n" + '*' * 55 + "\n")
 
 
     # 手动实现Softmax函数
@@ -56,17 +56,19 @@ if __name__ == '__main__':
      [0.1142 0.1142 0.1142]
      [0.8438 0.8438 0.8438]]
     '''
-    print(f'matrix manual softmax（axis=0）: \n{np.round(weights, 4)}')
+    print(f'matrix manual softmax（axis=0, softmax by column）: \n{np.round(weights, 4)}')
 
-    print('=' * 20)
+    print('=' * 42)
 
     # 矩阵按行（axis=1）进行Softmax计算
-    weights = manual_softmax(
-        np.array([[1.0, 2.0, 3.0], [2.0, 3.0, 4.0], [4.0, 5.0, 6.0]]), 1
-    )
+    weights = manual_softmax(np.array([
+        [1.0, 2.0, 3.0],
+        [2.0, 3.0, 4.0],
+        [4.0, 5.0, 6.0]
+    ]), 1)
     '''
     [[0.09   0.2447 0.6652]
      [0.09   0.2447 0.6652]
      [0.09   0.2447 0.6652]]
     '''
-    print(f"matrix manual softmax（axis=1）: \n{np.round(weights, 4)}")
+    print(f"matrix manual softmax（axis=1, softmax by row）: \n{np.round(weights, 4)}")
