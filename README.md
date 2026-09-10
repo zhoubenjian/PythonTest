@@ -33,17 +33,17 @@ pip3 uninstall 包名
 
 
 # 查看某个包详细信息（版本、依赖、路径）
-pip3 show numpy
+pip3 show 包名
 
 
 # 列出全部已安装
 pip3 list
 
 # 过滤关键词（linux/mac）
-pip3 list | grep numpy
+pip3 list | grep 包名
 
 # windows cmd
-pip3 list | findstr numpy
+pip3 list | findstr 包名
 
 
 
