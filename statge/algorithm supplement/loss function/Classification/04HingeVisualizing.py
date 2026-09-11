@@ -51,55 +51,7 @@ plt.grid(True, alpha=0.3)
 plt.show()
 
 
-def manual_multi_hinge_loss(scores, y_true, δ=1.0):
-    '''
-    手动计算多分类 Hinge Loss
-    :param scores: 每个样本的类别得分矩阵，形状为 (n_samples, n_classes)
-    :param y_true: 真实标签向量，形状为 (n_samples,)
-    :param δ: 损失函数的参数，用于控制惩罚的强度
-    :return: 多分类 Hinge Loss 值
-    '''
-    # 样本数量
-    n_samples = scores.shape[0]
-
-    total_loss = 0.0
-    for i in range(n_samples):
-        correct_score = scores[i, y_true[i]]
-        loss_i = 0.0
-        for j in range(scores.shape[1]):
-            if j == y_true[i]:
-                continue
-            loss_i += max(0, scores[i, j] - correct_score + δ)
-        total_loss += loss_i
-    return total_loss / n_samples
 
 
-if __name__ == '__main__':
-
-    '''
-    计算Hinge Loss
-    '''
-    # 真实标签
-    y_true = 1
-    f_x = np.array([2.0, 1.0, 0.5, 0.0, -1.0])
-
-    # 计算损失inge Loss
-    hinge_loss = np.maximum(0, 1 - y_true * f_x)
-    print('Hinge Loss:', hinge_loss, sep='')
-
-
-    print('\n' + '=' * 50 + '\n')
-
-
-    scores = np.array([
-        [3.0, 1.0, 0.5],
-        [1.0, 3.0, 0.5],
-        [0.5, 0.5, 3.0],
-    ])
-
-    y_true = np.array([0, 1, 2])
-
-    loss = manual_multi_hinge_loss(scores, y_true)
-    print(f"多分类 Hinge Loss: {loss:.4f}")
 
 

@@ -25,5 +25,6 @@ def setup_chinese_font():
     plt.rcParams['font.sans-serif'] = CHINESE_FONTS
     plt.rcParams['axes.unicode_minus'] = False
 
+
 # 模块被 import 时自动执行一次，方便直接 `import common.mpl_config`
 setup_chinese_font()
