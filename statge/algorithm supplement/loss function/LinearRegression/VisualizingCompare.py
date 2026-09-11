@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# 导入中文字体配置
 import common.mpl_config
 
 

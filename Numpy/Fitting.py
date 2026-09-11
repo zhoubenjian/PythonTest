@@ -5,18 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# -------------------------- 设置中文字体 start --------------------------
-plt.rcParams['font.sans-serif'] = [
-    # Windows 优先
-    'SimHei', 'Microsoft YaHei',
-    # macOS 优先
-    'PingFang SC', 'Heiti TC',
-    # Linux 优先
-    'WenQuanYi Micro Hei', 'DejaVu Sans'
-]
-# 修复负号显示为方块的问题
-plt.rcParams['axes.unicode_minus'] = False
-# -------------------------- 设置中文字体 start --------------------------
+# 导入中文字体配置
+import common.mpl_config
 
 
 np.random.seed(42)

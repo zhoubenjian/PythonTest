@@ -19,6 +19,7 @@ CHINESE_FONTS = [
     'WenQuanYi Micro Hei', 'Noto Sans CJK SC', 'DejaVu Sans',
 ]
 
+
 def setup_chinese_font():
     """配置 matplotlib 以正确显示中文和负号。"""
     plt.rcParams['font.sans-serif'] = CHINESE_FONTS
