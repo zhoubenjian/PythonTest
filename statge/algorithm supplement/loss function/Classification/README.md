@@ -89,4 +89,15 @@
         含义：错误类别得分比正确类别高多少？如果高出不够 1，就惩罚。
 
         正确类别的得分，应该比所有错误类别的得分都高出至少 1 个边界。
+
+
+
+    PyTorch	            nn.MultiMarginLoss	                多分类	        原始得分 + 类别索引
+    PyTorch	            手动实现	                            二分类	        决策值 + {-1,1}标签
+
+    Keras	            tf.keras.losses.Hinge	            二分类	        预测值 + 标签
+    Keras	            tf.keras.losses.categorical_hinge	多分类	        one-hot标签 + 预测值
+
+    sklearn	            hinge_loss	                        二分类/多分类	    decision_function输出 
+
     
