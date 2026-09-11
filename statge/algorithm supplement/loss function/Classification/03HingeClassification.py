@@ -190,7 +190,7 @@ if __name__ == '__main__':
     y_true = [0, 2, 3]
     labels = np.array([0, 1, 2, 3])
 
-    # 计算多分类 Hinge Loss
+    # 计算多分类 Hinge Loss（多分类时需要提供 labels 参数）
     loss = hinge_loss(y_true, pred_decision, labels=labels)
     print(f"Scikit-learn 多分类 Hinge Loss: {loss:.4f}")       # 0.5641
 
