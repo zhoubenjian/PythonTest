@@ -56,7 +56,7 @@ if __name__ == '__main__':
     y_true = 1
     f_x = np.array([2.0, 1.0, 0.5, 0.0, -1.0])
 
-    # 计算损失inge Loss
+    # 计算损失Hinge Loss
     hinge_loss = np.maximum(0, 1 - y_true * f_x)
     print('二分类 Hinge Loss:', hinge_loss, sep='')
 
