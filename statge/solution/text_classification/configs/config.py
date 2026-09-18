@@ -70,10 +70,12 @@ TFIDF_CONFIG = {
 ========== 模型配置 ==========
 '''
 MODEL_CONFIGS = {
+
     'naive_bayes': {
         'name': 'MultinomialNB',
         'params': {'alpha': 0.1},
     },
+
     'logistic': {
         'name': 'LogisticRegression',
         'params': {
@@ -83,6 +85,7 @@ MODEL_CONFIGS = {
             'random_state': RANDOM_STATE,
         },
     },
+
     'svm': {
         'name': 'SVC',
         'params': {
@@ -93,6 +96,7 @@ MODEL_CONFIGS = {
             'random_state': RANDOM_STATE,
         },
     },
+
     'forest': {
         'name': 'RandomForestClassifier',
         'params': {
