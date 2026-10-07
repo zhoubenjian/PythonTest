@@ -1,6 +1,3 @@
-'''
-案例 1：最简单线性图（无分支）
-'''
 from typing import TypedDict
 from langgraph.graph import StateGraph, START, END
 
