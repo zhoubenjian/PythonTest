@@ -12,7 +12,7 @@ DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
 llm = ChatOpenAI(
     model = "deepseek-chat",
-    api_key = DEEPSEEK_API_KEY,    # 填写你的 API Key
+    api_key = DEEPSEEK_API_KEY,                 # 填写你的 API Key
     base_url = "https://api.deepseek.com/v1"    # 接口地址固定
 )
 

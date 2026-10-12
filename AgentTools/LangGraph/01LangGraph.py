@@ -12,6 +12,11 @@ from typing import TypedDict
 
 # 1. 定义状态
 class SimpleState(TypedDict):
+    '''
+    状态字典，包含消息和 processed 标志
+    :param message: 消息内容
+    :param processed: 是否已处理
+    '''
     message: str
     processed: bool
 
