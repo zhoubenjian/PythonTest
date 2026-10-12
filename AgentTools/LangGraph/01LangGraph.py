@@ -22,23 +22,41 @@ class SimpleState(TypedDict):
 
 
 # 2. 定义节点
+'''
+message变更，processed不变
+'''
 def greet_node(state: SimpleState) -> dict:
     '''
     欢迎节点：生成问候语
     :param state: 状态字典，包含消息和 processed 标志
-    :return: 包含问候语的状态字典
+    :return: 包含问候语的状态字典，！！！节点返回什么，就用什么覆盖掉同名字段，没返回的字段不动！！！
     '''
     print(f"[greet_node]收到消息: {state['message']}")
     return {"message": f"你好！{state['message']}"}
 
+'''
+processed变更，message不变
+'''
 def process_node(state: SimpleState) -> dict:
     '''
     处理节点：对消息进行处理
     :param state: 状态字典，包含消息和 processed 标志
-    :return: 状态字典，包含处理后的消息和 processed 标志
+    :return: 状态字典，包含处理后的消息和 processed 标志，！！！节点返回什么，就用什么覆盖掉同名字段，没返回的字段不动！！！
     '''
     print(f"[process_node]收到消息: {state['message']}")
     return {"processed": True}
+
+'''
+message变更，processed变更
+'''
+def other_node(state: SimpleState) -> dict:
+    '''
+    其他节点：对消息进行其他处理
+    :param state: 状态字典，包含消息和 processed 标志
+    :return: 状态字典，包含其他后的消息和 processed 标志，！！！节点返回什么，就用什么覆盖掉同名字段，没返回的字段不动！！！
+    '''
+    print(f"[other_node]收到消息: {state['message']}")
+    return {"message": f"其他处理：{state['message']}", "processed": False}
 
 
 # 3. 构建图
@@ -47,11 +65,13 @@ builder = StateGraph(SimpleState)
 # 添加节点
 builder.add_node("greet", greet_node)
 builder.add_node("process", process_node)
+builder.add_node("other", other_node)
 
 # 添加边
 builder.add_edge(START, "greet")
 builder.add_edge("greet", "process")
-builder.add_edge("process", END)
+builder.add_edge("process", "other")
+builder.add_edge("other", END)
 
 
 # 4. 编译图
