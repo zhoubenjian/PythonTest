@@ -49,4 +49,5 @@ builder.add_edge("chat_node", END)
 graph = builder.compile()
 
 print(graph.invoke({"text": "今天天气怎么样？"}))
+print('\n' + '-'*50 + '\n')
 print(graph.invoke({"text": "我有一个问题，什么是LangGraph?"}))
