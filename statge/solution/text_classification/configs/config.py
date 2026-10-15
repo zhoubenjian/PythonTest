@@ -39,7 +39,7 @@ LOCAL_DATA_PATH = os.path.normpath(LOCAL_DATA_PATH)
 DEFAULT_CATEGORIES = [
     'alt.atheism',
     'comp.graphics',
-    'comp.os.ms-windows',
+    'comp.os.ms-windows.misc',
     'rec.sport.baseball'
 ]
 
@@ -57,6 +57,18 @@ VAL_SIZE = 0.1
 
 '''
 ========== TF-IDF 配置 ==========
+    如果"apple"在一篇文档中出现很多次（TF高），说明这篇文档在讨论苹果
+    如果"apple"在很多文档中都出现（IDF低），说明这个词很常见，区分度低
+    综合起来，TF-IDF能选出对当前文档重要且在整个数据集中有区分度的词
+    
+    TF-IDF = 词频(TF) × 逆文档频率(IDF)
+    TF-IDF(t, d) = TF(t, d) × IDF(t)
+
+    TF（词频 Term Frequency）:衡量一个词在当前文档中的重要性
+    TF(t, d) = 词t在文档d中出现的次数 / 文档d的总词数
+
+    IDF（逆文档频率 Inverse Document Frequency）:衡量一个词的稀有程度，稀有词更有区分度
+    IDF(t) = ln( (1+总文档数) / (1+包含词t的文档数) ) + 1
 '''
 TFIDF_CONFIG = {
     'max_features': 10000,
@@ -72,11 +84,13 @@ TFIDF_CONFIG = {
 '''
 MODEL_CONFIGS = {
 
+    # 朴素贝叶斯分类器
     'naive_bayes': {
         'name': 'MultinomialNB',
         'params': {'alpha': 0.1},
     },
 
+    # 逻辑回归分类器
     'logistic': {
         'name': 'LogisticRegression',
         'params': {
@@ -87,6 +101,7 @@ MODEL_CONFIGS = {
         },
     },
 
+    # 支持向量机分类器
     'svm': {
         'name': 'SVC',
         'params': {
@@ -98,6 +113,7 @@ MODEL_CONFIGS = {
         },
     },
 
+    # 随机森林分类器
     'forest': {
         'name': 'RandomForestClassifier',
         'params': {
