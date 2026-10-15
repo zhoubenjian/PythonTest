@@ -3,8 +3,6 @@
     8项房屋 / 周边特征，预测房价（回归任务）
     加利福尼亚房价回归预测（连续值输出）
 '''
-
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -22,13 +20,17 @@ housing = fetch_california_housing()
 X = housing.data
 y = housing.target.reshape(-1, 1)
 
-# 标准化
-scaler_x = StandardScaler()
-scaler_y = StandardScaler()
-X = scaler_x.fit_transform(X)
-y = scaler_y.fit_transform(y)
-# 数据集划分
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Fix CodeX Suggestions
+# 先划分原始数据
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# 只在训练集上拟合
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
 
 # 转张量
 X_train = torch.tensor(X_train, dtype=torch.float32)

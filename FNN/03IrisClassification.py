@@ -1,8 +1,6 @@
 '''
 鸢尾花三分类（极简多分类）
 '''
-
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -18,10 +16,19 @@ iris = load_iris()
 X = iris.data
 y = iris.target
 
-# 2.归一化
+# Fix CodeX Suggestions
+# 先划分原始数据
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+
+# Fix CodeX Suggestions
+# 2.标准化特征，只在训练集上拟合
 scaler = StandardScaler()
-X = scaler.fit_transform(X)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
 
 # 3.转为张量类型
 X_train = torch.tensor(X_train, dtype=torch.float32)
@@ -42,7 +49,17 @@ class IrisMLP(nn.Module):
     # 前向传播
     def forward(self, x):
         x = self.relu(self.fc1(x))
-        return self.relu(self.fc2(x))
+
+        # Fix CodeX Suggestions
+        '''
+        没有激活函数，直接输出
+        因为是多分类任务，每个类别都有一个输出
+        输出层的神经元数等于类别数
+        输出每个类别的原始得分（logits），不是概率
+        CrossEntropyLoss 内部完成 log_softmax 和负对数似然计算
+        '''
+        return self.fc2(x)
+
 
 # 实例化模型
 model = IrisMLP()
