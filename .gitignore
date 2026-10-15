@@ -51,15 +51,24 @@ Thumbs.db
 
 
 
-# ========== Python 缓存 ==========
+# ========== Python 虚拟环境与缓存 ==========
+venv/
+.venv/
+env/
+ENV/
 __pycache__/
 *.pyc
 *.pyo
 
 # ========== solution 下各项目：数据/模型 ==========
-solution/*/data/raw/*.csv
-solution/*/data/processed/*.npz
-solution/*/models/*.pkl
+statge/solution/*/data/raw/*.csv
+statge/solution/*/data/processed/*.npz
+statge/solution/*/models/*.pkl
+
+# ========== 本地向量库与临时目录 ==========
+**/chroma_db/
+**/chroma_tmp/
+**/local_chroma_db/
 
 # ========== 保留 .gitkeep 占位文件 ==========
 !statge/solution/*/data/raw/.gitkeep
