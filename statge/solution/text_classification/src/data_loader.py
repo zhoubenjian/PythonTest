@@ -8,6 +8,7 @@ from sklearn.datasets import load_files
 
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# 加载config中配置的路径
 from configs.config import (
     RAW_DATA_DIR, DATASET_NAME, DEFAULT_CATEGORIES,
     RANDOM_STATE, LOCAL_DATA_PATH
@@ -25,6 +26,7 @@ def load_raw_data(categories=None):
         pd.DataFrame: 包含 text 和 category 两列的 DataFrame
     '''
     if not os.path.exists(LOCAL_DATA_PATH):
+        # 如果本地数据目录不存在，提示用户放置数据
         raise FileNotFoundError(
             f"本地数据目录不存在: {LOCAL_DATA_PATH}\n"
             f"请确认数据已放置在正确位置"
@@ -33,6 +35,7 @@ def load_raw_data(categories=None):
     print(f"📂 从本地加载数据...")
     print(f"   路径: {LOCAL_DATA_PATH}")
 
+    # 加载数据集 打乱样本顺序
     data = load_files(
         container_path=LOCAL_DATA_PATH,
         encoding='ISO-8859-1',
@@ -41,6 +44,7 @@ def load_raw_data(categories=None):
         decode_error='ignore',
     )
 
+    # 转换为 DataFrame 格式 拆分类别ID为类别名称
     df = pd.DataFrame({
         'text': data.data,
         'category_id': data.target,

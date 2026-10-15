@@ -31,7 +31,7 @@ os.makedirs(MODEL_DIR, exist_ok=True)
 ========== 数据配置 ==========
 '''
 DATASET_NAME = '20_newsgroups'
-# 本地数据路径（相对于项目根目录）
+# 本地数据路径（相对于项目根目录： ../../../local_datas/20_newsgroups）
 LOCAL_DATA_PATH = os.path.join(PROJECT_ROOT, '..', '..', '..', 'local_datas', '20_newsgroups')
 LOCAL_DATA_PATH = os.path.normpath(LOCAL_DATA_PATH)
 
