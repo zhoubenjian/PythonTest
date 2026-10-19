@@ -73,7 +73,11 @@ statge/solution/*/models/*.pkl
 **/local_chroma_db/
 
 # ========== 本机环境诊断产物（不参与提交）==========
+# 三端环境清单是 W01 交付物，需要提交；其余 env 诊断文件仍忽略
 env_*.txt
+!env_Linux.txt
+!env_Windows.txt
+!env_Darwin.txt
 
 # ========== 保留 .gitkeep 占位文件 ==========
 !statge/solution/*/data/raw/.gitkeep
