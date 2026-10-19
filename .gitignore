@@ -64,6 +64,8 @@ __pycache__/
 statge/solution/*/data/raw/*.csv
 statge/solution/*/data/processed/*.npz
 statge/solution/*/models/*.pkl
+# rebuilt 独立重写版的训练产物（与上级 models/ 分开存放，不参与提交）
+**/rebuilt/artifacts/
 
 # ========== 本地向量库与临时目录 ==========
 **/chroma_db/
