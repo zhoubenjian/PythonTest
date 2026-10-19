@@ -72,6 +72,9 @@ statge/solution/*/models/*.pkl
 **/chroma_tmp/
 **/local_chroma_db/
 
+# ========== 本机环境诊断产物（不参与提交）==========
+env_*.txt
+
 # ========== 保留 .gitkeep 占位文件 ==========
 !statge/solution/*/data/raw/.gitkeep
 !statge/solution/*/data/processed/.gitkeep
