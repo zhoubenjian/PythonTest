@@ -48,7 +48,25 @@ def load_data(categories=None, data_root=DATA_ROOT, random_state=RANDOM_STATE):
     返回:
         pd.DataFrame
     '''
-    raise NotImplementedError('TODO: 按 docstring 里的 6 条要求实现')
+    if not os.path.isdir(data_root):
+        raise FileNotFoundError(f'数据目录不存在: {data_root}')
+    data = load_files(
+        container_path=data_root,
+        categories=categories if categories is not None else DEFAULT_CATEGORIES,
+        encoding='ISO-8859-1',
+        shuffle=True,
+        random_state=random_state,
+        decode_error='ignore'
+    )
+
+    df = pd.DataFrame({
+        'text': data.data,
+        'category_id': data.target
+    })
+    df['category'] = df['category_id'].map(lambda x: data.target_names[x])
+
+    return df.reset_index(drop=True)
+    # raise NotImplementedError('TODO: 按 docstring 里的 6 条要求实现')
 
 
 if __name__ == '__main__':

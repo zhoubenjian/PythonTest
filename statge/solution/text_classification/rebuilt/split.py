@@ -28,7 +28,15 @@ def split_data(df, train_size=0.8, val_size=0.1, random_state=42, label_col='cat
     返回:
         (train_df, val_df, test_df)
     '''
-    raise NotImplementedError('TODO: 按 docstring 里的 5 条要求实现')
+    train_df, temp_df = train_test_split(
+        df, train_size=train_size, test_size=1 - train_size,
+        stratify=df[label_col], random_state=random_state,
+    )
+    val_df, test_df = train_test_split(
+        temp_df, train_size=val_size / (1 - train_size),
+        stratify=temp_df[label_col], random_state=random_state,
+    )
+    return train_df.reset_index(drop=True), val_df.reset_index(drop=True), test_df.reset_index(drop=True)
 
 
 if __name__ == '__main__':

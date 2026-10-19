@@ -2,7 +2,15 @@
 channels:
   - https://repo.anaconda.com/pkgs/main
   - https://repo.anaconda.com/pkgs/r
-  - https://repo.anaconda.com/pkgs/msys2
 dependencies:
   - python=3.11
-prefix: D:\ProgramData\anaconda3\envs\ai_app
+  - pip
+  - pip:
+      # 与 Windows 基线一致（见 执行日志.md W01 交接记录）
+      - numpy==1.26.4
+      - pandas==2.2.3
+      - scipy==1.13.1
+      - scikit-learn==1.5.2
+      - joblib==1.4.2
+      - matplotlib
+      - pytest
