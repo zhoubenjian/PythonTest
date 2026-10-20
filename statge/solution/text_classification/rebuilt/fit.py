@@ -54,12 +54,23 @@ def fit_vectorizer(texts_train, tfidf_params=None):
     返回:
         TfidfVectorizer（已 fit）
     '''
-    raise NotImplementedError('TODO: 实现，注意只用训练集 fit')
+
+    # 基于默认参数覆盖，传 None 时等价于只用 TFIDF_PARAMS
+    params = dict(TFIDF_PARAMS)
+    if tfidf_params is not None:
+        params.update(tfidf_params)
+
+    vectorizer = TfidfVectorizer(**params)
+    # 只在训练集上 fit，避免验证集/测试集的词表泄漏到训练阶段
+    vectorizer.fit(texts_train)
+    return vectorizer
 
 
 def transform(vectorizer, texts):
     '''用已拟合的 vectorizer 把文本转成稀疏矩阵（只 transform，不 fit）。'''
-    raise NotImplementedError('TODO: 实现')
+
+    # 仅 transform，不 fit，不改变 vectorizer 状态
+    return vectorizer.transform(texts)
 
 
 def train_model(X_train, y_train, model_params=None):
@@ -68,7 +79,14 @@ def train_model(X_train, y_train, model_params=None):
     说明：不引入 LabelEncoder，直接把字符串标签交给 sklearn
     （LogisticRegression 支持字符串 y），少一层编解码就少一个出错点。
     '''
-    raise NotImplementedError('TODO: 实现')
+
+    params = dict(MODEL_PARAMS)
+    if model_params is not None:
+        params.update(model_params)
+
+    model = LogisticRegression(**params)
+    model.fit(X_train, y_train)
+    return model
 
 
 def evaluate(model, X, y_true):
@@ -78,7 +96,20 @@ def evaluate(model, X, y_true):
         accuracy: 准确率
         f1_macro: macro 平均 F1（4 类均衡，用 macro 而不是 weighted）
     '''
-    raise NotImplementedError('TODO: 实现')
+
+    y_pred = model.predict(X)
+    accuracy = accuracy_score(y_true, y_pred)
+    f1_macro = f1_score(y_true, y_pred, average='macro')
+
+    print(classification_report(y_true, y_pred))
+    print(f'accuracy={accuracy:.4f}, f1_macro={f1_macro:.4f}')
+
+    return {
+        'accuracy': accuracy,
+        'f1_macro': f1_macro,
+        'f1_weighted': f1_score(y_true, y_pred, average='weighted'),
+        'n_samples': len(y_true)
+    }
 
 
 def save_artifacts(vectorizer, model):
@@ -86,7 +117,12 @@ def save_artifacts(vectorizer, model):
 
     要求：目录不存在时先创建。
     '''
-    raise NotImplementedError('TODO: 实现，用 joblib.dump')
+
+    os.makedirs(ARTIFACT_DIR, exist_ok=True)
+    joblib.dump(vectorizer, VECTORIZER_PATH)
+    joblib.dump(model, MODEL_PATH)
+    print(f'已保存 vectorizer 到 {VECTORIZER_PATH}')
+    print(f'已保存 model 到 {MODEL_PATH}')
 
 
 if __name__ == '__main__':
@@ -112,4 +148,4 @@ if __name__ == '__main__':
     # 4) 保存产物，供 predict.py 使用
     save_artifacts(vectorizer, model)
 
-    # TODO(W02): 需不需要在这里用测试集出最终报告？注意测试集只能报告、不能参与选择
+    # 测试集不在此处评估：选型/调参只看验证集，测试集由最终报告（W02 独立脚本）使用一次
