@@ -2,8 +2,8 @@
 
 约束：不得 import 上级 src/ 的任何模块。
 
-运行方式（在 rebuilt 目录内）：
-    & "D:\\ProgramData\\anaconda3\\envs\\ai_app\\python.exe" split.py
+运行方式（在 rebuilt 目录内；三端通用，先 conda activate ai_app）：
+    python split.py
 '''
 from sklearn.model_selection import train_test_split
 

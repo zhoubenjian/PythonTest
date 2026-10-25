@@ -6,8 +6,8 @@ W01 只做单模型（LogisticRegression）最小闭环，目的是验证自己�
 不是在重做四模型对比（那已经在基线 w01_baseline_test.log 里有了）。
 多模型对比、选型口径统一留给 W02。
 
-运行方式（在 rebuilt 目录内）：
-    & "D:\\ProgramData\\anaconda3\\envs\\ai_app\\python.exe" fit.py
+运行方式（在 rebuilt 目录内；三端通用，先 conda activate ai_app）：
+    python fit.py
 '''
 import os
 

@@ -4,8 +4,8 @@
 1. 本目录下的代码不得 import 上级 src/ 的任何模块，也不得复用其中的函数。
 2. 实现由自己完成，AI 只做审查。已给出的只有接口签名与要求说明。
 
-运行方式（在 rebuilt 目录内，用 ai_app 环境）：
-    & "D:\\ProgramData\\anaconda3\\envs\\ai_app\\python.exe" load.py
+运行方式（在 rebuilt 目录内，用 ai_app 环境；三端通用，先 conda activate ai_app）：
+    python load.py
 '''
 import os
 

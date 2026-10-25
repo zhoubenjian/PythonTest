@@ -2,8 +2,8 @@
 
 约束：不得 import 上级 src/ 的任何模块。
 
-运行方式（在 rebuilt 目录内，需先跑通 fit.py 生成 artifacts）：
-    & "D:\\ProgramData\\anaconda3\\envs\\ai_app\\python.exe" predict.py
+运行方式（在 rebuilt 目录内，需先跑通 fit.py 生成 artifacts；三端通用，先 conda activate ai_app）：
+    python predict.py
 '''
 import os
 
@@ -26,13 +26,24 @@ def load_artifacts(artifact_dir=ARTIFACT_DIR):
     vectorizer_path = os.path.join(artifact_dir, 'vectorizer.pkl')
     model_path = os.path.join(artifact_dir, 'model.pkl')
 
-    # 检查文件是否存在，避免报错
-    if [p for p in (vectorizer_path, model_path) if not os.path.exists(p)]:
-        raise FileNotFoundError(f'缺失文件: {vectorizer_path} 或 {model_path}, 请先运行 fit.py 生成 artifacts。')
+    # 逐个检查，报错时精确列出缺了哪个文件
+    missing = [p for p in (vectorizer_path, model_path) if not os.path.exists(p)]
+    if missing:
+        raise FileNotFoundError(f'缺失文件: {missing}，请先运行 fit.py 生成 artifacts。')
 
     vectorizer = joblib.load(vectorizer_path)
     model = joblib.load(model_path)
     return vectorizer, model
+
+
+def _rank(classes, proba_row, top_k):
+    '''类别与概率配对、按概率降序排序，返回 (label, confidence, top_k 列表)。
+
+    单条与批量共用：classes 的顺序与 predict_proba 概率列一一对应，
+    配对来源必须是 model.classes_，不能是词表或输入文本（历史上在这栽过两次）。
+    '''
+    pairs = sorted(zip(classes, proba_row), key=lambda p: p[1], reverse=True)
+    return pairs[0][0], pairs[0][1], pairs[:top_k]
 
 
 def predict_one(text, vectorizer, model, top_k=3):
@@ -47,16 +58,15 @@ def predict_one(text, vectorizer, model, top_k=3):
     # 只进行 transform，不进行 fit_transform，因为 vectorizer 已经在 fit.py 中训练过
     X = vectorizer.transform([text])
     proba = model.predict_proba(X)[0]
-
-    pairs = sorted(zip (model.classes_, proba), key=lambda x: x[1], reverse=True)
+    label, confidence, top = _rank(model.classes_, proba, top_k)
     return {
-        'label': pairs[0][0],
-        'confidence': pairs[0][1],
-        'top_k': pairs[:top_k],
+        'label': label,
+        'confidence': confidence,
+        'top_k': top,
     }
 
 
-def predict_batch(texts, vectorizer, model):
+def predict_batch(texts, vectorizer, model, top_k=3):
     '''批量预测，返回 list[dict]，每个元素与 predict_one 结构一致。'''
 
     # 传进来单个 str 时会被当成字符序列逐字 transform，这里直接拦掉
@@ -72,9 +82,11 @@ def predict_batch(texts, vectorizer, model):
 
     results = []
     for proba in probas:
-        pairs = sorted(zip(model.classes_, proba), key=lambda p: p[1], reverse=True)
+        label, confidence, top = _rank(model.classes_, proba, top_k)
         results.append({
-            "label": pairs[0][0], "confidence": pairs[0][1], "top_k": pairs[:3],
+            'label': label,
+            'confidence': confidence,
+            'top_k': top,
         })
     return results
 
