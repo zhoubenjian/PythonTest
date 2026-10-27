@@ -39,7 +39,12 @@ def dedup_crossposts(df):
     1. 打印去重前后条数（预期 4000 -> 3995，若不是请核对你的数据）；
     2. 不修改传入的 df（去重实验的对照还要用原始数据）。
     '''
-    raise NotImplementedError
+
+    before = len(df)
+    result = df.drop_duplicates(subset='text', keep='first').reset_index(drop=True)
+    after = len(result)
+    print(f'去重前 {before} 条，去重后 {after} 条')
+    return result
 
 
 def run_one(train_df, val_df, tfidf_params, model):
@@ -73,13 +78,15 @@ def experiment_models(train_df, val_df):
     raise NotImplementedError
 
 
-def experiment_dedup(train_df, val_df, baseline_f1):
+def experiment_dedup(baseline_f1):
     '''实验三：去重前后对照。返回 [(名称, f1), ...] 一条（去重后）。
 
     要求：
     1. baseline_f1 是原始数据上的 LR (1,1) 结果，这里只跑去重后那次；
-    2. 对 train_df / val_df 分别 dedup_crossposts 后再跑（划分参数不变），
-       并打印去重后 train/val 的条数与各类占比变化。
+    2. 必须先全库去重再划分：load_data -> dedup_crossposts -> split_data
+       （同一 random_state）。不能对切好的 train/val 分别去重——那删不掉
+       跨集重复，泄漏依旧；
+    3. 打印去重后 train/val 条数与各类占比（对照 0.25）。
     '''
     raise NotImplementedError
 
@@ -106,5 +113,5 @@ if __name__ == '__main__':
     rows = [('基线', 'LR + (1,1) + 原始数据', baseline_f1)]
     rows += experiment_ngram(train_df, val_df)
     rows += experiment_models(train_df, val_df)
-    rows += experiment_dedup(train_df, val_df, baseline_f1)
+    rows += experiment_dedup(baseline_f1)
     print_table(rows, baseline_f1)
