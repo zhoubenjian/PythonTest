@@ -20,6 +20,7 @@ print 出来直接贴进执行日志，即为 W02 验收的"实验记录表"。
     python experiments.py
 '''
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import f1_score
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import LinearSVC
 
@@ -55,15 +56,34 @@ def run_one(train_df, val_df, tfidf_params, model):
     2. model 是已构造好的实例（本函数不负责选择模型种类）；
     3. 不要打印 classification_report（实验表只要数字，报告噪音太大）。
     '''
-    raise NotImplementedError
+
+    vectorizer = fit.fit_vectorizer(train_df['text'], tfidf_params)
+    X_train = fit.transform(vectorizer, train_df['text'])
+    X_val = fit.transform(vectorizer, val_df['text'])
+
+    model.fit(X_train, train_df['category'])
+    y_pred = model.predict(X_val)
+    f1_macro = f1_score(val_df['category'], y_pred, average='macro')
+    return f1_macro
 
 
 def experiment_ngram(train_df, val_df):
-    '''实验一：ngram (1,1) vs (1,2)。返回 [(名称, f1), ...] 两条记录。
+    '''实验一：ngram (1,1) vs (1,2)。返回 [(实验, 变量, f1), ...] 三元组记录。
 
     要求：模型统一 LogisticRegression 默认（fit.MODEL_PARAMS）。
     '''
-    raise NotImplementedError
+
+    results = []
+    for ngram in [(1, 1), (1, 2)]:
+        f1 = run_one(
+            train_df,
+            val_df,
+            {'ngram_range': ngram},
+            LogisticRegression(**fit.MODEL_PARAMS)  # MODEL_PARAMS 一个键都不动
+        )
+        results.append(('实验一 ngram', str(ngram), f1))
+        print(f'ngram={ngram} f1_macro={f1:.4f}')
+    return results
 
 
 def experiment_models(train_df, val_df):
@@ -106,8 +126,12 @@ if __name__ == '__main__':
     train_df, val_df, _test_df = split.split_data(df)
 
     # 基线：原始数据 + LR 默认 + TF-IDF (1,1)，预期 0.9950
-    baseline_f1 = run_one(train_df, val_df, BASE_TFIDF_PARAMS,
-                          LogisticRegression(**fit.MODEL_PARAMS))
+    baseline_f1 = run_one(
+        train_df,
+        val_df,
+        BASE_TFIDF_PARAMS,
+        LogisticRegression(**fit.MODEL_PARAMS)
+    )
     print(f'基线 f1_macro = {baseline_f1:.4f}\n')
 
     rows = [('基线', 'LR + (1,1) + 原始数据', baseline_f1)]
