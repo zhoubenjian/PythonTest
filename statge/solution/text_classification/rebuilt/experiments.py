@@ -95,7 +95,19 @@ def experiment_models(train_df, val_df):
        另两个模型在这里自行构造，不要改 fit.py；
     3. 三者超参一律默认，保证"只动模型种类"这一个变量。
     '''
-    raise NotImplementedError
+
+    results = []
+    models = [
+        ('LR', LogisticRegression(**fit.MODEL_PARAMS)),
+        ('LinearSVC', LinearSVC()),
+        ('MultinomialNB', MultinomialNB())
+    ]
+
+    for name, model in models:
+        f1 = run_one(train_df, val_df, BASE_TFIDF_PARAMS, model)
+        results.append(('实验二 模型对比', name, f1))
+        print(f'{name} f1_macro={f1:.4f}')
+    return results
 
 
 def experiment_dedup(baseline_f1):
@@ -108,20 +120,47 @@ def experiment_dedup(baseline_f1):
        跨集重复，泄漏依旧；
     3. 打印去重后 train/val 条数与各类占比（对照 0.25）。
     '''
-    raise NotImplementedError
+
+    df = load.load_data()
+    deduped_df = dedup_crossposts(df)
+
+    train_df, val_df, test_df = split.split_data(deduped_df, random_state=42)
+    print(f'去重后 train {len(train_df)} 条，val {len(val_df)} 条')
+    print('各类占比（对照 0.25）：')
+    for name, part in [('train', train_df), ('val', val_df)]:
+        ratios = part['category'].value_counts(normalize=True).round(4)
+        print(f'  {name}: {dict(ratios)}')
+
+    f1 = run_one(train_df, val_df, BASE_TFIDF_PARAMS, LogisticRegression(**fit.MODEL_PARAMS))
+    print(f'去重后 f1_macro={f1:.4f} (去重前 baseline={baseline_f1:.4f})')
+
+    return [('实验三 去重', '去重后', f1)]
 
 
 def print_table(rows, baseline_f1):
     '''把所有实验记录打印成 markdown 表格。
 
-    要求：列 = 实验 / 变量 / 验证集 f1_macro / 与基线差 / 是否有效(>=0.002)。
-    与基线差保留 4 位小数；基线本身那行"与基线差"写 0.0000。
+    要求：列 = 实验 / 变量 / 验证集 f1_macro / 与基线差 / 显著变化(Δ>=0.002)。
+    与基线差保留 4 位小数；基线本身那行"与基线差"写 0.0000、不参与判定。
+    main 传入的 rows 第一条就是基线行，这里不再重复前置。
     '''
-    raise NotImplementedError
+
+    print(f'| 实验 | 变量 | f1_macro | 与基线差 | 显著变化(Δ≥{DELTA_THRESHOLD}) |')
+    print('|---|---|---|---|---|')
+
+    for exp_name, var, f1 in rows:
+        if exp_name == '基线':
+            delta_str, valid = '0.0000', '—'
+        else:
+            delta = f1 - baseline_f1
+            delta_str = f'{delta:+.4f}'
+            valid = '✅' if abs(delta) >= DELTA_THRESHOLD else '❌'
+        print(f'| {exp_name} | {var} | {f1:.4f} | {delta_str} | {valid} |')
 
 
 if __name__ == '__main__':
-    # 共用同一次加载与划分：三组实验的固定量，任何一组都不得重新 split
+    # 实验一/二共用 main 这次加载与划分；实验三的因变量就是数据集本身，
+    # 必须重新 load -> dedup -> split（同 random_state），不受此约束
     df = load.load_data()
     train_df, val_df, _test_df = split.split_data(df)
 
