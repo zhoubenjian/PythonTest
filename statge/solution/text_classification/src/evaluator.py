@@ -12,7 +12,7 @@ from sklearn.metrics import (
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from configs.config import AVERAGE_METHOD
+from configs.config import AVERAGE_METHOD, MODEL_CONFIGS
 
 
 class ModelEvaluator:
@@ -77,6 +77,8 @@ class ModelEvaluator:
         多模型在验证集上的性能对比（选型用）
 
         注意：选型口径统一为验证集，最终测试集评估由调用方在选型后进行。
+        并列 F1 时按 MODEL_CONFIGS 配置顺序取第一个（与训练侧 tie-break 一致，
+        不受调用方 dict 顺序影响）。
 
         参数:
             models_dict: {model_type: model}
@@ -93,7 +95,14 @@ class ModelEvaluator:
         print(f"{'模型':<15} {'准确率':>10} {'F1':>10} {'精确率':>10} {'召回率':>10}")
         print("-" * 55)
 
-        for model_type, model in models_dict.items():
+        # 按 MODEL_CONFIGS 顺序迭代，保证并列时 tie-break 确定性
+        config_order = list(MODEL_CONFIGS)
+        ordered_types = sorted(
+            models_dict,
+            key=lambda t: config_order.index(t) if t in config_order else len(config_order),
+        )
+        for model_type in ordered_types:
+            model = models_dict[model_type]
             metrics = self.evaluate(model, X_val, y_val)
             all_metrics[model_type] = metrics
             print(
@@ -111,6 +120,41 @@ class ModelEvaluator:
         print(f"🏆 验证集最佳模型（选型）: '{best_type}' (F1={all_metrics[best_type]['f1']:.4f})")
 
         return best_type, best_model, all_metrics
+
+    def check_consistency(self, models_dict, X, y):
+        '''
+        交付一致性校验：模型与评估数据的特征维数、类别空间必须一致
+
+        用于防止 processed 数据与模型文件版本错配（如只重跑了其中一边）。
+
+        参数:
+            models_dict: {model_type: model}
+            X, y: 评估数据（任意切分）
+        '''
+        problems = []
+        n_features = X.shape[1]
+        classes = set(np.unique(y).tolist())
+
+        for model_type, model in models_dict.items():
+            if getattr(model, 'n_features_in_', n_features) != n_features:
+                problems.append(
+                    f"  - {model_type}: 特征维数不符 "
+                    f"(模型 {getattr(model, 'n_features_in_', '?')} vs 数据 {n_features})"
+                )
+            model_classes = set(getattr(model, 'classes_', np.array([])).tolist())
+            if model_classes != classes:
+                problems.append(
+                    f"  - {model_type}: 类别空间不符 "
+                    f"(模型 {sorted(model_classes)} vs 数据 {sorted(classes)})"
+                )
+
+        if problems:
+            raise ValueError(
+                "模型与评估数据不一致，请重新运行 train.py --save:\n"
+                + "\n".join(problems)
+            )
+        print(f"✅ 一致性校验通过: {len(models_dict)} 个模型 × "
+              f"特征维数 {n_features} × 类别数 {len(classes)}")
 
     def get_error_analysis(self, y_true, y_pred, texts=None):
         '''

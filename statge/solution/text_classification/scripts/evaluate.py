@@ -59,9 +59,12 @@ def main():
     X_test = data_dict['X_test']
     y_test = data_dict['y_test']
 
-    # Step 3: 评估
-    print("\n[Step 3] 模型评估")
+    # Step 3: 一致性校验 + 评估
+    print("\n[Step 3] 一致性校验")
     evaluator = ModelEvaluator(target_names=preprocessor.target_names)
+    evaluator.check_consistency(trainer.models, X_test, y_test)
+
+    print("\n[Step 4] 模型评估")
 
     if args.model:
         if args.model not in trainer.models:

@@ -166,8 +166,8 @@ Step 4: preprocessor.save() + save_processed_data() + trainer.save_all_models()
 
 ```
 Step 1: TextPreprocessor.load()        加载预处理器
-Step 2: 扫描 models/ 下所有 .pkl 模型文件
-Step 3: load_processed_data()           加载 .npz 数据（跳过重新划分！）
+Step 2: 扫描 models/ 下所有 .pkl 模型文件 + load_processed_data() 加载 .npz 数据
+Step 3: check_consistency()            模型×数据一致性校验（特征维数 + 类别空间）
 Step 4: ModelEvaluator.compare_models() 验证集选型 + 测试集分类报告 + 混淆矩阵
 ```
 

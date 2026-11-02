@@ -32,6 +32,15 @@ class TextClassifierPredictor:
             model_path = self._find_best_model()
         self.model = load_model(model_path)
 
+        # 交付一致性：模型特征维数必须与预处理器词表一致
+        n_vec = len(self.preprocessor.vectorizer.vocabulary_)
+        if getattr(self.model, 'n_features_in_', n_vec) != n_vec:
+            raise ValueError(
+                f"模型与预处理器不一致：模型特征维数 "
+                f"{getattr(self.model, 'n_features_in_', '?')} vs 词表 {n_vec}，"
+                f"请重新运行 train.py --save"
+            )
+
     def _find_best_model(self):
         '''读取训练侧保存的最佳模型元数据（验证集 F1 选型）'''
         if not os.path.exists(MODEL_DIR):
