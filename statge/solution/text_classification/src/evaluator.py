@@ -72,19 +72,21 @@ class ModelEvaluator:
             label = self.target_names[i] if self.target_names else str(i)
             print(f"  {label:<8}" + " ".join(f"{v:>12}" for v in row))
 
-    def compare_models(self, models_dict, X_test, y_test):
+    def compare_models(self, models_dict, X_val, y_val):
         '''
-        多模型在测试集上的性能对比
+        多模型在验证集上的性能对比（选型用）
+
+        注意：选型口径统一为验证集，最终测试集评估由调用方在选型后进行。
 
         参数:
             models_dict: {model_type: model}
-            X_test, y_test: 测试集数据
+            X_val, y_val: 验证集数据
 
         返回:
             best_type, best_model, all_metrics
         '''
         print("\n" + "=" * 60)
-        print("📊 测试集性能对比")
+        print("📊 验证集性能对比（选型）")
         print("=" * 60)
 
         all_metrics = {}
@@ -92,7 +94,7 @@ class ModelEvaluator:
         print("-" * 55)
 
         for model_type, model in models_dict.items():
-            metrics = self.evaluate(model, X_test, y_test)
+            metrics = self.evaluate(model, X_val, y_val)
             all_metrics[model_type] = metrics
             print(
                 f"{model_type:<15} "
@@ -106,7 +108,7 @@ class ModelEvaluator:
         best_model = models_dict[best_type]
 
         print("=" * 55)
-        print(f"🏆 测试集最佳模型: '{best_type}' (F1={all_metrics[best_type]['f1']:.4f})")
+        print(f"🏆 验证集最佳模型（选型）: '{best_type}' (F1={all_metrics[best_type]['f1']:.4f})")
 
         return best_type, best_model, all_metrics
 
@@ -152,10 +154,11 @@ if __name__ == '__main__':
 
     evaluator = ModelEvaluator(target_names=preprocessor.target_names)
 
+    # 选型用验证集，最终评估用测试集
     best_type, best_model, all_metrics = evaluator.compare_models(
         trainer.models,
-        data_dict['X_test'],
-        data_dict['y_test'],
+        data_dict['X_val'],
+        data_dict['y_val'],
     )
 
     evaluator.print_report(best_model, data_dict['X_test'], data_dict['y_test'])

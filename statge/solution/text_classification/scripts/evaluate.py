@@ -54,6 +54,8 @@ def main():
     # Step 2: 加载已保存的处理数据
     print("\n[Step 2] 加载已处理数据")
     data_dict = TextPreprocessor.load_processed_data()
+    X_val = data_dict['X_val']
+    y_val = data_dict['y_val']
     X_test = data_dict['X_test']
     y_test = data_dict['y_test']
 
@@ -69,7 +71,8 @@ def main():
         evaluator.print_report(model, X_test, y_test)
         evaluator.print_confusion_matrix(model, X_test, y_test)
     else:
-        best_type, best_model, _ = evaluator.compare_models(trainer.models, X_test, y_test)
+        # 选型用验证集，最终评估用测试集
+        best_type, best_model, _ = evaluator.compare_models(trainer.models, X_val, y_val)
         evaluator.print_report(best_model, X_test, y_test)
         evaluator.print_confusion_matrix(best_model, X_test, y_test)
 

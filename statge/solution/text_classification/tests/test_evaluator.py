@@ -45,8 +45,8 @@ class TestModelEvaluator(unittest.TestCase):
     def test_compare_models(self):
         best_type, best_model, all_metrics = self.evaluator.compare_models(
             self.trainer.models,
-            self.data_dict['X_test'],
-            self.data_dict['y_test'],
+            self.data_dict['X_val'],
+            self.data_dict['y_val'],
         )
         self.assertIn(best_type, self.trainer.models)
         self.assertEqual(len(all_metrics), len(self.trainer.models))

@@ -3,6 +3,7 @@
 负责训练单个/多个模型，计算指标，保存模型
 '''
 import os
+import json
 import joblib
 from sklearn.metrics import accuracy_score, classification_report, f1_score
 
@@ -101,13 +102,24 @@ class ModelTrainer:
 
     def save_all_models(self):
         '''
-        保存所有已训练的模型到 models/ 目录
+        保存所有已训练的模型到 models/ 目录，并写入最佳模型元数据
         '''
         saved_paths = {}
         for model_type, model in self.models.items():
             filepath = os.path.join(MODEL_DIR, f"{model_type}_model.pkl")
             save_model(model, filepath)
             saved_paths[model_type] = filepath
+
+        # 选型口径统一：按验证集 F1 记录最佳模型，供 predictor 加载
+        best_type = max(self.scores, key=lambda k: self.scores[k]['val_f1'])
+        metadata_path = os.path.join(MODEL_DIR, 'best_model.json')
+        with open(metadata_path, 'w', encoding='utf-8') as f:
+            json.dump({
+                'best_type': best_type,
+                'val_f1': self.scores[best_type]['val_f1'],
+            }, f, ensure_ascii=False, indent=2)
+        print(f"🏆 最佳模型元数据已保存: {metadata_path}")
+
         return saved_paths
 
     def save_best_model(self):

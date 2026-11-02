@@ -3,6 +3,7 @@
 支持单条/批量文本预测，交互式预测，适配甲方交付
 '''
 import os
+import json
 import numpy as np
 
 import sys
@@ -32,27 +33,31 @@ class TextClassifierPredictor:
         self.model = load_model(model_path)
 
     def _find_best_model(self):
-        '''在 models/ 目录下找到最佳模型（F1 最高的）'''
+        '''读取训练侧保存的最佳模型元数据（验证集 F1 选型）'''
         if not os.path.exists(MODEL_DIR):
             raise FileNotFoundError(f"模型目录不存在: {MODEL_DIR}")
 
-        model_files = [f for f in os.listdir(MODEL_DIR) if f.endswith('_model.pkl')]
-        if not model_files:
+        metadata_path = os.path.join(MODEL_DIR, 'best_model.json')
+        if not os.path.exists(metadata_path):
             raise FileNotFoundError(
-                f"未找到模型文件，请先运行 train.py --save\n"
-                f"目录: {MODEL_DIR}"
+                f"未找到最佳模型元数据，请先运行 train.py --save\n"
+                f"路径: {metadata_path}"
             )
 
-        scoring_keys = ['svm', 'logistic', 'naive_bayes', 'forest']
-        for key in scoring_keys:
-            for f in model_files:
-                if f.startswith(key):
-                    path = os.path.join(MODEL_DIR, f)
-                    print(f"自动选择模型: {path}")
-                    return path
+        with open(metadata_path, 'r', encoding='utf-8') as f:
+            metadata = json.load(f)
+        best_type = metadata['best_type']
 
-        path = os.path.join(MODEL_DIR, model_files[0])
-        print(f"自动选择模型: {path}")
+        path = os.path.join(MODEL_DIR, f"{best_type}_model.pkl")
+        if not os.path.exists(path):
+            raise FileNotFoundError(
+                f"元数据指向的模型文件不存在: {path}\n"
+                f"请重新运行 train.py --save"
+            )
+
+        val_f1 = metadata.get('val_f1')
+        val_f1_str = f"{val_f1:.4f}" if isinstance(val_f1, (int, float)) else 'N/A'
+        print(f"自动选择模型（验证集 F1 选型，val_f1={val_f1_str}）: {path}")
         return path
 
     def predict(self, text):

@@ -123,7 +123,7 @@ scipy.sparse.load_npz('X.npz')
 | `evaluate(model, X, y)` | 单模型评估，返回 accuracy/f1/precision/recall |
 | `print_report(model, X, y)` | 打印详细分类报告 |
 | `print_confusion_matrix(model, X, y)` | 打印混淆矩阵 |
-| `compare_models(models_dict, X_test, y_test)` | 多模型对比，返回 F1 最高的 |
+| `compare_models(models_dict, X_val, y_val)` | 多模型在验证集上对比（选型），返回 F1 最高的 |
 | `get_error_analysis(y_true, y_pred)` | 找出错误分类的样本 |
 
 ### `src/predictor.py` — 预测器
@@ -168,7 +168,7 @@ Step 4: preprocessor.save() + save_processed_data() + trainer.save_all_models()
 Step 1: TextPreprocessor.load()        加载预处理器
 Step 2: 扫描 models/ 下所有 .pkl 模型文件
 Step 3: load_processed_data()           加载 .npz 数据（跳过重新划分！）
-Step 4: ModelEvaluator.compare_models() 测试集对比 + 分类报告 + 混淆矩阵
+Step 4: ModelEvaluator.compare_models() 验证集选型 + 测试集分类报告 + 混淆矩阵
 ```
 
 ### `scripts/predict.py` — 预测入口
