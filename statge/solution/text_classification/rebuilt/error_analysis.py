@@ -20,6 +20,8 @@
 - 随机种子统一 42
 '''
 
+import os
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import StratifiedKFold
@@ -145,5 +147,33 @@ if __name__ == '__main__':
     print('\n===== 混淆矩阵与 per-class 报告 =====')
     confusion_and_per_class(df_oof)
 
-    # 下一步（人工）：把上面两张表导出/复制，逐条读 text 加 error_type 列，
-    # 汇总归因分布表写进 执行日志.md 的 W02 记录
+    # 导出人工复核用 CSV（放 fit.ARTIFACT_DIR 即 rebuilt/artifacts/，已被 .gitignore 忽略）。
+    # 复核流程：逐条读 text → 在 error_type 列填
+    # cross_post / domain_confusion / noise_short / label_suspect（拿不准可在 note 写一句判据）
+    # → 汇总分布写回执行日志。
+    # 若目标文件已存在且已有人工标注，则按行序保留旧标注（OOF 确定性，同数据行序稳定），
+    # 防止重跑本脚本冲掉复核成果。
+    os.makedirs(fit.ARTIFACT_DIR, exist_ok=True)
+    mis_path = os.path.join(fit.ARTIFACT_DIR, 'misclassified_review.csv')
+    near_path = os.path.join(fit.ARTIFACT_DIR, 'nearmiss_review.csv')
+    for sub, path in [(df_mis, mis_path), (df_near, near_path)]:
+        # 预置复核模板列：error_type（四选一）+ note（可选，写一句判据）
+        sub['error_type'] = ''
+        sub['note'] = ''
+        if os.path.exists(path):
+            df_old = pd.read_csv(path, encoding='utf-8-sig')
+            has_label = 'error_type' in df_old and df_old['error_type'].notna().any()
+            if len(df_old) == len(sub) and has_label:
+                sub['error_type'] = df_old['error_type'].values
+                if 'note' in df_old:
+                    sub['note'] = df_old['note'].values
+        sub.to_csv(path, index=False, encoding='utf-8-sig')
+    print(f'\n复核表已导出（全量文本 + error_type/note）:\n  {mis_path}\n  {near_path}')
+
+    # 归因分布表（W02 验收四件套之一）：从已标注的复核表汇总打印
+    print('\n===== 归因分布（人工复核 2026-11-02）=====')
+    for name, path in [('错分', mis_path), ('近错', near_path)]:
+        df_reviewed = pd.read_csv(path, encoding='utf-8-sig')
+        if df_reviewed['error_type'].notna().any():
+            print(f'\n{name}（{len(df_reviewed)} 条）:')
+            print(df_reviewed['error_type'].value_counts().to_string())
