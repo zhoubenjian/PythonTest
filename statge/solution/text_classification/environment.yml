@@ -6,11 +6,18 @@ dependencies:
   - python=3.11
   - pip
   - pip:
-      # 与 Windows 基线一致（见 执行日志.md W01 交接记录）
+      # 数值与建模（W01 基线）
       - numpy==1.26.4
       - pandas==2.2.3
       - scipy==1.13.1
       - scikit-learn==1.5.2
       - joblib==1.4.2
-      - matplotlib
-      - pytest
+      # 可视化与测试（与 env_Linux.txt 对齐，11-02 #7）
+      - matplotlib==3.11.2
+      - pillow==13.0.0
+      - pytest==9.1.1
+      # W03 API 主线（11-02 #7 预置，周四开工）
+      - fastapi==0.162.0
+      - pydantic==2.14.2
+      - uvicorn==0.54.0
+      - httpx==0.28.1
