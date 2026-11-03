@@ -9,12 +9,15 @@ import logging
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 from api.model_service import ModelService, timed
 from api.schemas import (
     BatchPredictRequest,
     BatchPredictResponse,
+    ErrorResponse,
     HealthResponse,
     PredictRequest,
     PredictResponse,
@@ -45,6 +48,28 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 app = FastAPI(title='rebuilt 文本分类 API', version='0.1.0', lifespan=lifespan)
 
 
+@app.exception_handler(RequestValidationError)
+async def validation_error_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
+    '''pydantic 校验失败（422）：裹成统一外形，只带前 3 条错误避免刷屏。'''
+    return JSONResponse(
+        status_code=422,
+        content=ErrorResponse(
+            code='VALIDATION_ERROR',
+            message=f'输入校验失败: {exc.errors()[:3]}',
+        ).model_dump(),
+    )
+
+
+@app.exception_handler(Exception)
+async def fallback_error_handler(_: Request, exc: Exception) -> JSONResponse:
+    '''未知异常兜底（500）：完整堆栈进日志，调用方只见统一外形。'''
+    logger.exception('unhandled error')
+    return JSONResponse(
+        status_code=500,
+        content=ErrorResponse(code='INTERNAL_ERROR', message='Internal server error').model_dump(),
+    )
+
+
 @app.get('/health', response_model=HealthResponse)
 def health() -> HealthResponse:
     '''健康检查：顺带暴露模型特征维数与类别表，便于核对部署的是哪批产物。'''
@@ -54,10 +79,7 @@ def health() -> HealthResponse:
 @app.post('/predict', response_model=PredictResponse)
 def predict(req: PredictRequest) -> PredictResponse:
     '''单条预测。'''
-    try:
-        result = timed(service, service.predict, req.text, req.top_k)
-    except TypeError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    result = timed(service, service.predict, req.text, req.top_k)
     return PredictResponse(**result)
 
 

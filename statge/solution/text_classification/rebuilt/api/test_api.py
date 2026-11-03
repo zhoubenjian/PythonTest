@@ -91,3 +91,12 @@ def test_batch_rejects_single_string(client):
 def test_predict_rejects_empty_text(client):
     resp = client.post('/predict', json={'text': ''})
     assert resp.status_code == 422
+
+
+def test_error_shape_consistent(client):
+    '''所有错误返回同一外形 {code, message} —— 调用方只写一次处理逻辑。'''
+    r = client.post('/predict', json={'text': ''})
+    assert r.status_code == 422
+    body = r.json()
+    assert set(body) == {'code', 'message'}
+    assert body['code'] == 'VALIDATION_ERROR'

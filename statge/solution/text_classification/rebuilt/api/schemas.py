@@ -37,3 +37,13 @@ class HealthResponse(BaseModel):
     status: str
     n_features: int
     classes: list[str]
+
+
+class ErrorResponse(BaseModel):
+    '''统一错误响应体：所有错误场景返回同一外形，调用方的错误处理只写一次。
+
+    code 是机器可读的错误码（如 VALIDATION_ERROR / INTERNAL_ERROR），
+    供调用方程序分支；HTTP 状态码仍负责粗分类。
+    '''
+    code: str = Field(examples=['VALIDATION_ERROR'], description='机器可读错误码')
+    message: str = Field(description='人类可读说明，只描述问题不泄漏内部细节')
