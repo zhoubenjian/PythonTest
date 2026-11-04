@@ -17,7 +17,8 @@ MODEL_PATH = os.path.join(ARTIFACT_DIR, 'model.pkl')
 
 
 def load_artifacts(artifact_dir=ARTIFACT_DIR):
-    '''加载 vectorizer 与 model，返回 (vectorizer, model)。
+    '''
+    加载 vectorizer 与 model，返回 (vectorizer, model)。
 
     要求：文件不存在时给出明确错误，提示先运行 fit.py。
     '''
@@ -37,7 +38,8 @@ def load_artifacts(artifact_dir=ARTIFACT_DIR):
 
 
 def _rank(classes, proba_row, top_k):
-    '''类别与概率配对、按概率降序排序，返回 (label, confidence, top_k 列表)。
+    '''
+    类别与概率配对、按概率降序排序，返回 (label, confidence, top_k 列表)。
 
     单条与批量共用：classes 的顺序与 predict_proba 概率列一一对应，
     配对来源必须是 model.classes_，不能是词表或输入文本（历史上在这栽过两次）。
@@ -47,7 +49,8 @@ def _rank(classes, proba_row, top_k):
 
 
 def predict_one(text, vectorizer, model, top_k=3):
-    '''预测单条文本，返回 dict。
+    '''
+    预测单条文本，返回 dict。
 
     返回的 dict 至少包含:
         label:      预测类别
@@ -67,7 +70,9 @@ def predict_one(text, vectorizer, model, top_k=3):
 
 
 def predict_batch(texts, vectorizer, model, top_k=3):
-    '''批量预测，返回 list[dict]，每个元素与 predict_one 结构一致。'''
+    '''
+    批量预测，返回 list[dict]，每个元素与 predict_one 结构一致。
+    '''
 
     # 传进来单个 str 时会被当成字符序列逐字 transform，这里直接拦掉
     if isinstance(texts, str):
