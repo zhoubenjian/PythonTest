@@ -8,9 +8,10 @@ predict_one / predict_batch，不复制实现（两份实现迟早漂移）。
 （uvicorn 会把启动时的工作目录放进 sys.path）。
 '''
 import logging
+import os
 import time
 
-from predict import load_artifacts, predict_batch, predict_one
+from predict import ARTIFACT_DIR, load_artifacts, predict_batch, predict_one
 
 logger = logging.getLogger('api.service')
 
@@ -24,7 +25,9 @@ class ModelService:
 
     def __init__(self):
         t0 = time.perf_counter()
-        self.vectorizer, self.model = load_artifacts()
+        # ARTIFACTS_DIR 环境变量可覆盖产物目录（Docker 挂载/多套产物切换用），缺省用 rebuilt/artifacts
+        artifact_dir = os.getenv('ARTIFACTS_DIR')
+        self.vectorizer, self.model = load_artifacts(artifact_dir or ARTIFACT_DIR)
         self.load_seconds = time.perf_counter() - t0
         self.n_features = self.vectorizer.transform(['']).shape[1]
         self.classes = [str(c) for c in self.model.classes_]

@@ -6,6 +6,7 @@
 约束：不得 import 上级 src/ 的任何模块；运行目录即包路径，不用 sys.path 注入。
 '''
 import logging
+import os
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
@@ -23,8 +24,9 @@ from api.schemas import (
     PredictResponse,
 )
 
+# 环境变量：LOG_LEVEL 调日志级别（非法值启动即报错，早失败）；ARTIFACTS_DIR 见 model_service
 logging.basicConfig(
-    level=logging.INFO,
+    level=os.getenv('LOG_LEVEL', 'INFO').upper(),
     format='%(asctime)s %(levelname)s %(name)s %(message)s',
 )
 logger = logging.getLogger('api')
