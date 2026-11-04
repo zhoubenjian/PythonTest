@@ -1,4 +1,4 @@
-﻿name: ai_app
+name: ai_app
 channels:
   - https://repo.anaconda.com/pkgs/main
   - https://repo.anaconda.com/pkgs/r
@@ -14,6 +14,7 @@ dependencies:
       - joblib==1.4.2
       # 可视化与测试（与 env_Linux.txt 对齐，11-02 #7）
       - matplotlib==3.11.2
+      - fonttools==4.68.0   # matplotlib 传递依赖，钉版防止三端漂移（4.67/4.68）
       - pillow==13.0.0
       - pytest==9.1.1
       # W03 API 主线（11-02 #7 预置，周四开工）
