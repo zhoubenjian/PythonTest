@@ -1,0 +1,5 @@
+# 镜像里不进测试与开发文件（构建上下文是 rebuilt/，默认会全量带入）
+api/test_api.py
+**/__pycache__/
+.pytest_cache/
+NOTES.md

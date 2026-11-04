@@ -1,0 +1,9 @@
+# rebuilt API 容器内运行时最小依赖（钉版，与 environment.yml 对齐）。
+# 证据点：生产推理只需要这 7 个包，不含 pandas/matplotlib/pytest 等任何训练与开发依赖。
+numpy==1.26.4
+scipy==1.13.1
+scikit-learn==1.5.2
+joblib==1.4.2
+fastapi==0.162.0
+pydantic==2.14.2
+uvicorn==0.54.0
