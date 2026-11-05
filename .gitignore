@@ -71,6 +71,24 @@ statge/solution/*/models/*.pkl
 **/chroma_db/
 **/chroma_tmp/
 **/local_chroma_db/
+**/local_pdf_chroma_db_*/
+**/local_vector_db/
+**/my_local_vector_db/
+local_models/
+
+# ========== 公开数据集（不入库，由脚本下载）==========
+# 20 Newsgroups / MNIST / CIFAR-10 均为公开数据集，克隆时按需下载
+local_datas/
+CNN/data/MNIST/
+CNN/data/cifar-10-batches-py/
+**/cifar-10-batches-py/
+
+# ========== 训练与推理输出产物 ==========
+Math/TrainApplicationExample/outputs/
+
+# ========== 密钥文件（仅根目录 .env 已忽略，这里覆盖变体）==========
+.env.*
+*.env
 
 # ========== 本机环境诊断产物（不参与提交）==========
 # 三端环境清单是 W01 交付物，需要提交；其余 env 诊断文件仍忽略
