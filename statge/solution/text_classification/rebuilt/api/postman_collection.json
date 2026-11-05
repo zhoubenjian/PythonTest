@@ -1,0 +1,169 @@
+{
+  "info": {
+    "_postman_id": "6f1c2a4e-9b7d-4c2a-8e5f-3d1b0a7c9e21",
+    "name": "rebuilt 文本分类 API",
+    "description": "W03 验收材料：四个请求覆盖健康检查、单条预测、批量预测与非法输入（422）。\n使用前先启动服务：cd rebuilt && python -m uvicorn api.main:app\n导入方式：Postman -> Import -> 选择本文件；如需换地址，改集合变量 base_url。",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. 健康检查",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('状态码 200', function () { pm.response.to.have.status(200); });",
+              "const body = pm.response.json();",
+              "pm.test('服务就绪且模型维度正确', function () {",
+              "    pm.expect(body.status).to.eql('ok');",
+              "    pm.expect(body.n_features).to.eql(10000);",
+              "    pm.expect(body.classes.length).to.eql(4);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "2. 单条预测",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('状态码 200', function () { pm.response.to.have.status(200); });",
+              "const body = pm.response.json();",
+              "pm.test('响应结构完整', function () {",
+              "    pm.expect(body).to.have.all.keys('label', 'confidence', 'top_k');",
+              "    pm.expect(body.confidence).to.be.within(0, 1);",
+              "});",
+              "pm.test('top_k 降序且首位与 label 一致', function () {",
+              "    pm.expect(body.top_k[0][0]).to.eql(body.label);",
+              "    for (let i = 1; i < body.top_k.length; i++) {",
+              "        pm.expect(body.top_k[i - 1][1]).to.be.at.least(body.top_k[i][1]);",
+              "    }",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"The team scored three runs in the ninth inning to win the game.\",\n  \"top_k\": 3\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/predict",
+          "host": ["{{base_url}}"],
+          "path": ["predict"]
+        }
+      }
+    },
+    {
+      "name": "3. 批量预测",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('状态码 200', function () { pm.response.to.have.status(200); });",
+              "const body = pm.response.json();",
+              "pm.test('count 与 results 长度一致', function () {",
+              "    pm.expect(body.count).to.eql(2);",
+              "    pm.expect(body.results.length).to.eql(2);",
+              "});",
+              "pm.test('results 顺序与请求一一对应', function () {",
+              "    body.results.forEach(function (r) {",
+              "        pm.expect(r).to.have.all.keys('label', 'confidence', 'top_k');",
+              "        pm.expect(r.top_k[0][0]).to.eql(r.label);",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"texts\": [\n    \"The team scored three runs in the ninth inning to win the game.\",\n    \"Computer graphics rendering uses polygon meshes and shaders.\"\n  ],\n  \"top_k\": 3\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/predict/batch",
+          "host": ["{{base_url}}"],
+          "path": ["predict", "batch"]
+        }
+      }
+    },
+    {
+      "name": "4. 非法输入（空文本，期望 422）",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('状态码 422', function () { pm.response.to.have.status(422); });",
+              "const body = pm.response.json();",
+              "pm.test('错误外形统一为 code + message', function () {",
+              "    pm.expect(Object.keys(body).sort()).to.eql(['code', 'message']);",
+              "    pm.expect(body.code).to.eql('VALIDATION_ERROR');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/predict",
+          "host": ["{{base_url}}"],
+          "path": ["predict"]
+        }
+      }
+    }
+  ]
+}

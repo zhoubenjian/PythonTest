@@ -17,6 +17,7 @@
 | 产物存放位置 | `models/`（与环境共享，磁盘上混有 sklearn 1.6.1 存的旧文件） | `rebuilt/artifacts/` 独立目录 | 旧 pkl 由 1.5.2 环境加载产生 InconsistentVersionWarning（实证）；混放会互相污染，独立目录隔离实验产物 |
 | 预测接口 | `_find_best_model` 按硬编码顺序取第一个文件，注释却写"F1 最高" | 加载固定产物，无选型；选型结果由训练流程保证 | 硬编码顺序是把选型决定藏在了加载侧；rebuilt 的分工是"训练侧定，预测侧只执行" |
 | 错误处理 | 混合（有 raise 有 print 继续） | 显式抛 `FileNotFoundError`；目录用 `exist_ok=True` | 静默继续会把错误推迟到更难查的下游；边界处早失败 |
+| HTTP 服务层 | 无（只有 `predict.py` / `evaluate.py` 脚本入口） | 新增 `api/`：`/health`、`/predict`、`/predict/batch`；错误统一为 `{code, message}` 外形；产物缺失在启动时失败 | 脚本入口无法对外交付；如果放任 pydantic 的 422 与未捕获异常的 500 各自成外形，调用方要写两套错误处理。统一外形 + 早失败，把问题都挡在边界 |
 
 ## 值得对比的点（自己判断，不要都写成"无差异"）
 
@@ -31,7 +32,9 @@
 
 - 重写版验证集 macro-F1：**0.9950**（对比基线：logistic 0.9975）
 - 与原版是否有实质行为差异：**无**。差的 1 条已实证：全量 4 类数据含 5 对"同文本不同标签"的 cross-post，其中 1 对跨 train/val，即 400 条验证集中 1 条分歧 = 0.0025。数据指纹 sha256 前 16 位 `374fa3d7bfd13759`。
-- 下一步（W02 要做的事）：
-  1. 重复样本受控实验：保留 vs 去重后按组切分（cross-post 不得跨集）
-  2. 选型口径统一：trainer / evaluate.py / predictor 三处统一为"验证集选型"，predictor 去掉硬编码顺序
-  3. manifest 一致性校验：sklearn 版本 + 数据指纹 + 样本数，不匹配报错；用当前环境重训覆盖旧 1.6.1 产物
+- 下一步进展（原 W02 三项）：
+  1. 重复样本受控实验：**已完成**（去重 + 按组切分，唯一有效方案差异 0.0025）
+  2. 选型口径统一：**已完成**（trainer / evaluate.py / predictor 全部改为验证集选型，predictor 去掉硬编码顺序）
+  3. manifest 一致性校验：**部分完成**（已做特征维数 + 类别空间校验，接入 evaluate.py 与 predictor 加载路径）；
+     sklearn 版本 + 数据指纹 + 样本数的完整 manifest 尚未做，待后续周次补
+- W03 追加：HTTP 服务层（`api/`）已完成，验收材料见 `README.md` 与 `api/postman_collection.json`
