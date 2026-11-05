@@ -36,6 +36,8 @@ def main():
     if args.data_path and os.path.exists(args.data_path):
         # 加载已处理的数据
         data_dict = DataPreprocessor.load_processed_data(args.data_path)
+        # 反标准化需要 scaler_y：从模型目录加载
+        preprocessor = DataPreprocessor.load()
     else:
         # 重新加载和处理数据
         df = load_raw_data()
@@ -44,14 +46,16 @@ def main():
 
     # ============ Step 2: 加载模型并评估 ============
     evaluator = ModelEvaluator()
+    unit = "万美元（原始尺度）"
 
     if args.model_path:
         # 评估单个模型
         print(f"\n📊 评估模型: {args.model_path}")
         model = joblib.load(args.model_path)
         result = evaluator.evaluate(
-            model, data_dict["X_test"], data_dict["y_test"]
+            model, data_dict["X_test"], data_dict["y_test"], preprocessor=preprocessor
         )
+        print(f"   指标单位: {unit}")
         print(f"   MSE:  {result['mse']:.4f}")
         print(f"   RMSE: {result['rmse']:.4f}")
         print(f"   MAE:  {result['mae']:.4f}")
@@ -78,7 +82,8 @@ def main():
 
         # 对比评估
         evaluator.compare_models(
-            models_dict, data_dict["X_test"], data_dict["y_test"]
+            models_dict, data_dict["X_test"], data_dict["y_test"],
+            preprocessor=preprocessor
         )
 
     print("\n✅ 评估完成！")

@@ -64,10 +64,10 @@ def main():
 
     if args.model:
         # 训练指定模型
-        results = trainer.train(args.model, data_dict)
+        results = trainer.train(args.model, data_dict, preprocessor=preprocessor)
     else:
         # 训练所有模型
-        results = trainer.train_all(data_dict)
+        results = trainer.train_all(data_dict, preprocessor=preprocessor)
 
     # ============ Step 4: 保存模型 ============
     if args.save:
@@ -75,6 +75,8 @@ def main():
         print("💾 Step 4: 保存模型")
         print("=" * 60)
         os.makedirs(args.save_dir, exist_ok=True)
+        # scaler 与模型配套保存，评估时才能反标准化回原始尺度
+        preprocessor.save(args.save_dir)
 
         if args.model:
             save_path = os.path.join(args.save_dir, f"{args.model}_model.pkl")

@@ -11,6 +11,8 @@ import pandas as pd
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PROJECT_ROOT)
 
+from configs.config import TARGET_UNIT_SCALE
+
 
 class HousePricePredictor:
     """房价预测器"""
@@ -34,7 +36,7 @@ class HousePricePredictor:
                 - pd.DataFrame: 多个样本
                 - np.ndarray: 已处理的特征数组
         Returns:
-            np.ndarray: 预测的房价（原始尺度）
+            np.ndarray: 预测的房价（单位：万美元）
         """
         # 1. 转换输入格式
         if isinstance(features, dict):
@@ -51,8 +53,8 @@ class HousePricePredictor:
         # 2. 预测
         y_pred_scaled = self.model.predict(X)
 
-        # 3. 反标准化回原始尺度
-        y_pred = self.preprocessor.inverse_transform_y(y_pred_scaled)
+        # 3. 反标准化回原始尺度，并换算为万美元（与评估报告口径一致）
+        y_pred = self.preprocessor.inverse_transform_y(y_pred_scaled) * TARGET_UNIT_SCALE
 
         return y_pred
 
@@ -62,7 +64,7 @@ class HousePricePredictor:
         Args:
             **kwargs: 特征名=值，如 MedInc=5.0, HouseAge=30
         Returns:
-            float: 预测房价
+            float: 预测房价（单位：万美元）
         """
         # 验证特征名
         valid_features = self.preprocessor.feature_columns
@@ -83,7 +85,7 @@ class HousePricePredictor:
         Args:
             feature_list: 特征字典列表
         Returns:
-            np.ndarray: 预测结果数组
+            np.ndarray: 预测结果数组（单位：万美元）
         """
         df = pd.DataFrame(feature_list)
         return self.predict(df)

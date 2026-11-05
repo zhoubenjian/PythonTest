@@ -49,6 +49,8 @@ FEATURE_COLUMNS = [
     "Longitude"     # 经度
 ]
 TARGET_COLUMN = "MedHouseVal"  # 目标：房价中位数
+# MedHouseVal 原始单位为 10 万美元；评估报告统一换算为万美元，避免出现 "MAE 0.35" 这类无法解读的数字
+TARGET_UNIT_SCALE = 10
 
 
 '''

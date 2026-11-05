@@ -11,22 +11,32 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PROJECT_ROOT)
 
+from configs.config import TARGET_UNIT_SCALE
+
 
 class ModelEvaluator:
     """模型评估器"""
 
     @staticmethod
-    def evaluate(model, X: np.ndarray, y: np.ndarray) -> dict:
+    def evaluate(model, X: np.ndarray, y: np.ndarray,
+                 preprocessor: "DataPreprocessor" = None) -> dict:
         """
         评估单个模型
         Args:
             model: 已训练的模型
             X: 特征数据
-            y: 真实标签
+            y: 真实标签（标准化尺度）
+            preprocessor: 数据预处理器；传入时先把真实值和预测值反标准化回原始尺度，
+                          指标单位即为原始尺度（万美元）
         Returns:
             dict: 评估指标
         """
         y_pred = model.predict(X)
+
+        # 反标准化回原始尺度：模型在标准化标签上训练，直接用标准化尺度算 MAE/RMSE 无法解读
+        if preprocessor is not None:
+            y = preprocessor.inverse_transform_y(np.asarray(y)) * TARGET_UNIT_SCALE
+            y_pred = preprocessor.inverse_transform_y(y_pred) * TARGET_UNIT_SCALE
 
         # MSE(均方误差，越小越好)
         mse = mean_squared_error(y, y_pred)
@@ -44,26 +54,30 @@ class ModelEvaluator:
         }
 
     @staticmethod
-    def compare_models(models_dict: dict, X_test: np.ndarray, y_test: np.ndarray) -> dict:
+    def compare_models(models_dict: dict, X_test: np.ndarray, y_test: np.ndarray,
+                       preprocessor: "DataPreprocessor" = None) -> dict:
         """
         对比多个模型的性能
         Args:
             models_dict: {model_name: model} 字典
             X_test: 测试特征
-            y_test: 测试标签
+            y_test: 测试标签（标准化尺度）
+            preprocessor: 数据预处理器；传入时指标为原始尺度（万美元）
         Returns:
             dict: 各模型的评估结果
         """
         results = {}
+        unit = "万美元（原始尺度）" if preprocessor is not None else "标准化尺度"
 
         print(f"\n{'='*60}")
         print("📊 测试集模型性能对比")
+        print(f"   指标单位：{unit}（MSE 为该单位的平方）")
         print(f"{'='*60}")
         print(f"{'模型':<20} {'MSE':<12} {'RMSE':<12} {'MAE':<12} {'R²':<12}")
         print("-" * 68)
 
         for model_name, model in models_dict.items():
-            result = ModelEvaluator.evaluate(model, X_test, y_test)
+            result = ModelEvaluator.evaluate(model, X_test, y_test, preprocessor=preprocessor)
             results[model_name] = result
 
             print(
@@ -119,8 +133,8 @@ if __name__ == "__main__":
     # 2. 训练模型
     print("\n🚀 训练模型...")
     trainer = ModelTrainer()
-    trainer.train("ridge", data_dict)
-    trainer.train("forest", data_dict)
+    trainer.train("ridge", data_dict, preprocessor=preprocessor)
+    trainer.train("forest", data_dict, preprocessor=preprocessor)
 
     # 3. 评估模型
     print("\n📊 评估模型...")
@@ -131,14 +145,15 @@ if __name__ == "__main__":
 
     evaluator = ModelEvaluator()
     results = evaluator.compare_models(
-        models_dict, data_dict["X_test"], data_dict["y_test"]
+        models_dict, data_dict["X_test"], data_dict["y_test"], preprocessor=preprocessor
     )
 
-    # 4. 误差分析
+    # 4. 误差分析（真实值为原始尺度）
     print("\n🔍 误差分析 (RandomForest):")
     forest_result = results["forest"]
     error_analysis = evaluator.get_error_analysis(
-        data_dict["y_test"], forest_result["predictions"]
+        preprocessor.inverse_transform_y(data_dict["y_test"]) * TARGET_UNIT_SCALE,
+        forest_result["predictions"]
     )
 
     for key, value in error_analysis.items():

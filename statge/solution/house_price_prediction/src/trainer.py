@@ -12,7 +12,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PROJECT_ROOT)
 
-from configs.config import MODEL_CONFIGS, MODEL_DIR
+from configs.config import MODEL_CONFIGS, MODEL_DIR, TARGET_UNIT_SCALE
 
 
 class ModelTrainer:
@@ -22,11 +22,13 @@ class ModelTrainer:
         self.models = {}            # 存储训练好的模型
         self.training_history = {}  # 存储训练历史
 
-    def train(self, model_type: str, data_dict: dict) -> dict:
+    def train(self, model_type: str, data_dict: dict,
+              preprocessor: "DataPreprocessor" = None) -> dict:
         """
         训练单个模型
         :param model_type: 模型类型
         :param data_dict: 数据字典
+        :param preprocessor: 数据预处理器；传入时训练/验证指标反标准化回原始尺度（万美元）
         :return: 训练结果
         """
         from model import get_model
@@ -49,14 +51,15 @@ class ModelTrainer:
         train_pred = model.predict(X_train)
         val_pred = model.predict(X_val)
 
-        train_metrics = self._calculate_metrics(y_train, train_pred)
-        val_metrics = self._calculate_metrics(y_val, val_pred)
+        train_metrics = self._calculate_metrics(y_train, train_pred, preprocessor)
+        val_metrics = self._calculate_metrics(y_val, val_pred, preprocessor)
 
-        print(f"\n📊 训练集指标:")
+        unit = "万美元（原始尺度）" if preprocessor is not None else "标准化尺度"
+        print(f"\n📊 训练集指标（{unit}）:")
         for metric, value in train_metrics.items():
             print(f"   {metric}: {value:.4f}")
 
-        print(f"\n📊 验证集指标:")
+        print(f"\n📊 验证集指标（{unit}）:")
         for metric, value in val_metrics.items():
             print(f"   {metric}: {value:.4f}")
 
@@ -73,22 +76,25 @@ class ModelTrainer:
             "val_metrics": val_metrics,
         }
 
-    def train_all(self, data_dict: dict) -> list:
+    def train_all(self, data_dict: dict,
+                  preprocessor: "DataPreprocessor" = None) -> list:
         """
         训练所有模型
         Args:
             data_dict: 数据字典
+            preprocessor: 数据预处理器；传入时指标为原始尺度（万美元）
         Returns:
             list: 所有模型的训练结果
         """
         results = []
         for model_type in MODEL_CONFIGS:
-            result = self.train(model_type, data_dict)
+            result = self.train(model_type, data_dict, preprocessor=preprocessor)
             results.append(result)
 
         # 打印汇总对比
+        unit = "万美元（原始尺度）" if preprocessor is not None else "标准化尺度"
         print(f"\n{'='*50}")
-        print("📈 模型性能对比（验证集）")
+        print(f"📈 模型性能对比（验证集，{unit}）")
         print(f"{'='*50}")
         print(f"{'模型':<20} {'RMSE':<12} {'MAE':<12} {'R²':<12}")
         print("-" * 56)
@@ -135,15 +141,21 @@ class ModelTrainer:
         return joblib.load(model_path)
 
     @staticmethod
-    def _calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
+    def _calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray,
+                           preprocessor: "DataPreprocessor" = None) -> dict:
         """
         计算评估指标
         Args:
-            y_true: 真实值
-            y_pred: 预测值
+            y_true: 真实值（标准化尺度）
+            y_pred: 预测值（标准化尺度）
+            preprocessor: 数据预处理器；传入时两者都反标准化回原始尺度再计算
         Returns:
             dict: 指标字典
         """
+        if preprocessor is not None:
+            y_true = preprocessor.inverse_transform_y(np.asarray(y_true)) * TARGET_UNIT_SCALE
+            y_pred = preprocessor.inverse_transform_y(np.asarray(y_pred)) * TARGET_UNIT_SCALE
+
         mse = mean_squared_error(y_true, y_pred)
         mae = mean_absolute_error(y_true, y_pred)
         r2 = r2_score(y_true, y_pred)
@@ -174,7 +186,7 @@ if __name__ == "__main__":
     # 3. 训练所有模型
     print("\n🚀 开始训练所有模型...")
     trainer = ModelTrainer()
-    trainer.train_all(data_dict)
+    trainer.train_all(data_dict, preprocessor=preprocessor)
 
     # 4. 保存所有交付物
     print("\n💾 保存所有模型...")
