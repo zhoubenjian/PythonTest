@@ -10,14 +10,7 @@
 import os
 
 import pandas as pd
-from sklearn.datasets import load_files
-
-# 数据目录：仓库根 / local_datas / 20_newsgroups
-# 层级：rebuilt -> text_classification -> solution -> statge -> 仓库根（4 级）
-_HERE = os.path.dirname(os.path.abspath(__file__))
-DATA_ROOT = os.path.normpath(
-    os.path.join(_HERE, '..', '..', '..', '..', 'local_datas', '20_newsgroups')
-)
+from sklearn.datasets import fetch_20newsgroups, load_files, get_data_home
 
 DEFAULT_CATEGORIES = [
     'alt.atheism',
@@ -29,35 +22,72 @@ DEFAULT_CATEGORIES = [
 RANDOM_STATE = 42
 
 
-def load_data(categories=None, data_root=DATA_ROOT, random_state=RANDOM_STATE):
+def _sklearn_cache_ready():
+    """检查 sklearn 20newsgroups 缓存是否已就绪（避免联网超时）。"""
+    cache_root = os.path.join(get_data_home(), '20news_home', '20news-bydate')
+    train_dir = os.path.join(cache_root, '20news-bydate-train')
+    if not os.path.isdir(train_dir):
+        return False
+    # 至少要有一个类别子目录
+    subdirs = [d for d in os.listdir(train_dir)
+              if os.path.isdir(os.path.join(train_dir, d))]
+    return len(subdirs) > 0
+
+
+def _local_fallback_root():
+    """项目内 local_datas/20_newsgroups 路径（本机兜底）。"""
+    _HERE = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.normpath(
+        os.path.join(_HERE, '..', '..', '..', '..', 'local_datas', '20_newsgroups')
+    )
+    return path
+
+
+def load_data(categories=None, random_state=RANDOM_STATE):
     '''加载 20newsgroups 的指定类别，返回 DataFrame。
 
-    要求：
-    1. 数据目录不存在时抛 FileNotFoundError，错误信息里带上实际路径。
-    2. 用 sklearn.datasets.load_files 读取；encoding='ISO-8859-1'、decode_error='ignore'
-       （这批数据是 1980 年代末的邮件，含大量非 UTF-8 字节，用默认 UTF-8 会直接报错）。
-    3. shuffle=True 且固定 random_state —— 三端（Windows/Ubuntu/Mac）必须得到完全相同的行顺序。
-    4. categories 为 None 时使用 DEFAULT_CATEGORIES，否则只保留传入的类别。
-    5. category 列由 target_names 映射得到（不要用 unique() 的出现顺序猜类别编号）。
-    6. 返回的 DataFrame 至少包含 text / category 两列，index 重置为 0..n-1。
+    策略：
+      1. sklearn 缓存已就绪 → fetch_20newsgroups（秒走缓存）
+      2. sklearn 缓存未就绪 + 项目内 local_datas 存在 → load_files（本机兜底）
+      3. 都没有 → 报错，提示联网 fetch
+
+    此逻辑避免在网络不通时 fetch 卡 120 秒超时。
+    Linux/Mac 首次运行前请先联网执行一次 fetch_20newsgroups 建立缓存。
 
     参数:
         categories:   要保留的类别名列表，None 表示用默认 4 类
-        data_root:    数据目录，默认取 DATA_ROOT
         random_state: 随机种子
     返回:
         pd.DataFrame
     '''
-    if not os.path.isdir(data_root):
-        raise FileNotFoundError(f'数据目录不存在: {data_root}')
-    data = load_files(
-        container_path=data_root,
-        categories=categories if categories is not None else DEFAULT_CATEGORIES,
-        encoding='ISO-8859-1',
-        shuffle=True,
-        random_state=random_state,
-        decode_error='ignore'
-    )
+    cats = categories if categories is not None else DEFAULT_CATEGORIES
+    local_root = _local_fallback_root()
+
+    if _sklearn_cache_ready():
+        # 缓存就绪 → fetch（秒返回）
+        data = fetch_20newsgroups(
+            subset='all',
+            categories=cats,
+            shuffle=True,
+            random_state=random_state,
+            remove=('headers', 'footers', 'quotes'),
+        )
+    elif os.path.isdir(local_root):
+        # 缓存未就绪但项目内有本地数据 → load_files（本机兜底）
+        data = load_files(
+            container_path=local_root,
+            categories=cats,
+            encoding='ISO-8859-1',
+            shuffle=True,
+            random_state=random_state,
+            decode_error='ignore',
+        )
+    else:
+        raise RuntimeError(
+            "找不到 20newsgroups 数据。\n"
+            "  1. 联网执行一次：python -c \"from sklearn.datasets import fetch_20newsgroups; fetch_20newsgroups(subset='train')\"\n"
+            "  2. 或手动将数据放到 sklearn 缓存目录。"
+        )
 
     df = pd.DataFrame({
         'text': data.data,
@@ -66,11 +96,10 @@ def load_data(categories=None, data_root=DATA_ROOT, random_state=RANDOM_STATE):
     df['category'] = df['category_id'].map(lambda x: data.target_names[x])
 
     return df.reset_index(drop=True)
-    # raise NotImplementedError('TODO: 按 docstring 里的 6 条要求实现')
 
 
 if __name__ == '__main__':
-    # 自测入口：跑通后应能打印总样本数与每类样本数（本版本 4 类共 4000 条）
+    # 自测入口：跑通后应能打印总样本数与每类样本数
     df = load_data()
     print(f'总样本数: {len(df)}')
     print(df['category'].value_counts())
