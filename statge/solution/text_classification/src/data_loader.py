@@ -15,6 +15,7 @@ from configs.config import (
     RAW_DATA_DIR, DATASET_NAME, DEFAULT_CATEGORIES,
     RANDOM_STATE,
 )
+from configs.text_clean import clean_text
 
 
 def _sklearn_cache_ready():
@@ -50,12 +51,14 @@ def load_raw_data(categories=None):
 
     if _sklearn_cache_ready():
         print(f"📂 sklearn 缓存已就绪 → fetch_20newsgroups")
+        # remove=() 先取原始全文，统一由 clean_text 清洗，
+        # 保证与 load_files 兜底路径使用同一套剥离规则
         data = fetch_20newsgroups(
             subset='all',
             categories=cats,
             shuffle=True,
             random_state=RANDOM_STATE,
-            remove=('headers', 'footers', 'quotes'),
+            remove=(),
         )
     elif os.path.isdir(local_root):
         print(f"📂 sklearn 缓存未就绪 → fallback 本地 load_files")
@@ -79,6 +82,9 @@ def load_raw_data(categories=None):
         'category_id': data.target,
     })
     df['category'] = df['category_id'].map(lambda x: data.target_names[x])
+
+    # 统一清洗：邮件头含 `Newsgroups: <类别名>`，等于把标签写进特征，必须剥离
+    df['text'] = df['text'].map(clean_text)
 
     print(f"✅ 数据加载完成: {len(df)} 条样本")
     print(f"   类别映射: {dict(enumerate(df['category'].unique()))}")

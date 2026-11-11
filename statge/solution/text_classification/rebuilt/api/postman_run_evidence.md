@@ -1,26 +1,26 @@
 # Postman 集合实跑证据
 
 对应集合：[postman_collection.json](postman_collection.json)（4 个请求）
+复跑脚本：[postman_rerun.py](postman_rerun.py)（与服务同环境，直接跑即可复现）
 
-- **执行时间**：2026-11-10 09:46:04
-- **运行环境**：`api-requirements.txt` 钉版依赖（scikit-learn 1.5.2 / numpy 1.26.4 / fastapi 0.162.0 / uvicorn 0.54.0）
+- **执行时间**：2026-11-11 11:16:48（数据清洗后重跑）
+- **运行环境**：`api-requirements.txt` 钉版依赖（scikit-learn 1.5.2 / numpy 1.26.4 / pandas 2.2.3 / fastapi / uvicorn）
 - **服务地址**：http://localhost:8000
 - **结果**：**17 PASS / 0 FAIL**
 
-> 说明：服务须用 `api-requirements.txt` 的环境启动。若用更高版本的 scikit-learn 加载产物，会触发
-> `InconsistentVersionWarning`（产物由 1.5.2 生成），虽不影响本例预测结果，但正式证据以钉版环境为准。
+> 重要：本文件在 2026-11-11 数据口径修正后重新生成。
+> 原记录（2026-11-10）的置信度数值（0.7757 / 0.9156）来自**未剥离邮件头**的数据，
+> 存在标签泄漏，已作废。当前数值基于 `configs/text_clean.py` 统一清洗后的数据。
 
 ---
 
 ## 实跑输出
 
 ```text
-=== Postman 集合实跑证据 ===
-时间: 2026-11-10 09:46:04
+=== Postman 集合实跑证据（清洗后重跑）===
+时间: 2026-11-11 11:16:48
 集合: rebuilt 文本分类 API (4 请求)
 base_url: http://localhost:8000
-
-[服务已就绪]
 
 [1. 健康检查] GET /health
     响应: {"status": "ok", "n_features": 10000, "classes": ["alt.atheism", "comp.graphics", "comp.os.ms-windows.misc", "rec.sport.baseball"]}
@@ -31,8 +31,8 @@ base_url: http://localhost:8000
 
 [2. 单条预测] POST /predict
     请求: The team scored three runs in the ninth inning to win the ga...
-    响应: {"label": "rec.sport.baseball", "confidence": 0.7757451290403236, "top_k": [["rec.sport.baseball", 0.7757451290403236], ["comp.graphics", 0.08278568052806412], ["comp.os.ms-windows.misc", 0.07946518735382542]]}
-    耗时: 2058.1ms
+    响应: {"label": "rec.sport.baseball", "confidence": 0.8917835358288766, "top_k": [["rec.sport.baseball", 0.8917835358288766], ["comp.os.ms-windows.misc", 0.05027751012545256], ["comp.graphics", 0.03416951373422382]]}
+    耗时: 2047.2ms
     PASS  状态码 200
     PASS  响应含 label/confidence/top_k
     PASS  confidence 在 [0,1]
@@ -40,8 +40,8 @@ base_url: http://localhost:8000
     PASS  top_k 降序
 
 [3. 批量预测] POST /predict/batch
-    响应: {"count": 2, "results": [{"label": "rec.sport.baseball", "confidence": 0.7757451290403236, "top_k": [["rec.sport.baseball", 0.7757451290403236], ["comp.graphics", 0.08278568052806412], ["comp.os.ms-windows.misc", 0.07946518735382542]]}, {"label": "comp.graphics", "confidence": 0.9155649361292334, "top_k": [["comp.graphics", 0.9155649361292334], ["rec.sport.baseball", 0.03113389265064061], ["alt.atheism", 0.02958235000297623]]}]}
-    耗时: 2069.0ms
+    响应: {"count": 2, "results": [{"label": "rec.sport.baseball", "confidence": 0.8917835358288766, "top_k": [["rec.sport.baseball", 0.8917835358288766], ["comp.os.ms-windows.misc", 0.05027751012545256], ["comp.graphics", 0.03416951373422382]]}, {"label": "comp.graphics", "confidence": 0.9437804495710632, "top_k": [["comp.graphics", 0.9437804495710632], ["comp.os.ms-windows.misc", 0.024122484472750814], ["rec.sport.baseball", 0.01644310079985114]]}]}
+    耗时: 2051.2ms
     PASS  状态码 200
     PASS  count == 2
     PASS  results 长度 == 2
@@ -62,28 +62,29 @@ base_url: http://localhost:8000
 ## 服务端日志对照
 
 ```text
-INFO api.service artifacts loaded in 2.240s: n_features=10000 classes=['alt.atheism', 'comp.graphics', 'comp.os.ms-windows.misc', 'rec.sport.baseball']
+INFO api.service artifacts loaded in 3.890s: n_features=10000 classes=['alt.atheism', 'comp.graphics', 'comp.os.ms-windows.misc', 'rec.sport.baseball']
 INFO api service ready: n_features=10000 classes=['alt.atheism', 'comp.graphics', 'comp.os.ms-windows.misc', 'rec.sport.baseball']
 INFO:     Uvicorn running on http://127.0.0.1:8000
-INFO:     127.0.0.1:64535 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64537 - "GET /health HTTP/1.1" 200 OK
-INFO api.service predicted in 2.2ms
-INFO:     127.0.0.1:64542 - "POST /predict HTTP/1.1" 200 OK
-INFO api.service predicted in 0.7ms
-INFO:     127.0.0.1:64545 - "POST /predict/batch HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64550 - "POST /predict HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:56291 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56343 - "GET /health HTTP/1.1" 200 OK
+INFO api.service predicted in 3.6ms
+INFO:     127.0.0.1:56347 - "POST /predict HTTP/1.1" 200 OK
+INFO api.service predicted in 1.4ms
+INFO:     127.0.0.1:56351 - "POST /predict/batch HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56370 - "POST /predict HTTP/1.1" 422 Unprocessable Entity
 ```
 
 > 客户端记录的 `耗时`（约 2s）包含 HTTP 连接建立与 JSON 序列化开销；
-> 服务端 `predicted in 2.2ms / 0.7ms` 是纯推理耗时。对外描述性能时以服务端为准。
+> 服务端 `predicted in 3.6ms / 1.4ms` 是纯推理耗时。对外描述性能时以服务端为准。
 
 ---
 
 ## 运行截图
 
-| 文件 | 内容 |
-|------|------|
-| [01_swagger_docs.png](screenshots/01_swagger_docs.png) | Swagger UI：三个接口 + 6 个 Schemas |
-| [02_predict_200.png](screenshots/02_predict_200.png) | POST /predict 返回 200，label=comp.graphics，confidence=0.9155649381292334 |
+| 文件 | 内容 | 状态 |
+|------|------|------|
+| [01_swagger_docs.png](screenshots/01_swagger_docs.png) | Swagger UI：三个接口 + 6 个 Schemas | 有效（不含数值） |
+| [02_predict_200.png](screenshots/02_predict_200.png) | POST /predict 返回 200 | **需重截**：图中 confidence 为旧模型值 |
 
-截图 2 的 confidence 与上方批量预测第二条**逐位一致**，说明 Postman 脚本与 Swagger UI 两条独立链路输出确定性相同。
+截图 02 应重截为 `comp.graphics / 0.9437804495710632`（批量结果第二条），
+与上表数值逐位一致即为有效证据。

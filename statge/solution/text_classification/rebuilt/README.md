@@ -2,7 +2,9 @@
 
 独立重写版：不 import 原版 `src/` 的任何模块，只看行为与结论。与原版逐项差异见 `NOTES.md`。
 数据集为 20 Newsgroups 的 4 个类别（alt.atheism / comp.graphics / comp.os.ms-windows.misc / rec.sport.baseball），
-TF-IDF(10000 维) + LogisticRegression，验证集 macro-F1 = 0.9975。
+TF-IDF(10000 维) + LogisticRegression，验证集 macro-F1 = **0.9296**。
+文本统一经 `configs/text_clean.py` 剥离邮件头 / footer / 引用——邮件头含 `Newsgroups: <类别名>`，
+不剥离会让指标虚高约 6.8 个百分点（见 `header_ablation.py`）。
 
 ## 目录
 
@@ -13,6 +15,7 @@ TF-IDF(10000 维) + LogisticRegression，验证集 macro-F1 = 0.9975。
 | `fit.py` | 拟合 TF-IDF + 训练，产物写入 `artifacts/` |
 | `predict.py` | 预测入口：加载产物，单条 / 批量预测 |
 | `experiments.py` | W02 受控实验（去重 vs 保留、按组切分） |
+| `header_ablation.py` | W04 邮件头剥离实验：量化标签泄漏幅度（0.9950 → 0.9271） |
 | `error_analysis.py` | W02 错分归因分析（标注保留 + 分布汇总） |
 | `artifacts/` | `vectorizer.pkl` + `model.pkl`，训练产物 |
 | `api/` | FastAPI 服务（`main.py` / `schemas.py` / `model_service.py` / `test_api.py`） |
@@ -94,8 +97,8 @@ curl -s -X POST http://localhost:8000/predict \
 ```json
 {
   "label": "rec.sport.baseball",
-  "confidence": 0.7757,
-  "top_k": [["rec.sport.baseball", 0.7757], ["comp.graphics", 0.1203], ["comp.os.ms-windows.misc", 0.0811], ["alt.atheism", 0.0229]]
+  "confidence": 0.8918,
+  "top_k": [["rec.sport.baseball", 0.8918], ["comp.os.ms-windows.misc", 0.0503], ["comp.graphics", 0.0342]]
 }
 ```
 

@@ -8,9 +8,17 @@
     python load.py
 '''
 import os
+import sys
 
 import pandas as pd
 from sklearn.datasets import fetch_20newsgroups, load_files, get_data_home
+
+# 清洗规则放在 configs/text_clean.py，此处复用同一实现：
+# 若两边各写一份，一旦漂移就会让不同机器跑出不可比的指标。
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
+from configs.text_clean import clean_text
 
 DEFAULT_CATEGORIES = [
     'alt.atheism',
@@ -43,7 +51,7 @@ def _local_fallback_root():
     return path
 
 
-def load_data(categories=None, random_state=RANDOM_STATE):
+def load_data(categories=None, random_state=RANDOM_STATE, clean=True):
     '''加载 20newsgroups 的指定类别，返回 DataFrame。
 
     策略：
@@ -57,6 +65,8 @@ def load_data(categories=None, random_state=RANDOM_STATE):
     参数:
         categories:   要保留的类别名列表，None 表示用默认 4 类
         random_state: 随机种子
+        clean:        True 剥离邮件头/footer/引用（默认）；
+                      False 返回原始全文，仅供 header_ablation.py 做对照实验
     返回:
         pd.DataFrame
     '''
@@ -64,13 +74,15 @@ def load_data(categories=None, random_state=RANDOM_STATE):
     local_root = _local_fallback_root()
 
     if _sklearn_cache_ready():
-        # 缓存就绪 → fetch（秒返回）
+        # 缓存就绪 → fetch（秒返回）。
+        # remove=() 表示这里先取原始全文，清洗统一交给 clean_text 完成，
+        # 避免「fetch 用 sklearn 内置剥离、load_files 用自写剥离」两条规则不一致。
         data = fetch_20newsgroups(
             subset='all',
             categories=cats,
             shuffle=True,
             random_state=random_state,
-            remove=('headers', 'footers', 'quotes'),
+            remove=(),
         )
     elif os.path.isdir(local_root):
         # 缓存未就绪但项目内有本地数据 → load_files（本机兜底）
@@ -94,6 +106,11 @@ def load_data(categories=None, random_state=RANDOM_STATE):
         'category_id': data.target
     })
     df['category'] = df['category_id'].map(lambda x: data.target_names[x])
+
+    # 统一清洗：剥离邮件头 / footer / 引用
+    # 邮件头含 `Newsgroups: <类别名>`，等于把标签写进特征里，必须剥离。
+    if clean:
+        df['text'] = df['text'].map(clean_text)
 
     return df.reset_index(drop=True)
 
