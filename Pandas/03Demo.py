@@ -20,6 +20,13 @@ print(df)
 
 print('=' * 30)
 
+# 列名
+print(f'特征列名：{list(df.columns[:-1])}')  # 特征列名：['name', 'age']
+print(f'目标列名：{list(df.columns[-1:])}')  # 目标列名：['score']
+
+
+print('=' * 30)
+
 
 # 第一行数据
 '''
