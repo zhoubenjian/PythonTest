@@ -13,18 +13,47 @@
 验收：运行本文件，test F1 与 val F1 差 < 0.05，且错分示例已打印。
 """
 import joblib
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 
 
 def evaluate(test_df, model, vectorizer):
     """在 test 上评估，打印指标，返回 (accuracy, f1_macro)。
 
     TODO:
-      1. transform(test_df['text']) → predict
+      1. transform(test_df['text']) => predict
       2. 打印 accuracy、macro-F1、混淆矩阵（标明行/列顺序是 [ham, spam]）
       3. 打印 3 条错分示例：原文 + 真实标签 + 预测标签
       4. 返回 (accuracy, f1)
     """
-    raise NotImplementedError('练习：删除本行并实现 evaluate')
+
+    from fit import transform
+
+    X_test = transform(vectorizer, test_df['text'])
+    y_test = (test_df['label'] == 'spam').astype(int).to_numpy()
+    y_pred = model.predict(X_test)
+
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f'test accuracy = {accuracy:.4f}\n')
+
+    f1 = f1_score(y_test, y_pred, average='macro')
+    print(f'test macro-F1 = {f1:.4f}\n')
+
+    cm = confusion_matrix(y_test, y_pred)
+    print('混淆矩阵（行=真实，列=预测，顺序 [ham, spam]）:')
+    print(cm, '\n')
+
+    # 打印 3 条错分示例（真正错分的，不是前 3 条）
+    import numpy as np
+
+    wrong_idx = np.flatnonzero(y_test != y_pred)
+    texts = test_df['text'].to_numpy()
+    print(f'错分 {len(wrong_idx)} / {len(y_test)} 条，示例前 3 条：')
+    for i in wrong_idx[:3]:
+        print(f'原文: {texts[i][:100]}')
+        print(f'真实标签: {"spam" if y_test[i] else "ham"}  预测标签: {"spam" if y_pred[i] else "ham"}')
+        print('-' * 50)
+
+    return accuracy, f1
 
 
 if __name__ == '__main__':
@@ -40,18 +69,21 @@ if __name__ == '__main__':
     train_df, val_df, test_df = split_data(df)
 
     best_model, best_name, vectorizer = train_and_compare(train_df, val_df)
-    # TODO: val_f1 从哪来？train_and_compare 里算过但没返回。
-    # 自己决定改法：改返回签名，还是在这里重算。两种都对，想清楚你选哪个、为什么。
+    # val_f1 选择「在这里重算」而不是改 train_and_compare 的返回签名：
+    # 改签名会连带改 fit.py 的验收块，而 val 本来就是选型用的、可以反复评估，
+    # 重算一行更简单，也不污染 fit.py 的接口。
+    X_val = transform(vectorizer, val_df['text'])
+    y_val = (val_df['label'] == 'spam').astype(int).to_numpy()
+    val_f1 = f1_score(y_val, best_model.predict(X_val), average='macro')
 
     acc, test_f1 = evaluate(test_df, best_model, vectorizer)
 
     # ---- 验收（不要改这部分）----
     print(f'test accuracy={acc:.4f}  test macro-F1={test_f1:.4f}  (best={best_name})')
-    # TODO: 填上 val_f1 后启用下面两行
-    # assert abs(test_f1 - val_f1) < 0.05, f'test 与 val 差 {abs(test_f1 - val_f1):.4f} >= 0.05，怀疑选型泄漏或数据异常'
-    # print('evaluate.py 验收 PASS')
+    assert abs(test_f1 - val_f1) < 0.05, f'test 与 val 差 {abs(test_f1 - val_f1):.4f} >= 0.05，怀疑选型泄漏或数据异常'
+    print(f'evaluate.py 验收 PASS（val {val_f1:.4f} / test {test_f1:.4f}）')
 
     os.makedirs('artifacts', exist_ok=True)
-    # TODO: joblib.dump(best_model, 'artifacts/model.pkl')
-    # TODO: joblib.dump(vectorizer, 'artifacts/vectorizer.pkl')
-    print('（落盘 artifacts/ 是练习 5 的前置，别忘）')
+    joblib.dump(best_model, 'artifacts/model.pkl')
+    joblib.dump(vectorizer, 'artifacts/vectorizer.pkl')
+    print('已落盘 artifacts/model.pkl、artifacts/vectorizer.pkl（练习 5 用）')

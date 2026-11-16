@@ -43,4 +43,8 @@
 
 ## 踩坑记录（每步做完就补一行）
 
-- （待填）
+- **练习 1 · `header=None` 和 `names` 各管一件事（11-16）**：`header=None` 表示「这个文件没有表头行」，`names=[...]` 表示「按我给的名字起列名」，两者不是一回事。只给 `names` 而不给 `header=None`，pandas 会把**第一行数据当成表头吞掉**，总行数少 1、列名也对不上。反过来，如果文件真有表头却写了 `header=None`，那行表头会被当成一条正常数据读进来（label 变成字符串 `'label'`），验收断言立刻失败。教训：**读数据前先确认文件有没有表头**，不能想当然。
+- **练习 2 · `test_size` 是相对「传入的那个 DataFrame」算的（11-16）**：第二刀在 `rest_df`（85% 的数据）上划分，写 `test_size=0.15` 得到的是**全量的 4.5%**，不是 15%——结果 val 26% / test 5%。更值得记的是：**当时的验收断言只检查了「三份数据 spam 占比一致」，所以报 PASS 了，但结果是错的**。已给 split.py 补「比例 + 总量守恒」断言。教训：**断言决定了你能看见什么**，测试全绿不等于功能正确。
+- **练习 3 · `f1_score` 必须喂离散标签（11-16）**：把 `predict_proba(...)[:, 1]` 的概率值直接传给 `f1_score` 会算出错误结果，因为指标内部做的是 `y_true == y_pred` 的逐元素比较，`0.837` 永远不等于 `1`。要用概率的话得自己设阈值转成 0/1：`(proba >= 0.5).astype(int)`——这也是阈值调优的入口。与练习 4 第二条（`predict_proba` 喂指标）同源，属同一盲区的两次表现。
+- **练习 4 · accuracy 掩盖了少数类缺陷（11-16）**：test accuracy 0.9737 看着很漂亮，但混淆矩阵 `[[723, 1], [21, 91]]` 说明 22 条错分里 **21 条是把 spam 漏判成 ham**，spam recall 只有 **0.8125**。成因是 spam 仅占 13.4%，模型倾向于「不确定就猜 ham」。教训：不平衡数据必须看**每一类的 precision/recall 和混淆矩阵**，accuracy 单独出现时不能作为决策依据。附带红线：test 只跑一次，看到 spam recall 低也不能回 test 调阈值，只能在 val 上调、最后回 test 验一次。
+- **练习 4 · `predict_proba` 不能直接喂评估指标（11-16）**：`model.predict_proba()` 返回 `(n, 2)` 概率矩阵，喂给 `accuracy_score` 会报 `ValueError: Classification metrics can't handle a mix of binary and continuous-multioutput targets`。判断标准：**要标签或指标用 `predict`，要概率/阈值/排序才用 `predict_proba`**。
