@@ -12,6 +12,8 @@
 验收：运行本文件，最佳 val macro-F1 >= 0.85。
 """
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 
 
@@ -22,12 +24,17 @@ def fit_vectorizer(train_texts):
       1. 创建 TfidfVectorizer(max_features=5000)
       2. fit_transform(train_texts)，返回 vectorizer（转换结果在调用方算）
     """
-    raise NotImplementedError('练习：删除本行并实现 fit_vectorizer')
+
+    vectorizer = TfidfVectorizer(max_features=5000)
+    # 只在训练集上 fit，避免验证集/测试集的词表泄漏到训练阶段
+    vectorizer.fit(train_texts)
+    return vectorizer
 
 
 def transform(vectorizer, texts):
     """用已有 vectorizer 转换任意文本集。"""
-    raise NotImplementedError('练习：删除本行并实现 transform')
+
+    return vectorizer.transform(texts)
 
 
 def train_and_compare(train_df, val_df):
@@ -41,7 +48,36 @@ def train_and_compare(train_df, val_df):
       3. 各自算 val macro-F1 并打印
       4. 按分数选 best 返回
     """
-    raise NotImplementedError('练习：删除本行并实现 train_and_compare')
+
+    # 1. 只在训练集上 fit 向量化器，避免 val/test 词表泄漏
+    vectorizer = fit_vectorizer(train_df['text'])
+    X_train = transform(vectorizer, train_df['text'])
+    X_val = transform(vectorizer, val_df['text'])
+    # 0:ham（正常短信），1:spam（垃圾短信）
+    y_train = (train_df['label'] == 'spam').astype(int)
+    y_val = (val_df['label'] == 'spam').astype(int)
+
+    # 2. 训练两个模型并各自评估
+    mnb_model = MultinomialNB()
+    mnb_model.fit(X_train, y_train)
+    mnb_f1 = f1_score(y_val, mnb_model.predict(X_val), average='macro')
+
+    lr_model = LogisticRegression(max_iter=5000)
+    lr_model.fit(X_train, y_train)
+    lr_f1 = f1_score(y_val, lr_model.predict(X_val), average='macro')
+
+    print(f'MultinomialNB（朴素贝叶斯） val macro-F1 = {mnb_f1:.4f}')
+    print(f'LogisticRegression（逻辑回归） val macro-F1 = {lr_f1:.4f}')
+
+    # 3. 按 val 分数选 best（不许写死模型名）
+    scores = {
+        'MultinomialNB（朴素贝叶斯）': (mnb_f1, mnb_model), 
+        'LogisticRegression（逻辑回归）': (lr_f1, lr_model)
+    }
+    best_name, (best_f1, best_model) = max(scores.items(), key=lambda kv: kv[1][0])
+    # print(f'best = {best_name}（val marco-F1 = {best_f1:.4f}）')
+
+    return best_model, best_name, vectorizer
 
 
 if __name__ == '__main__':

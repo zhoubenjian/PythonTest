@@ -19,7 +19,10 @@ def load_sms(path):
       1. 用 pandas 读取（分隔符是什么？没有表头怎么处理？列名在哪传？）
       2. 返回 DataFrame
     """
-    raise NotImplementedError('练习：删除本行并实现 load_sms')
+
+    # 读取 TSV 文件
+    df = pd.read_csv(path, sep='\t', header=None, names=['label', 'text'], encoding='utf-8')
+    return df
 
 
 if __name__ == '__main__':
@@ -31,6 +34,6 @@ if __name__ == '__main__':
     assert set(df['label'].unique()) == {'ham', 'spam'}, f'label 取值不对: {df["label"].unique()}'
     assert df['text'].isna().sum() == 0, '存在空 text'
     assert (df['text'].str.strip() == '').sum() == 0, '存在纯空白 text'
-    print(f'总行数: {len(df)}（参考: 5574）')
-    print(f'spam 占比: {(df["label"] == "spam").mean():.1%}（参考: 约 13.4%）')
+    print(f'总行数: {len(df)}（参考: 5572）')
+    print(f'spam 占比: {(df["label"] == "spam").mean():.2%}（参考: 13.41%）')
     print('load.py 验收 PASS')

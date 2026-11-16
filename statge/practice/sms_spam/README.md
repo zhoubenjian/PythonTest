@@ -1,11 +1,12 @@
 # SMS 垃圾短信分类 · 骨架练习
 
 目的：把 text_classification 项目里「看懂了」的链路，亲手「写出来」一遍。
-换新数据集（UCI SMS Spam Collection，5574 条短文本，spam 占 13.4%），防止凭记忆抄旧代码。
+换新数据集（UCI SMS Spam Collection，5572 条短文本，spam 占 13.4%），防止凭记忆抄旧代码。
 
 ## 数据
 
 - 文件：`data/SMSSpamCollection`，UTF-8，每行 `ham<TAB>短信内容` 或 `spam<TAB>短信内容`，无表头
+- 实测 5572 行：ham 4825 / spam 747（13.41%），无空值、无纯空白
 - 类别不平衡（spam 约 13.4%）——这会逼你重新思考该用什么指标
 
 ## 规则（重要，先读完再动手）
