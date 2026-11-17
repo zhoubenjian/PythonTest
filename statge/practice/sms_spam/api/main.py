@@ -17,26 +17,58 @@
 - predict_proba 的列顺序由 model.classes_ 决定，别想当然
 """
 import os
+import joblib
 
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field, field_validator
 
 app = FastAPI(title='sms-spam API', version='0.1.0')
 
 # TODO: 启动时加载 model.pkl / vectorizer.pkl（怎么拿相对路径才稳？）
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+model = joblib.load(os.path.join(BASE_DIR, 'artifacts/model.pkl'))
+vectorizer = joblib.load(os.path.join(BASE_DIR, 'artifacts/vectorizer.pkl'))
+
+
+class PredictRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=1000)
+
+    @field_validator('text')
+    @classmethod
+    def not_blank(cls, v):
+        if not v.strip():
+            raise ValueError('text 不能为空')
+        return v
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_handler(request, exc):
+    msg = exc.errors()[0].get('msg', '参数校验失败')
+    return JSONResponse(
+        status_code=422,
+        content={'code': 'VALIDATION_ERROR', 'message': msg},
+    )
 
 
 @app.get('/health')
 def health():
-    """TODO: 返回约定外形"""
-    raise NotImplementedError('练习：实现 health')
+    return {'status': 'ok', 'model': 'sms-spam'}
 
 
 @app.post('/predict')
-def predict(body):
-    """TODO:
-      1. 定义请求体 Pydantic 模型（text 字段，长度约束在哪做？）
-      2. 空文本 → 422 VALIDATION_ERROR（外形 {code, message}）
-      3. 向量化 → predict_proba → label + confidence
-      4. 返回 {"label": ..., "confidence": ...}
-    """
-    raise NotImplementedError('练习：实现 predict')
+def predict(body: PredictRequest):
+    # 只transform，不fit
+    X = vectorizer.transform([body.text])
+
+    # 拿到各类概率
+    proba = model.predict_proba(X)[0]
+
+    # 取最大概率索引
+    idx = proba.argmax()
+
+    # 用 classes_ 映射回标签
+    label = model.classes_[idx]
+
+    return {'label': label, 'confidence': float(proba[idx])}

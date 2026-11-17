@@ -54,19 +54,19 @@ def train_and_compare(train_df, val_df):
     X_train = transform(vectorizer, train_df['text'])
     X_val = transform(vectorizer, val_df['text'])
     # 0:ham（正常短信），1:spam（垃圾短信）
-    y_train = (train_df['label'] == 'spam').astype(int)
-    y_val = (val_df['label'] == 'spam').astype(int)
+    y_train = train_df['label']
+    y_val = val_df['label']
 
     # 2. 训练两个模型并各自评估
+    # 朴素贝叶斯
     mnb_model = MultinomialNB()
     mnb_model.fit(X_train, y_train)
     mnb_f1 = f1_score(y_val, mnb_model.predict(X_val), average='macro')
-
+    print(f'MultinomialNB（朴素贝叶斯） val macro-F1 = {mnb_f1:.4f}')
+    # 逻辑回归
     lr_model = LogisticRegression(max_iter=5000)
     lr_model.fit(X_train, y_train)
     lr_f1 = f1_score(y_val, lr_model.predict(X_val), average='macro')
-
-    print(f'MultinomialNB（朴素贝叶斯） val macro-F1 = {mnb_f1:.4f}')
     print(f'LogisticRegression（逻辑回归） val macro-F1 = {lr_f1:.4f}')
 
     # 3. 按 val 分数选 best（不许写死模型名）
@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     # ---- 验收（不要改这部分）----
     X_val = transform(vectorizer, val_df['text'])
-    y_val = (val_df['label'] == 'spam').astype(int)
+    y_val = val_df['label']
     f1 = f1_score(y_val, best_model.predict(X_val), average='macro')
     print(f'best = {best_name}, val macro-F1 = {f1:.4f}')
     assert f1 >= 0.85, f'val macro-F1 {f1:.4f} < 0.85，先查选型逻辑再想特征'

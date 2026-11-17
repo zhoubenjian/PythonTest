@@ -29,7 +29,7 @@ def evaluate(test_df, model, vectorizer):
     from fit import transform
 
     X_test = transform(vectorizer, test_df['text'])
-    y_test = (test_df['label'] == 'spam').astype(int).to_numpy()
+    y_test = test_df['label'].to_numpy()
     y_pred = model.predict(X_test)
 
     accuracy = accuracy_score(y_test, y_pred)
@@ -50,7 +50,7 @@ def evaluate(test_df, model, vectorizer):
     print(f'错分 {len(wrong_idx)} / {len(y_test)} 条，示例前 3 条：')
     for i in wrong_idx[:3]:
         print(f'原文: {texts[i][:100]}')
-        print(f'真实标签: {"spam" if y_test[i] else "ham"}  预测标签: {"spam" if y_pred[i] else "ham"}')
+        print(f'真实标签: {y_test[i]}  预测标签: {y_pred[i]}')
         print('-' * 50)
 
     return accuracy, f1
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     # 改签名会连带改 fit.py 的验收块，而 val 本来就是选型用的、可以反复评估，
     # 重算一行更简单，也不污染 fit.py 的接口。
     X_val = transform(vectorizer, val_df['text'])
-    y_val = (val_df['label'] == 'spam').astype(int).to_numpy()
+    y_val = val_df['label'].to_numpy()
     val_f1 = f1_score(y_val, best_model.predict(X_val), average='macro')
 
     acc, test_f1 = evaluate(test_df, best_model, vectorizer)
