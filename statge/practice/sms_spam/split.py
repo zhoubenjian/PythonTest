@@ -59,7 +59,7 @@ if __name__ == '__main__':
         share = len(part) / total
         print(f'{name}: {len(part)} 行 ({share:.0%})，spam 占比 {ratio:.1%}')
         assert abs(share - expected[name]) < 0.02, \
-            f'{name} 占比 {share:.1%}，期望 {expected[name]:.0%} → 检查 test_size 是相对哪个 DataFrame 算的'
+            f'{name} 占比 {share:.1%}，期望 {expected[name]:.0%} => 检查 test_size 是相对哪个 DataFrame 算的'
     assert abs(ratios[0] - ratios[1]) < 0.01, 'train 与 val 的 spam 占比差超过 1 个百分点 => 没有分层'
     assert abs(ratios[0] - ratios[2]) < 0.01, 'train 与 test 的 spam 占比差超过 1 个百分点 => 没有分层'
     assert len(train_df) + len(val_df) + len(test_df) == total, '三份行数相加不等于全量 => 有数据丢失或重复'

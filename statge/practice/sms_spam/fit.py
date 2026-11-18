@@ -18,11 +18,8 @@ from sklearn.metrics import f1_score
 
 
 def fit_vectorizer(train_texts):
-    """只在训练集上 fit，返回 TfidfVectorizer。
-
-    TODO:
-      1. 创建 TfidfVectorizer(max_features=5000)
-      2. fit_transform(train_texts)，返回 vectorizer（转换结果在调用方算）
+    """
+    只在训练集上 fit，返回 TfidfVectorizer。
     """
 
     vectorizer = TfidfVectorizer(max_features=5000)
@@ -32,21 +29,17 @@ def fit_vectorizer(train_texts):
 
 
 def transform(vectorizer, texts):
-    """用已有 vectorizer 转换任意文本集。"""
+    """
+    用已有 vectorizer 转换任意文本集。
+    """
 
     return vectorizer.transform(texts)
 
 
 def train_and_compare(train_df, val_df):
-    """训练两个模型，在 val 上比 macro-F1。
-
+    """
+    训练两个模型，在 val 上比 macro-F1。
     返回 (best_model, best_name, vectorizer)。
-
-    TODO:
-      1. fit_vectorizer(train_df['text'])
-      2. 训练两个模型
-      3. 各自算 val macro-F1 并打印
-      4. 按分数选 best 返回
     """
 
     # 1. 只在训练集上 fit 向量化器，避免 val/test 词表泄漏
