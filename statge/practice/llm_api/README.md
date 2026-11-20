@@ -22,8 +22,8 @@
 | # | 文件 | 任务 | 验收 |
 |---|------|------|------|
 | 1 | [01_basic_call.py](01_basic_call.py) | 非流式调用一次，解析正文与 usage | content 非空；usage 三个字段 > 0 且守恒 |
-| 2 | 02_stream.py | 流式接收，逐块打印 | 首块到达明显早于整体结束；拼接结果非空 |
-| 3 | 03_structured.py | 让模型输出 JSON + 错误处理 | 稳定拿到可 `json.loads` 的对象；401/超时/非法 JSON 都被拦住 |
+| 2 | [02_stream.py](02_stream.py) | 流式接收，逐块打印 | 至少 2 个内容块；拼接结果非空；首块早于结束 |
+| 3 | [03_structured.py](03_structured.py) | 让模型输出 JSON + 错误处理 | 坏 JSON 抛 ValueError；围栏能剥离；真实调用符合 schema |
 
 ## 要能讲清的三件事
 

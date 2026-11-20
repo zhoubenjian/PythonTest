@@ -26,7 +26,7 @@ from pydantic import BaseModel, Field, field_validator
 
 app = FastAPI(title='sms-spam API', version='0.1.0')
 
-# TODO: 启动时加载 model.pkl / vectorizer.pkl（怎么拿相对路径才稳？）
+# 启动时加载 model.pkl / vectorizer.pkl
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 model = joblib.load(os.path.join(BASE_DIR, 'artifacts/model.pkl'))
 vectorizer = joblib.load(os.path.join(BASE_DIR, 'artifacts/vectorizer.pkl'))
