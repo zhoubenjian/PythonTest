@@ -26,31 +26,50 @@ def call_once(text):
 
     url = f'{API_BASE}/chat/completions'
 
-    # TODO 1: 组装 headers
+    # 1: 组装 headers
     #   至少要有 Authorization（Bearer 开头）和 Content-Type: application/json
-    headers = {}
+    headers = {
+        'Authorization': f'Bearer {API_KEY}',
+        'Content-Type': 'application/json'
+    }
 
-    # TODO 2: 组装 payload
+    # 2: 组装 payload
     #   model 用 MODEL
     #   messages 是 [{'role': 'user', 'content': text}]
     #   显式写下 stream: False，让「非流式」这件事可见
-    payload = {}
+    payload = {
+        'model': MODEL,
+        'messages': [{
+            'role': 'user',
+            'content': text
+        }],
+        'stream': False
+    }
 
-    # TODO 3: 发 POST
+    # 3: 发 POST
     #   用 json= 而不是 data=，requests 会自己序列化并带上正确的 Content-Type
     #   一定要传 timeout，线上没超时的请求就是事故
-    resp = None
+    resp = requests.post(
+        url,
+        headers=headers,
+        json=payload,
+        timeout=TIMEOUT
+    )
 
-    # TODO 4: 先判 HTTP 状态，再把响应体转 dict
+    # 4: 先判 HTTP 状态，再把响应体转 dict
     #   非 2xx 时把状态码和响应文本一起抛出来，方便定位
-    #   提示：resp.raise_for_status() 或自己判断都行
-    data = None
+    if not resp.ok:
+        raise requests.HTTPError(
+            f'HTTP {resp.status_code}: {resp.text[:500]}',
+            response=resp,
+        )
+    data = resp.json()
 
-    # TODO 5: 从 data 里取回答正文和用量
+    # 5: 从 data 里取回答正文和用量
     #   content 在 choices[0] -> message -> content
     #   usage 直接就是 data 里那一段
-    content = ''
-    usage = {}
+    content = data['choices'][0]['message']['content']
+    usage = data['usage']
 
     return content, usage
 
