@@ -32,10 +32,31 @@ def parse_json(text):
       2. ```json ... ``` 围栏 -> 先剥掉围栏再 loads
       3. 根本不是 JSON     -> 抛 ValueError，带上原始片段方便排查
     """
-    # TODO 1: 实现清理 + 解析
-    #   提示：str.strip() 之后可以判断是否以 ``` 开头；
-    #         也存在前后夹带解释文字的情况，可以考虑取第一个 '{' 到最后一个 '}'
-    raise NotImplementedError('练习：实现 parse_json')
+    text = text.strip()
+    if text.startswith('```'):
+        lines = text.splitlines()
+        body_lines = []
+        started = False
+        for line in lines:
+            if not started:
+                if line.strip().startswith('```'):
+                    started = True
+                continue
+            if line.strip() == '```':
+                break
+            body_lines.append(line)
+        text = '\n'.join(body_lines).strip()
+
+    start = text.find('{')
+    end = text.rfind('}')
+    if start == -1 or end == -1 or end <= start:
+        raise ValueError(f'未找到 JSON 对象边界：{text[:100]!r}')
+    text = text[start:end + 1]
+
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as e:
+        raise ValueError(f'JSON 解析失败：{e.msg}，片段：{text[:100]!r}') from e
 
 
 def call_json(text, retries=2):
@@ -56,12 +77,48 @@ def call_json(text, retries=2):
         'stream': False,
     }
 
-    # TODO 2: 实现带重试的请求
-    #   - 对 requests.Timeout 和 status_code == 429 重试，最多 retries 次
-    #   - 每次重试前等待，建议指数退避：0.5 * 2 ** i 秒
-    #   - 401/403 不重试，直接抛，因为重试也不会好
-    #   - 最后仍失败就把最后一次的错误抛出去
-    raise NotImplementedError('练习：实现 call_json')
+    last_err = None
+    for i in range(retries + 1):
+        try:
+            resp = requests.post(
+                url,
+                headers=headers,
+                json=payload,
+                timeout=TIMEOUT,
+            )
+        except requests.Timeout as e:
+            last_err = e
+            if i < retries:
+                time.sleep(0.5 * 2 ** i)
+                continue
+            raise
+
+        if resp.status_code in (401, 403):
+            raise requests.HTTPError(
+                f'HTTP {resp.status_code}：鉴权失败，不重试',
+                response=resp,
+            )
+
+        if resp.status_code == 429:
+            last_err = requests.HTTPError(
+                f'HTTP 429：限流',
+                response=resp,
+            )
+            if i < retries:
+                time.sleep(0.5 * 2 ** i)
+                continue
+            raise last_err
+
+        if not resp.ok:
+            raise requests.HTTPError(
+                f'HTTP {resp.status_code}: {resp.text[:500]}',
+                response=resp,
+            )
+
+        content = resp.json()['choices'][0]['message']['content']
+        return parse_json(content)
+
+    raise last_err
 
 
 if __name__ == '__main__':

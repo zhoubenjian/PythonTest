@@ -44,19 +44,36 @@ def stream_chat(text):
     first_chunk_at = None
     pieces = []
 
-    # TODO 1: 发请求，注意要 stream=True（这是 requests 的参数，别和 payload 里的重名参数搞混）
-    #   提示：resp.iter_lines() 可以逐行拿，记得 decode 成字符串
-    resp = None
+    resp = requests.post(
+        url,
+        headers=headers,
+        json=payload,
+        timeout=TIMEOUT,
+        stream=True,
+    )
+    if not resp.ok:
+        raise requests.HTTPError(
+            f'HTTP {resp.status_code}: {resp.text[:500]}',
+            response=resp,
+        )
 
-    # TODO 2: 逐行解析 SSE
-    #   - 跳过空行
-    #   - 行首是 "data: "，把它切掉
-    #   - 内容为 "[DONE]" 时结束循环
-    #   - 其余部分 json.loads 后取 choices[0].delta.content
-    #   - 首次取到非空 content 时，记下 first_chunk_at
-    #   - 每块 print 出来时加 flush=True 或 end=''，否则会攒着不显示
-
-    # TODO 3: 返回三个值
+    for raw_line in resp.iter_lines(decode_unicode=True):
+        if not raw_line:
+            continue
+        if not raw_line.startswith('data: '):
+            continue
+        body = raw_line[6:]
+        if body == '[DONE]':
+            break
+        data = json.loads(body)
+        delta = data['choices'][0].get('delta', {})
+        content = delta.get('content')
+        if content is None:
+            continue
+        if first_chunk_at is None:
+            first_chunk_at = time.perf_counter()
+        pieces.append(content)
+        print(content, end='', flush=True)
 
     elapsed_first = (first_chunk_at - started) if first_chunk_at else -1
     return ''.join(pieces), elapsed_first, len(pieces)
