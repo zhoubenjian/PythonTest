@@ -19,6 +19,7 @@
   - 页码都在有效范围内
 """
 import hashlib
+import re
 
 from parse import PDF_PATH, assert_text_layer, clean_pages, find_repeated_lines, load_pages
 
@@ -39,7 +40,9 @@ def split_text(text, max_chars=MAX_CHARS, overlap=OVERLAP):
     # TODO 1: 实现切分
     #   建议先把段落合并成「不超过 max_chars 的块」，而不是一个段落一块—
     #   手册里段落普遍偏短，一段一块会导致块过碎、上下文不足。
-    raise NotImplementedError('练习：实现 split_text')
+    if not text.strip():
+        return []
+    return [seg.strip() for seg in re.split(r'\n\s*\n', text) if seg.strip()] or [text.strip()]
 
 
 def make_chunk_id(doc_id, page, order):
@@ -52,7 +55,8 @@ def make_chunk_id(doc_id, page, order):
     """
     # TODO 2: 用 hashlib.sha1 对 f'{doc_id}:{page}:{order}' 取摘要前 12 位
     #   为什么不用 Python 内置 hash()：它带随机盐，进程重启后结果就变了
-    raise NotImplementedError('练习：实现 make_chunk_id')
+    #   所以要自己实现一个确定性函数，确保每次结果都一样
+    return hashlib.sha1(f'{doc_id}:{page}:{order}'.encode()).hexdigest()[:12]
 
 
 def build_chunks(pages, doc_id=DOC_ID):
