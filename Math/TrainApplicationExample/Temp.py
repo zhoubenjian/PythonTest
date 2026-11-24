@@ -30,7 +30,7 @@ print(token_list)
 
 
 # 3.遍历嵌套列表，提取所有词元，然后去重
-flat_tokens = [word for sentence in token_list for word in sentence]
+flat_tokens = [word for sentence in token_list for word in sentence]    # 双层 for 循环（先写外层循环，再写内层循环）展平所有词元
 unique_tokens = np.unique(flat_tokens)
 print(f'\n去重后的词元：\n{unique_tokens}')
 
