@@ -9,7 +9,7 @@
 
 验收（__main__ 里已写好，别改）：
   - 页数与 PDF 实际页数一致
-  - 首页 text 非空
+  - 有文字的页不少于 80%（第 1 页为封面，天然为空）
   - 扫描件能被 assert_text_layer 拦下
 """
 from collections import Counter
@@ -21,42 +21,44 @@ PDF_PATH = Path(__file__).resolve().parent.parent / 'pdf' / 'AlibabaJavaDevelopm
 
 
 def load_pages(pdf_path):
-    """解析 PDF，返回 [{'page': int, 'text': str}]，page 从 1 开始。
-
-    注意：page 用 1 起算，因为人读页码和引用都从 1 开始，
-    避免后面每次展示来源都 +1 转换（少一次转换就少一次错）。
-    """
-    # TODO 1: 用 pymupdf.open 打开，遍历每一页取纯文本
-    #   提示：page.get_text('text') 是纯文本模式
-    #   注意：本 PDF 第 1 页是封面，提出来是空的，这是正常情况，不要当异常处理
-    # TODO 2: 拼成 [{'page': i + 1, 'text': ...}]
-    raise NotImplementedError('练习：实现 load_pages')
+    """解析 PDF，返回 [{'page': int, 'text': str}]，page 从 1 开始。"""
+    doc = pymupdf.open(pdf_path)
+    pages = []
+    for i in range(doc.page_count):
+        page = doc.load_page(i)
+        text = page.get_text('text')
+        pages.append({'page': i + 1, 'text': text})
+    doc.close()
+    return pages
 
 
 def find_repeated_lines(pages, min_ratio=0.6):
-    """找出在超过 min_ratio 比例的页面里都出现的短行，视为页眉页脚。
-
-    做法要点：
-      - 逐页按行切分，去掉空白行
-      - 统计整行文本的出现页数（注意：同一页里重复出现只算一次）
-      - 只保留「长度较短」的行，避免把正文长句误判
-    返回：{行文本} 的集合
-    """
-    # TODO 3: 实现频次统计
-    #   提示：Counter 统计「行 -> 出现页数」时，要先用 set 把每页的行去重
-    raise NotImplementedError('练习：实现 find_repeated_lines')
+    """找出在超过 min_ratio 比例的页面里都出现的短行，视为页眉页脚。"""
+    counter = Counter()
+    for p in pages:
+        lines = set(line.strip() for line in p['text'].split('\n') if line.strip())
+        for line in lines:
+            counter[line] += 1
+    threshold = len(pages) * min_ratio
+    return {line for line, cnt in counter.items() if cnt >= threshold and len(line) <= 80}
 
 
 def clean_pages(pages, noise_lines):
     """把页眉页脚从每页文本里剔除，返回新的 pages。"""
-    # TODO 4: 按行过滤，保留非噪声行；保持返回结构与输入一致
-    raise NotImplementedError('练习：实现 clean_pages')
+    result = []
+    for p in pages:
+        lines = p['text'].split('\n')
+        cleaned = [line for line in lines if line.strip() not in noise_lines]
+        result.append({'page': p['page'], 'text': '\n'.join(cleaned)})
+    return result
 
 
 def assert_text_layer(pages, min_avg_chars=20):
     """确认 PDF 有文字层，否则抛 ValueError（用于识别扫描件）。"""
-    # TODO 5: 算平均每页字符数，低于阈值就抛，错误信息里带上实际数字
-    raise NotImplementedError('练习：实现 assert_text_layer')
+    total = sum(len(p['text']) for p in pages)
+    avg = total / len(pages) if pages else 0
+    if avg < min_avg_chars:
+        raise ValueError(f'文字层平均每页 {avg:.1f} 字符，低于阈值 {min_avg_chars}，可能是扫描件')
 
 
 if __name__ == '__main__':
