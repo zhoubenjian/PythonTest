@@ -41,8 +41,8 @@ def _split_by_punct(para, max_chars):
                 buf = ''
             for i in range(0, len(s), max_chars):
                 result.append(s[i:i + max_chars].strip())
-        elif len(buf) + len(s) + 1 <= max_chars:
-            buf = (buf + ' ' + s).strip()
+        elif len(buf) + len(s) <= max_chars:
+            buf = (buf + s).strip()
         else:
             if buf:
                 result.append(buf.strip())
