@@ -76,21 +76,20 @@ def split_text(text, max_chars=MAX_CHARS, overlap=OVERLAP):
     if not text.strip():
         return []
 
-    raw_paras = re.split(r'\n\s*\n', text)
-    paragraphs = [p.strip() for p in raw_paras if p.strip()]
+    # 页内换行归一化：英文/数字之间的换行补空格，其余视为排版换行直接去掉
+    text = re.sub(r'(?<=[A-Za-z0-9])\n(?=[A-Za-z0-9])', ' ', text)
+    text = re.sub(r'\n+', '', text)
 
-    expanded = []
-    for p in paragraphs:
-        if len(p) > max_chars:
-            expanded.extend(_split_by_punct(p, max_chars))
-        else:
-            expanded.append(p)
+    if len(text) > max_chars:
+        expanded = _split_by_punct(text, max_chars)
+    else:
+        expanded = [text.strip()]
 
     blocks = []
     buf = ''
     for seg in expanded:
-        if len(buf) + len(seg) + 1 <= max_chars:
-            buf = (buf + '\n' + seg).strip() if buf else seg
+        if len(buf) + len(seg) <= max_chars:
+            buf = (buf + seg).strip() if buf else seg
         else:
             if buf:
                 blocks.append(buf)
@@ -107,7 +106,7 @@ def split_text(text, max_chars=MAX_CHARS, overlap=OVERLAP):
     overlapped = [blocks[0]]
     for i in range(1, len(blocks)):
         prev_tail = blocks[i - 1][-overlap:] if len(blocks[i - 1]) > overlap else blocks[i - 1]
-        overlapped.append(prev_tail + '\n' + blocks[i])
+        overlapped.append(prev_tail + blocks[i])
 
     return overlapped
 
