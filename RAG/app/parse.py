@@ -14,10 +14,23 @@
 """
 from collections import Counter
 from pathlib import Path
+import re
 
 import pymupdf
 
 PDF_PATH = Path(__file__).resolve().parent.parent / 'pdf' / 'AlibabaJavaDevelopmentManual.pdf'
+
+
+def _norm(line):
+    """比对用的归一化：去空白 + 去行尾页码。
+
+    这份 PDF 每页开头是「——禁止用于商业用途，违者必究——   3 / 35」，
+    页码随页变化，所以整行精确匹配永远只出现 1 次，频次法会漏检。
+    归一化掉空白和尾部 n/m 页码后才能聚成同一个噪声指纹。
+    """
+    s = re.sub(r'\s+', '', line)
+    s = re.sub(r'\d+/\d+$', '', s)
+    return s
 
 
 def load_pages(pdf_path):
@@ -36,7 +49,7 @@ def find_repeated_lines(pages, min_ratio=0.6):
     """找出在超过 min_ratio 比例的页面里都出现的短行，视为页眉页脚。"""
     counter = Counter()
     for p in pages:
-        lines = set(line.strip() for line in p['text'].split('\n') if line.strip())
+        lines = {_norm(line) for line in p['text'].split('\n') if _norm(line)}
         for line in lines:
             counter[line] += 1
     threshold = len(pages) * min_ratio
@@ -48,7 +61,7 @@ def clean_pages(pages, noise_lines):
     result = []
     for p in pages:
         lines = p['text'].split('\n')
-        cleaned = [line for line in lines if line.strip() not in noise_lines]
+        cleaned = [line for line in lines if _norm(line) not in noise_lines]
         result.append({'page': p['page'], 'text': '\n'.join(cleaned)})
     return result
 

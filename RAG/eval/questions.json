@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "doc_id": "ali_java_manual",
+    "pdf": "AlibabaJavaDevelopmentManual.pdf",
+    "page_offset": 3,
+    "note": "source_pages 一律使用 PDF 页码（1 起）。手册印刷页码 = PDF 页码 - 3。",
+    "version": "v1",
+    "created": "2026-11-24",
+    "count": 18,
+    "type_distribution": {
+      "single": 9,
+      "multi": 5,
+      "unanswerable": 4
+    }
+  },
+  "questions": [
+    {
+      "id": "q01",
+      "type": "single",
+      "question": "重写了 equals 之后还必须重写哪个方法？",
+      "reference_answer": "必须重写 hashCode。只要重写 equals，就必须重写 hashCode；否则 Set 和 Map 依据 hashCode 与 equals 判断重复和键时会出现不符合预期的行为。",
+      "source_pages": [12],
+      "gold_keywords": ["hashCode", "equals"]
+    },
+    {
+      "id": "q02",
+      "type": "single",
+      "question": "ArrayList 的 subList 结果可以强转成 ArrayList 吗？会怎样？",
+      "reference_answer": "不可以。subList 返回的是 ArrayList 的内部类 SubList，它是原列表的一个视图，并不等于 ArrayList，强转会抛出 ClassCastException。",
+      "source_pages": [12],
+      "gold_keywords": ["subList", "ClassCastException", "视图"]
+    },
+    {
+      "id": "q03",
+      "type": "single",
+      "question": "手册允许用异常来做流程控制或条件控制吗？",
+      "reference_answer": "不允许。异常的处理效率比条件分支低，因此不应该用异常做流程控制或条件控制。",
+      "source_pages": [21],
+      "gold_keywords": ["流程控制", "条件控制", "效率"]
+    },
+    {
+      "id": "q04",
+      "type": "single",
+      "question": "可以在 finally 块里写 return 吗？为什么？",
+      "reference_answer": "不可以。finally 块中的 return 会导致方法结束执行，try 块中的 return 语句不会再执行，从而吞掉返回值或异常。",
+      "source_pages": [21],
+      "gold_keywords": ["finally", "return"]
+    },
+    {
+      "id": "q05",
+      "type": "single",
+      "question": "数据库表名可以使用复数名词吗？",
+      "reference_answer": "不可以。表名应该只表示表里的实体内容，不表示实体数量，对应的 DO 类名也用单数形式。",
+      "source_pages": [27],
+      "gold_keywords": ["表名", "复数", "单数"]
+    },
+    {
+      "id": "q06",
+      "type": "single",
+      "question": "表达「是否」概念的数据库字段应该怎么命名、用什么数据类型？",
+      "reference_answer": "必须使用 is_xxx 方式命名，数据类型为 unsigned tinyint，1 表示是，0 表示否。",
+      "source_pages": [27],
+      "gold_keywords": ["is_", "unsigned tinyint"]
+    },
+    {
+      "id": "q07",
+      "type": "single",
+      "question": "存储小数应该用什么数据类型？为什么不能用 float 和 double？",
+      "reference_answer": "必须使用 decimal，禁止使用 float 和 double。因为后两者在存储时存在精度损失，值比较时可能得到不正确的结果。",
+      "source_pages": [27],
+      "gold_keywords": ["decimal", "float", "double", "精度"]
+    },
+    {
+      "id": "q08",
+      "type": "single",
+      "question": "主键索引、唯一索引、普通索引分别应该如何命名？",
+      "reference_answer": "主键索引名为 pk_字段名，唯一索引名为 uk_字段名，普通索引名为 idx_字段名。",
+      "source_pages": [27],
+      "gold_keywords": ["pk_", "uk_", "idx_"]
+    },
+    {
+      "id": "q09",
+      "type": "single",
+      "question": "如果类成员方法只供类内部调用，访问修饰符应该是什么？",
+      "reference_answer": "必须是 private。手册要求严控访问范围，过于宽泛的访问范围不利于模块解耦。",
+      "source_pages": [12],
+      "gold_keywords": ["private", "访问范围"]
+    },
+    {
+      "id": "q10",
+      "type": "multi",
+      "question": "关于 try-catch 的写法，手册有哪些强制要求？",
+      "reference_answer": "1）不要对大段代码做 try-catch，要区分稳定代码与非稳定代码，并对非稳定代码区分类别分别处理；2）捕获异常后必须处理，不想处理就抛给调用者，最外层必须转成用户可理解的内容；3）finally 块必须关闭资源对象、流对象，有异常也要 try-catch；4）不能在 finally 块中使用 return。",
+      "source_pages": [21],
+      "gold_keywords": ["try-catch", "稳定代码", "finally", "return"]
+    },
+    {
+      "id": "q11",
+      "type": "multi",
+      "question": "MySQL 建表时对表名和字段名的命名有哪些强制要求？",
+      "reference_answer": "必须使用小写字母或数字；禁止以数字开头；禁止两个下划线中间只出现数字；表名不使用复数名词；禁用保留字。另外表达是否概念的字段用 is_xxx，非负数字段必须是 unsigned。",
+      "source_pages": [27],
+      "gold_keywords": ["小写", "数字开头", "复数", "保留字"]
+    },
+    {
+      "id": "q12",
+      "type": "multi",
+      "question": "哪些情况下必须重写 hashCode 和 equals？",
+      "reference_answer": "1）只要重写 equals 就必须重写 hashCode；2）Set 存储的对象必须重写这两个方法，因为 Set 依据它们判断是否重复；3）自定义对象作为 Map 的键时必须重写。",
+      "source_pages": [12],
+      "gold_keywords": ["Set", "Map", "键", "hashCode"]
+    },
+    {
+      "id": "q13",
+      "type": "multi",
+      "question": "应用分层中 Manager 层的主要职责是什么？",
+      "reference_answer": "1）对第三方平台封装的层，预处理返回结果并转化异常信息；2）对 Service 层通用能力的下沉，如缓存方案、中间件通用处理；3）与 DAO 层交互，对多个 DAO 的组合复用。",
+      "source_pages": [33],
+      "gold_keywords": ["Manager", "第三方", "缓存", "DAO"]
+    },
+    {
+      "id": "q14",
+      "type": "multi",
+      "question": "分层架构中，DAO 层和 Service 层的异常与日志处理有什么区别？",
+      "reference_answer": "DAO 层产生的异常类型多，用 catch(Exception e) 捕获后抛 DAOException，不需要打印日志；Service 层出现异常时必须记录出错日志到磁盘，并尽可能带上参数信息；如果 Manager 层与 Service 同机部署，日志处理方式与 DAO 层一致。",
+      "source_pages": [33],
+      "gold_keywords": ["DAOException", "日志", "Service", "Manager"]
+    },
+    {
+      "id": "q15",
+      "type": "unanswerable",
+      "question": "手册推荐使用哪个版本的 Java？",
+      "reference_answer": "资料中未找到该信息。手册只在 try-with-resources 处提到「JDK7 及以上」，没有给出统一的版本推荐。",
+      "source_pages": [],
+      "gold_keywords": []
+    },
+    {
+      "id": "q16",
+      "type": "unanswerable",
+      "question": "Redis 的缓存过期策略应该如何配置？",
+      "reference_answer": "资料中未找到该信息。手册是 Java 开发规约，不涉及 Redis 配置。",
+      "source_pages": [],
+      "gold_keywords": []
+    },
+    {
+      "id": "q17",
+      "type": "unanswerable",
+      "question": "Spring Boot 自动装配的实现原理是什么？",
+      "reference_answer": "资料中未找到该信息。手册不涉及 Spring Boot 框架原理。",
+      "source_pages": [],
+      "gold_keywords": []
+    },
+    {
+      "id": "q18",
+      "type": "unanswerable",
+      "question": "Kafka 消费积压应该怎么处理？",
+      "reference_answer": "资料中未找到该信息。手册不涉及 Kafka 或消息队列的运维处理。",
+      "source_pages": [],
+      "gold_keywords": []
+    }
+  ]
+}
