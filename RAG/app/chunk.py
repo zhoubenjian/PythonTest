@@ -71,7 +71,9 @@ def split_text(text, max_chars=MAX_CHARS, overlap=OVERLAP):
       2. 按 。！？； 切句
       3. 贪心合并句子，累积长度不超过 max_chars
       4. 单句本身超长时才硬切
-    相邻块之间保留 overlap 个字符的重复内容，避免答案正好卡在切口被切散。
+    max_chars 只约束正文长度；overlap 是额外附加到下一块开头的重复前缀，
+    所以最终块长上限是 max_chars + overlap，不视为越界。
+    overlap 起点优先对齐句子边界，避免从词语中间开始。
     """
     if not text.strip():
         return []
@@ -105,8 +107,18 @@ def split_text(text, max_chars=MAX_CHARS, overlap=OVERLAP):
 
     overlapped = [blocks[0]]
     for i in range(1, len(blocks)):
-        prev_tail = blocks[i - 1][-overlap:] if len(blocks[i - 1]) > overlap else blocks[i - 1]
-        overlapped.append(prev_tail + blocks[i])
+        prev = blocks[i - 1]
+        if len(prev) > overlap:
+            tail = prev[-overlap:]
+            m = re.search(r'[。！？；]', tail)
+            # 只在句子边界后仍有足够内容时才对齐，否则退回硬切
+            if m and len(tail) - m.end() >= overlap // 2:
+                prev_tail = tail[m.end():]
+            else:
+                prev_tail = tail
+        else:
+            prev_tail = prev
+        overlapped.append((prev_tail + blocks[i]).strip())
 
     return overlapped
 
