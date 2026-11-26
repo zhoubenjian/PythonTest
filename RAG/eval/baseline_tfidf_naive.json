@@ -1,0 +1,338 @@
+{
+  "meta": {
+    "created": "2026-11-26 17:26:13",
+    "retriever": "tfidf(max_features=5000, ngram=(1,2)) + cosine",
+    "doc_id": "ali_java_manual",
+    "note": "命中判定为 page 级：Top-k 中任一块的 page 属于 source_pages 即算命中"
+  },
+  "summary": {
+    "answerable_count": 14,
+    "unanswerable_count": 4,
+    "top_k": 5,
+    "recall@1": 0.3571,
+    "recall@5": 0.5,
+    "mrr": 0.4167,
+    "avg_top1_score_answerable": 0.158,
+    "max_top1_score_unanswerable": 0.1411
+  },
+  "details": [
+    {
+      "id": "q01",
+      "type": "single",
+      "question": "重写了 equals 之后还必须重写哪个方法？",
+      "expected_pages": [
+        12
+      ],
+      "hit_pages": [
+        9,
+        9,
+        13,
+        7
+      ],
+      "hit_scores": [
+        0.335,
+        0.0859,
+        0.0818,
+        0.0717
+      ],
+      "first_hit_rank": null,
+      "cost_ms": 80.4
+    },
+    {
+      "id": "q02",
+      "type": "single",
+      "question": "ArrayList 的 subList 结果可以强转成 ArrayList 吗？会怎样？",
+      "expected_pages": [
+        12
+      ],
+      "hit_pages": [
+        12,
+        14,
+        13,
+        12,
+        14
+      ],
+      "hit_scores": [
+        0.3994,
+        0.1375,
+        0.0657,
+        0.0654,
+        0.0553
+      ],
+      "first_hit_rank": 1,
+      "cost_ms": 10.4
+    },
+    {
+      "id": "q03",
+      "type": "single",
+      "question": "手册允许用异常来做流程控制或条件控制吗？",
+      "expected_pages": [
+        21
+      ],
+      "hit_pages": [],
+      "hit_scores": [],
+      "first_hit_rank": null,
+      "cost_ms": 9.0
+    },
+    {
+      "id": "q04",
+      "type": "single",
+      "question": "可以在 finally 块里写 return 吗？为什么？",
+      "expected_pages": [
+        21
+      ],
+      "hit_pages": [
+        21,
+        21,
+        17,
+        17,
+        11
+      ],
+      "hit_scores": [
+        0.1595,
+        0.139,
+        0.0952,
+        0.0815,
+        0.0728
+      ],
+      "first_hit_rank": 1,
+      "cost_ms": 10.6
+    },
+    {
+      "id": "q05",
+      "type": "single",
+      "question": "数据库表名可以使用复数名词吗？",
+      "expected_pages": [
+        27
+      ],
+      "hit_pages": [],
+      "hit_scores": [],
+      "first_hit_rank": null,
+      "cost_ms": 8.8
+    },
+    {
+      "id": "q06",
+      "type": "single",
+      "question": "表达「是否」概念的数据库字段应该怎么命名、用什么数据类型？",
+      "expected_pages": [
+        27
+      ],
+      "hit_pages": [],
+      "hit_scores": [],
+      "first_hit_rank": null,
+      "cost_ms": 8.1
+    },
+    {
+      "id": "q07",
+      "type": "single",
+      "question": "存储小数应该用什么数据类型？为什么不能用 float 和 double？",
+      "expected_pages": [
+        27
+      ],
+      "hit_pages": [
+        16,
+        9,
+        27
+      ],
+      "hit_scores": [
+        0.1132,
+        0.079,
+        0.0637
+      ],
+      "first_hit_rank": 3,
+      "cost_ms": 10.6
+    },
+    {
+      "id": "q08",
+      "type": "single",
+      "question": "主键索引、唯一索引、普通索引分别应该如何命名？",
+      "expected_pages": [
+        27
+      ],
+      "hit_pages": [
+        29
+      ],
+      "hit_scores": [
+        0.1678
+      ],
+      "first_hit_rank": null,
+      "cost_ms": 8.8
+    },
+    {
+      "id": "q09",
+      "type": "single",
+      "question": "如果类成员方法只供类内部调用，访问修饰符应该是什么？",
+      "expected_pages": [
+        12
+      ],
+      "hit_pages": [],
+      "hit_scores": [],
+      "first_hit_rank": null,
+      "cost_ms": 8.8
+    },
+    {
+      "id": "q10",
+      "type": "multi",
+      "question": "关于 try-catch 的写法，手册有哪些强制要求？",
+      "expected_pages": [
+        21
+      ],
+      "hit_pages": [
+        21,
+        18,
+        21,
+        16
+      ],
+      "hit_scores": [
+        0.273,
+        0.1053,
+        0.0998,
+        0.0656
+      ],
+      "first_hit_rank": 1,
+      "cost_ms": 8.6
+    },
+    {
+      "id": "q11",
+      "type": "multi",
+      "question": "MySQL 建表时对表名和字段名的命名有哪些强制要求？",
+      "expected_pages": [
+        27
+      ],
+      "hit_pages": [
+        27,
+        3,
+        2,
+        29
+      ],
+      "hit_scores": [
+        0.198,
+        0.1773,
+        0.105,
+        0.0789
+      ],
+      "first_hit_rank": 1,
+      "cost_ms": 9.1
+    },
+    {
+      "id": "q12",
+      "type": "multi",
+      "question": "哪些情况下必须重写 hashCode 和 equals？",
+      "expected_pages": [
+        12
+      ],
+      "hit_pages": [
+        9,
+        9,
+        13,
+        7
+      ],
+      "hit_scores": [
+        0.335,
+        0.0859,
+        0.0818,
+        0.0717
+      ],
+      "first_hit_rank": null,
+      "cost_ms": 8.5
+    },
+    {
+      "id": "q13",
+      "type": "multi",
+      "question": "应用分层中 Manager 层的主要职责是什么？",
+      "expected_pages": [
+        33
+      ],
+      "hit_pages": [
+        24,
+        33
+      ],
+      "hit_scores": [
+        0.1078,
+        0.0956
+      ],
+      "first_hit_rank": 2,
+      "cost_ms": 9.7
+    },
+    {
+      "id": "q14",
+      "type": "multi",
+      "question": "分层架构中，DAO 层和 Service 层的异常与日志处理有什么区别？",
+      "expected_pages": [
+        33
+      ],
+      "hit_pages": [
+        33,
+        6,
+        33,
+        34,
+        38
+      ],
+      "hit_scores": [
+        0.1231,
+        0.107,
+        0.0587,
+        0.0497,
+        0.0478
+      ],
+      "first_hit_rank": 1,
+      "cost_ms": 8.9
+    },
+    {
+      "id": "q15",
+      "type": "unanswerable",
+      "question": "手册推荐使用哪个版本的 Java？",
+      "expected_pages": [],
+      "hit_pages": [
+        38,
+        18,
+        4,
+        26,
+        21
+      ],
+      "hit_scores": [
+        0.1411,
+        0.1008,
+        0.0955,
+        0.0929,
+        0.0819
+      ],
+      "first_hit_rank": null,
+      "top1_score": 0.1411
+    },
+    {
+      "id": "q16",
+      "type": "unanswerable",
+      "question": "Redis 的缓存过期策略应该如何配置？",
+      "expected_pages": [],
+      "hit_pages": [],
+      "hit_scores": [],
+      "first_hit_rank": null,
+      "top1_score": 0.0
+    },
+    {
+      "id": "q17",
+      "type": "unanswerable",
+      "question": "Spring Boot 自动装配的实现原理是什么？",
+      "expected_pages": [],
+      "hit_pages": [
+        35
+      ],
+      "hit_scores": [
+        0.1145
+      ],
+      "first_hit_rank": null,
+      "top1_score": 0.1145
+    },
+    {
+      "id": "q18",
+      "type": "unanswerable",
+      "question": "Kafka 消费积压应该怎么处理？",
+      "expected_pages": [],
+      "hit_pages": [],
+      "hit_scores": [],
+      "first_hit_rank": null,
+      "top1_score": 0.0
+    }
+  ]
+}

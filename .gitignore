@@ -76,6 +76,10 @@ statge/solution/*/models/*.pkl
 **/my_local_vector_db/
 local_models/
 
+# ========== RAG 索引与模型产物（由 embed.py 现场生成）==========
+RAG/data/
+statge/practice/sms_spam/artifacts/
+
 # ========== 公开数据集（不入库，由脚本下载）==========
 # 20 Newsgroups / MNIST / CIFAR-10 均为公开数据集，克隆时按需下载
 local_datas/
