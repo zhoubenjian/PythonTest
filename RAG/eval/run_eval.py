@@ -14,6 +14,9 @@ import sys
 import time
 from pathlib import Path
 
+import numpy as np
+import sklearn
+
 BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE.parent / 'app'))
 
@@ -86,9 +89,16 @@ def main(top_k: int = 5) -> None:
     report = {
         'meta': {
             'created': time.strftime('%Y-%m-%d %H:%M:%S'),
-            'retriever': 'tfidf(max_features=5000, ngram=(1,2)) + cosine',
+            'retriever': 'tfidf(max_features=8000, analyzer=char_wb, ngram=(2,3)) + cosine',
             'doc_id': data['meta']['doc_id'],
             'note': '命中判定为 page 级：Top-k 中任一块的 page 属于 source_pages 即算命中',
+            # 环境必须记录：TF-IDF 分数对 numpy/sklearn 版本敏感，实测换 numpy
+            # 1.26→2.5 会让 q06 两个候选块（分差 0.0005）排名翻转，recall@1 抖动 7 个点
+            'env': {
+                'python': sys.version.split()[0],
+                'numpy': np.__version__,
+                'sklearn': sklearn.__version__,
+            },
         },
         'summary': summary,
         'details': details,
