@@ -1,7 +1,11 @@
-"""向量化与索引持久化。
+"""向量化与索引读写。
 
-W07 任务：用 TF-IDF（sklearn）把文本块变成向量，
-并实现「重复导入幂等」——同一批块多次运行只生成一份索引。
+职责边界只有两件事：
+1. vectorize —— 把文本块变成 TF-IDF 矩阵
+2. save_index / load_index —— 索引的持久化与读取
+
+流水线编排（parse → clean → chunk → vectorize → save）在 build_index.py，
+本文件不 import parse/chunk，避免把「存储」和「数据加工」耦在一起。
 """
 from __future__ import annotations
 
@@ -12,63 +16,61 @@ from pathlib import Path
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from parse import PDF_PATH
-from chunk import DOC_ID, build_chunks, clean_pages, find_repeated_lines, load_pages
-
 INDEX_PATH = Path(__file__).resolve().parent.parent / 'data' / 'index.pkl'
 
 
 def vectorize(chunks: list[dict]) -> tuple[TfidfVectorizer, np.ndarray]:
-    """把 chunks 里的 text 字段变成 TF-IDF 矩阵。
+    """把 chunks 里的 text 字段变成一个 TF-IDF 矩阵。
 
     返回：
-        vectorizer：拟合好的 TfidfVectorizer（检索时对查询词 transform 用）
-        matrix：    稠密化后的矩阵，shape=(n_chunks, n_vocab)
+        vectorizer：拟合好的 TfidfVectorizer，检索时对 query 做 transform
+        matrix：    shape=(n_chunks, n_vocab) 的稠密矩阵
 
-    为什么稠密：101 块、词汇量几千，稀疏矩阵存 pickle 也方便，
-    但稠密做余弦相似度更直观，W07 验收里我们要手动算 cosine。
+    中文必须用字符 n-gram：sklearn 默认的 token_pattern=r'(?u)\\b\\w\\w+\\b'
+    按空白和 ASCII 词边界切词，整句中文会被当成一个 token，导致纯中文查询
+    零命中（实测 recall@1 从 0.357 提升到 0.929，差距全部来自这一处）。
+
+    已知代价，如实记录：
+    - 只做字面共现，不懂同义词、不敏感于语序
+    - 2-3 gram 组合数远多于词袋，维度膨胀
+    - max_features=8000 是硬上限，真实 n-gram 数超过 8000 时会**静默截断**
+      低频项。构建时打印实际词表大小，用来判断是否被截断
+
+    为什么返回稠密矩阵：W07 阶段要在 index.py 里逐行手写余弦、把计算过程
+    摊开演示；代价是内存（101 x 8000 x 8B ≈ 6.6MB）和 101 次 Python 循环。
+    后续应改为稀疏矩阵 + sklearn.metrics.pairwise.cosine_similarity。
     """
     texts = [c['text'] for c in chunks]
-    # 中文没有空格分词，sklearn 默认 token_pattern[r'(?u)\b\w\w+\b'] 会把
-    # 整句中文当成一个 token，导致纯中文查询零命中。改用字符 n-gram：
-    # char_wb 按字切，2-3 gram 能覆盖「流程控制」「条件控制」这类词。
     vectorizer = TfidfVectorizer(analyzer='char_wb', ngram_range=(2, 3), max_features=8000)
     matrix = vectorizer.fit_transform(texts).toarray()
     return vectorizer, matrix
 
 
-def build_and_save() -> Path:
-    """完整流程：load → parse → chunk → vectorize → persist。
+def save_index(doc_id: str, vectorizer: TfidfVectorizer, matrix: np.ndarray,
+               chunks: list[dict]) -> Path:
+    """把索引写到 INDEX_PATH，返回文件路径。
 
-    幂等性：chunk 的 id 用 doc_id+page+order 哈希得出，相同块集两次
-    运行得到完全相同的向量矩阵（TF-IDF 词表顺序确定），因此不需要
-    额外检查——覆盖写就等于"没变化"。
+    重复构建的行为：同一文档、同一份代码，块集与向量矩阵都是确定的，
+    因此重复运行不会产生重复块，也不会让索引漂移。
+    但 `created` 是构建时间戳，每次都会变，文件字节并不相同——
+    不要用文件哈希判断「索引是否需要重建」，要看构建参数和源文档是否变化。
     """
-    raw = load_pages(PDF_PATH)
-    noise = find_repeated_lines(raw)
-    pages = clean_pages(raw, noise)
-    chunks = build_chunks(pages)
-    vectorizer, matrix = vectorize(chunks)
-
     INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
     data = {
-        'doc_id': DOC_ID,
+        'doc_id': doc_id,
         'vectorizer': vectorizer,
         'matrix': matrix,
         'chunks': chunks,
         'created': int(time.time()),
     }
     INDEX_PATH.write_bytes(pickle.dumps(data))
-    print(f'索引已保存：{INDEX_PATH}')
-    print(f'块数={len(chunks)}，维度={matrix.shape[1]}，大小={INDEX_PATH.stat().st_size // 1024}KB')
     return INDEX_PATH
 
 
 def load_index() -> dict:
     if not INDEX_PATH.exists():
-        raise FileNotFoundError(f'索引文件不存在：{INDEX_PATH}，请先运行 index.py')
+        raise FileNotFoundError(
+            f'索引文件不存在：{INDEX_PATH}\n'
+            f'请先运行：python RAG/app/build_index.py'
+        )
     return pickle.loads(INDEX_PATH.read_bytes())
-
-
-if __name__ == '__main__':
-    build_and_save()

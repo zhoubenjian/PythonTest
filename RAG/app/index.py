@@ -53,16 +53,20 @@ def search(query: str, top_k: int = 3) -> list[Hit]:
 
 
 if __name__ == '__main__':
-    # 验收块：用两道评测题验证检索能命中对应页
+    # 冒烟测试：断言写在运行时，避免「注释说命中、实际不命中」的注释过期问题
     cases = [
-        '重写 equals 必须重写什么方法',     # 预期 page 12
-        'finally 块里能写 return 吗',       # 预期 page 21
-        '表名不能用什么形式的名词',          # 预期 page 27
+        ('重写 equals 必须重写什么方法', 12),
+        ('finally 块里能写 return 吗', 21),
+        ('表名不能用什么形式的名词', 27),
     ]
-    for q in cases:
+    passed = 0
+    for q, want in cases:
         hits = search(q, top_k=2)
-        print(f'\nQ: {q}')
+        top_page = hits[0].page if hits else None
+        ok = top_page == want
+        passed += ok
+        print(f"\nQ: {q}")
+        print(f"  期望 page {want}  Top1 page {top_page}  {'PASS' if ok else 'FAIL'}")
         for h in hits:
             print(f'  [{h.score:.3f}] page={h.page} id={h.id[:10]}... {h.text[:50]}...')
-        if not hits:
-            print('  (无命中)')
+    print(f'\n冒烟测试 {passed}/{len(cases)} PASS')

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "created": "2026-11-27 09:37:53",
+    "created": "2026-11-27 09:51:12",
     "retriever": "tfidf(max_features=8000, analyzer=char_wb, ngram=(2,3)) + cosine",
     "doc_id": "ali_java_manual",
     "note": "命中判定为 page 级：Top-k 中任一块的 page 属于 source_pages 即算命中",
@@ -43,7 +43,7 @@
         0.0523
       ],
       "first_hit_rank": 1,
-      "cost_ms": 86.4
+      "cost_ms": 90.1
     },
     {
       "id": "q02",
@@ -67,7 +67,7 @@
         0.1716
       ],
       "first_hit_rank": 1,
-      "cost_ms": 11.9
+      "cost_ms": 14.1
     },
     {
       "id": "q03",
@@ -91,7 +91,7 @@
         0.0392
       ],
       "first_hit_rank": 1,
-      "cost_ms": 45.4
+      "cost_ms": 13.1
     },
     {
       "id": "q04",
@@ -115,7 +115,7 @@
         0.1086
       ],
       "first_hit_rank": 1,
-      "cost_ms": 15.5
+      "cost_ms": 12.3
     },
     {
       "id": "q05",
@@ -139,7 +139,7 @@
         0.0443
       ],
       "first_hit_rank": 1,
-      "cost_ms": 13.2
+      "cost_ms": 12.2
     },
     {
       "id": "q06",
@@ -163,7 +163,7 @@
         0.097
       ],
       "first_hit_rank": 2,
-      "cost_ms": 13.0
+      "cost_ms": 12.1
     },
     {
       "id": "q07",
@@ -187,7 +187,7 @@
         0.0787
       ],
       "first_hit_rank": 1,
-      "cost_ms": 12.6
+      "cost_ms": 12.1
     },
     {
       "id": "q08",
@@ -211,7 +211,7 @@
         0.1447
       ],
       "first_hit_rank": null,
-      "cost_ms": 12.5
+      "cost_ms": 12.6
     },
     {
       "id": "q09",
@@ -235,7 +235,7 @@
         0.0528
       ],
       "first_hit_rank": 1,
-      "cost_ms": 13.3
+      "cost_ms": 11.9
     },
     {
       "id": "q10",
@@ -259,7 +259,7 @@
         0.0767
       ],
       "first_hit_rank": 1,
-      "cost_ms": 13.8
+      "cost_ms": 12.2
     },
     {
       "id": "q11",
@@ -283,7 +283,7 @@
         0.0836
       ],
       "first_hit_rank": 1,
-      "cost_ms": 12.9
+      "cost_ms": 13.9
     },
     {
       "id": "q12",
@@ -307,7 +307,7 @@
         0.1026
       ],
       "first_hit_rank": 1,
-      "cost_ms": 13.3
+      "cost_ms": 12.5
     },
     {
       "id": "q13",
@@ -331,7 +331,7 @@
         0.0679
       ],
       "first_hit_rank": 1,
-      "cost_ms": 12.9
+      "cost_ms": 11.5
     },
     {
       "id": "q14",
@@ -355,7 +355,7 @@
         0.1512
       ],
       "first_hit_rank": 1,
-      "cost_ms": 13.2
+      "cost_ms": 12.1
     },
     {
       "id": "q15",
